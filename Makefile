@@ -6,7 +6,7 @@
 #    By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/23 19:40:24 by gilmar            #+#    #+#              #
-#    Updated: 2024/04/23 20:08:53 by gilmar           ###   ########.fr        #
+#    Updated: 2024/04/28 15:57:39 by gilmar           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ CFLAGS = -std=c++98 -Wall
 
 TARGET = server
 
-SRCS = main.cpp
+SRCS = main.cpp Client.cpp Server.cpp
 
 OBJS = $(SRCS:.cpp=.o)
 

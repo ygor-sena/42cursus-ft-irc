@@ -1,23 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/28 10:47:49 by gilmar            #+#    #+#             */
-/*   Updated: 2024/04/28 16:07:16 by gilmar           ###   ########.fr       */
+/*   Created: 2024/04/28 10:20:02 by gilmar            #+#    #+#             */
+/*   Updated: 2024/04/28 10:22:55 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Server.hpp"
+#include "Client.hpp"
 
-int main(int argc, char **argv)
+/*
+** ------------------------------- CONSTRUCTOR --------------------------------
+*/
+
+Client::Client()
 {
-	Server server;
-	if (argc != 3)
-		{std::cout << "Usage: " << argv[0] << " <port number> <password>" << std::endl; return 1;}
-	std::cout << "---- SERVER ----" << std::endl;
-	server.init("4444", "12345");
-	std::cout << "The Server Closed!" << std::endl;
+}
+
+/*
+** --------------------------------- ACCESSOR ---------------------------------
+*/
+
+int Client::GetFd()
+{
+    return Fd;
+}
+
+void Client::SetFd(int fd)
+{
+    Fd = fd;
+}
+
+void Client::setIpAdd(std::string ipadd)
+{
+    IPadd = ipadd;
 }
