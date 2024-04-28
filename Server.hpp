@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:23:47 by gilmar            #+#    #+#             */
-/*   Updated: 2024/04/28 17:50:47 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/04/28 18:39:21 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,10 @@ class Server //-> class for server
 {
     public:
         Server(); //-> constructor
+        ~Server(); //-> destructor
 
         void init(const std::string &port, const std::string &password); //-> server initialization
-
+        
     private:
         int _port; //-> server port
         int _server_fdsocket; //-> server socket file descriptor
@@ -62,6 +63,4 @@ class Server //-> class for server
         Client& _get_client(int fd); //-> get client
         
         void _close_fds(); //-> close file descriptors
-
-        
 };
