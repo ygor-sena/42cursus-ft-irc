@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:26:55 by gilmar            #+#    #+#             */
-/*   Updated: 2024/04/28 17:09:58 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/04/28 18:36:35 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,11 +110,11 @@ void Server::_set_server_socket()
 /**
  * @brief Starts the server loop.
  *
- * This method initiates the server loop, which continuously waits for incoming connections
- * and processes the data received from clients. It utilizes the poll system call to monitor
- * file descriptors for events and handle them appropriately.
+ * This method initiates the server loop, continuously waiting for incoming connections
+ * and processing data received from clients. It utilizes the poll system call to efficiently
+ * monitor file descriptors for events.
  *
- * The server loop runs until the termination signal is received.
+ * The server loop continues to run until a termination signal is received.
  *
  * @throws std::runtime_error if an error occurs during the polling process.
  */
@@ -122,9 +122,11 @@ void Server::_server_loop()
 {
     while (Server::_signal == false)
     {
+        // Poll for events on file descriptors
         if((poll(&_fds[0], _fds.size(), -1) == -1) && Server::_signal == false)
             throw(std::runtime_error("poll() faild"));
         for (size_t i = 0; i < _fds.size(); i++) {
+            // Check if the file descriptor has an event
             if (_fds[i].revents & POLLIN) {
                 if (_fds[i].fd == _server_fdsocket)
                     _accept_new_client();
@@ -241,19 +243,20 @@ void Server::_receive_new_data(int fd)
     char buff[1024]; //-> buffer for the received data
     std::memset(buff, 0, sizeof(buff)); //-> clear the buffer
 
-
-    // TODO: Obter o cliente que está armazenado na std::vector<Client> _clients através do file descriptor fd
-
     ssize_t bytes = recv(fd, buff, sizeof(buff) - 1 , 0); //-> receive the data
     if(bytes <= 0) { //-> check if the client disconnected
         std::cout << RED << "Client <" << fd << "> Disconnected" << WHI << std::endl;
         _clear_client(fd); //-> clear the client
     }
-    else { //-> print the received data
+    else {
+
+        // TODO: Obter o cliente através do file descriptor (fd) vinculado ao socket
+        Client &cli = _get_client(fd);
+
+        //-> print the received data
         buff[bytes] = '\0';
         std::cout << YEL << "Client <" << fd << "> Data: " << WHI << buff;
 
-        
         //here you can add your code to process the received data: parse, check, authenticate, handle the command, etc...
     }
 }
@@ -284,4 +287,25 @@ void Server::_clear_client(int fd)
         }
     }
     close(fd);
+}
+
+/**
+ * @brief Retrieves the client associated with the given file descriptor.
+ *
+ * This method retrieves the client object associated with the specified file descriptor from the
+ * vector of active clients. It iterates through the list of clients and returns the client object
+ * that matches the provided file descriptor.
+ *
+ * @param fd The file descriptor associated with the client to retrieve.
+ * @return The client object associated with the specified file descriptor.
+ */
+Client& Server::_get_client(int fd)
+{
+    for (size_t i = 0; i < _clients.size(); i++) {
+        if (_clients[i].GetFd() == fd) {
+            return _clients[i];
+        }
+    }
+
+    throw std::invalid_argument("Client not found");
 }

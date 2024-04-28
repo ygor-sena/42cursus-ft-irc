@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:23:47 by gilmar            #+#    #+#             */
-/*   Updated: 2024/04/28 16:07:11 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/04/28 17:50:47 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ class Server //-> class for server
         void _clear_client(int fd); //-> clear clients
         void _server_loop(); //-> server loop
 
+        Client& _get_client(int fd); //-> get client
+        
         void _close_fds(); //-> close file descriptors
 
         
