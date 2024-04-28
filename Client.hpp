@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:19:06 by gilmar            #+#    #+#             */
-/*   Updated: 2024/04/28 10:34:50 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/04/28 17:07:57 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,6 @@ class Client //-> class for client
         void setIpAdd(std::string ipadd);
 
     private:
-        int Fd; //-> client file descriptor
-        std::string IPadd; //-> client ip address
+        int fd; //-> client file descriptor
+        std::string ip_addr; //-> client ip address
 };

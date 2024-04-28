@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:20:02 by gilmar            #+#    #+#             */
-/*   Updated: 2024/04/28 10:22:55 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/04/28 17:08:27 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,15 @@ Client::Client()
 
 int Client::GetFd()
 {
-    return Fd;
+    return fd;
 }
 
 void Client::SetFd(int fd)
 {
-    Fd = fd;
+    fd = fd;
 }
 
 void Client::setIpAdd(std::string ipadd)
 {
-    IPadd = ipadd;
+    ip_addr = ipadd;
 }
