@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:26:55 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/01 16:39:59 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/01 16:50:17 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -252,30 +252,20 @@ void Server::_receive_new_data(const int fd)
     std::vector<std::string> cmd; //-> vector for the parsed command
     std::memset(buff, 0, sizeof(buff)); //-> clear the buffer
     
-    //Client &cli = _get_client(fd); // -> get the client object associated with the file descriptor (fd)
-
-    _get_client(fd); 
+    Client &cli = _get_client(fd); // -> get the client object associated with the file descriptor (fd)
     ssize_t bytes = recv(fd, buff, sizeof(buff) -1 , 0); //-> receive the data
     if(bytes <= 0) { //-> check if the client disconnected
         std::cout << RED << "Client <" << fd << "> Disconnected" << WHI << std::endl;
         _clear_client(fd); //-> clear the client
     }
     else {
-        //cli.set_buffer(buff); //-> set the buffer with the received data
-        //if (cli.get_buffer().find_first_of("\r\n") == std::string::npos) //-> check if the data is complete
-            //return;      
-        // TODO: GET THE CMD FROM THE BUFFER
-        //std::vector<std::string> cmd = _parse_received_buffer(cli.get_buffer());
-        // TODO: PROCESS THE CMD
-        //for (size_t i = 0; i < cmd.size(); i++)
-        //{
-            //std::cout << YEL << "Client <" << fd << "> Command: " << WHI << cmd[i] << std::endl;
-        //}
-        
-        // -> print the received data
-        buff[bytes] = '\0';
-        std::cout << YEL << "Client <" << fd << "> Data: " << WHI << buff;
-
+        cli.set_buffer(buff); //-> set the buffer with the received data
+        if (cli.get_buffer().find_first_of("\r\n") == std::string::npos) //-> check if the data is complete
+            return;      
+        std::vector<std::string> cmd = _parse_received_buffer(cli.get_buffer());
+        for (size_t i = 0; i < cmd.size(); i++)
+            _execute_command(cmd[i], fd);
+        // Clear the client buffer
         //here you can add your code to process the received data: parse, check, authenticate, handle the command, etc...
     }
 }
@@ -291,9 +281,9 @@ void Server::_receive_new_data(const int fd)
  * @param buffer The received buffer containing the command to be executed.
  * @param fd The file descriptor associated with the client that sent the command.
  */
-void Server::_execute_command(const std::vector<std::string> &buffer, const int fd)
+void Server::_execute_command(const std::string &command, const int fd)
 {
-    
+    std::cout << YEL << "Client <" << fd << "> Command: " << WHI << command << std::endl;
 }
 
 /**
@@ -360,7 +350,7 @@ void Server::_clear_client(const int fd)
  * @param fd The file descriptor associated with the client to retrieve.
  * @return The client object associated with the specified file descriptor.
  */
-const Client& Server::_get_client(const int fd)
+Client& Server::_get_client(const int fd)
 {
     for (size_t i = 0; i < _clients.size(); i++) {
         if (_clients[i].get_fd() == fd) {

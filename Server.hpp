@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:23:47 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/01 16:34:31 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/01 16:48:05 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,11 @@ class Server //-> class for server
         void _clear_client(const int fd); //-> clear clients
         void _server_loop(); //-> server loop
         
-        void _execute_command(const std::vector<std::string> &buffer, const int fd); //-> execute command
+        void _execute_command(const std::string &command, const int fd); //-> execute command
         std::vector<std::string> _parse_received_buffer(const std::string &buffer); //-> parse received buffer
         
 
-        const Client& _get_client(const int fd); //-> get client
+        Client& _get_client(const int fd); //-> get client
         
         void _close_fds(); //-> close file descriptors
 };
