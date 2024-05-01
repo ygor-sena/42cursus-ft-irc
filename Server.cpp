@@ -6,13 +6,11 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:26:55 by gilmar            #+#    #+#             */
-/*   Updated: 2024/04/28 18:36:35 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/01 16:39:59 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
-
-bool Server::_signal = false; //-> initialize the static boolean
 
 /*
 ** ------------------------------- CONSTRUCTOR --------------------------------
@@ -21,6 +19,14 @@ bool Server::_signal = false; //-> initialize the static boolean
 Server::Server()
 {
     _server_fdsocket = -1;
+}
+
+/*
+** -------------------------------- DESTRUCTOR --------------------------------
+*/
+
+Server::~Server()
+{
 }
 
 /*
@@ -37,7 +43,8 @@ Server::Server()
  *
  * @param signum The signal number that triggered the signal handler.
  */
-void Server::_signal_handler(int signum)
+bool Server::_signal = false; //-> initialize the static boolean
+void Server::_signal_handler(const int signum)
 {
     (void)signum;
     std::cout << std::endl << "Signal Received!" << std::endl;
@@ -58,8 +65,8 @@ void Server::_close_fds()
 {
     //-> close all the clients
     for(size_t i = 0; i < _clients.size(); i++) {
-        std::cout << RED << "Client <" << _clients[i].GetFd() << "> Disconnected" << WHI << std::endl;
-        close(_clients[i].GetFd());
+        std::cout << RED << "Client <" << _clients[i].get_fd() << "> Disconnected" << WHI << std::endl;
+        close(_clients[i].get_fd());
     }
     if (_server_fdsocket != -1) {
         std::cout << RED << "Server <" << _server_fdsocket << "> Disconnected" << WHI << std::endl;
@@ -86,20 +93,20 @@ void Server::_set_server_socket()
     struct pollfd new_poll;
     struct sockaddr_in server_addr;
     
-	int enable = 1;
+	int enable = 1; //-> enable the socket option
 	server_addr.sin_family = AF_INET;
 	server_addr.sin_addr.s_addr = INADDR_ANY;
-	server_addr.sin_port = htons(_port);
-	_server_fdsocket = socket(AF_INET, SOCK_STREAM, 0);
+	server_addr.sin_port = htons(_port); //-> set the port
+	_server_fdsocket = socket(AF_INET, SOCK_STREAM, 0); //-> create the socket
 	if(_server_fdsocket == -1)
 		throw(std::runtime_error("faild to create socket"));
-	if(setsockopt(_server_fdsocket, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(enable)) == -1)
+	if(setsockopt(_server_fdsocket, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(enable)) == -1) //-> set the socket options | Enable is used to reuse the address
 		throw(std::runtime_error("faild to set option (SO_REUSEADDR) on socket"));
-    if (fcntl(_server_fdsocket, F_SETFL, O_NONBLOCK) == -1)
+    if (fcntl(_server_fdsocket, F_SETFL, O_NONBLOCK) == -1) //-> set the socket to non-blocking mode
 		throw(std::runtime_error("faild to set option (O_NONBLOCK) on socket"));
-	if (bind(_server_fdsocket, (struct sockaddr *)&server_addr, sizeof(server_addr)) == -1)
+	if (bind(_server_fdsocket, (struct sockaddr *)&server_addr, sizeof(server_addr)) == -1) //-> bind the socket
 		throw(std::runtime_error("faild to bind socket"));
-	if (listen(_server_fdsocket, SOMAXCONN) == -1)
+	if (listen(_server_fdsocket, SOMAXCONN) == -1) //-> listen for incoming connections
 		throw(std::runtime_error("listen() faild"));
 	new_poll.fd = _server_fdsocket;
 	new_poll.events = POLLIN;
@@ -219,46 +226,100 @@ void Server::_add_server_signal()
 void Server::_accept_new_client()
 {
 	Client cli; //-> create a new client
-    struct pollfd new_poll;
-    struct sockaddr_in cli_addr;
+    struct pollfd new_poll; //-> create a new pollfd
+    struct sockaddr_in cli_addr;  //-> create a new sockaddr_in
 
+    memset(&cli_addr, 0, sizeof(cli_addr));
     socklen_t len = sizeof(cli_addr);
-	int incofd = accept(_server_fdsocket, (sockaddr *)&(cli_addr), &len);
+	int incofd = accept(_server_fdsocket, (sockaddr *)&(cli_addr), &len); // -> accept the incoming connection
 	if (incofd == -1)
 		{std::cout << "accept() failed" << std::endl; return;}
-	if (fcntl(incofd, F_SETFL, O_NONBLOCK) == -1)
+	if (fcntl(incofd, F_SETFL, O_NONBLOCK) == -1) //-> set the socket to non-blocking mode
 		{std::cout << "fcntl() failed" << std::endl; return;}
 	new_poll.fd = incofd;
 	new_poll.events = POLLIN;
 	new_poll.revents = 0;
-	cli.SetFd(incofd);
-	cli.setIpAdd(inet_ntoa((cli_addr.sin_addr)));
+	cli.set_fd(incofd);
+	cli.set_ip_add(inet_ntoa((cli_addr.sin_addr)));
 	_clients.push_back(cli);
 	_fds.push_back(new_poll);
 	std::cout << GRE << "Client <" << incofd << "> Connected" << WHI << std::endl;
 }
 
-void Server::_receive_new_data(int fd)
+void Server::_receive_new_data(const int fd)
 {
     char buff[1024]; //-> buffer for the received data
+    std::vector<std::string> cmd; //-> vector for the parsed command
     std::memset(buff, 0, sizeof(buff)); //-> clear the buffer
+    
+    //Client &cli = _get_client(fd); // -> get the client object associated with the file descriptor (fd)
 
-    ssize_t bytes = recv(fd, buff, sizeof(buff) - 1 , 0); //-> receive the data
+    _get_client(fd); 
+    ssize_t bytes = recv(fd, buff, sizeof(buff) -1 , 0); //-> receive the data
     if(bytes <= 0) { //-> check if the client disconnected
         std::cout << RED << "Client <" << fd << "> Disconnected" << WHI << std::endl;
         _clear_client(fd); //-> clear the client
     }
     else {
-
-        // TODO: Obter o cliente através do file descriptor (fd) vinculado ao socket
-        Client &cli = _get_client(fd);
-
-        //-> print the received data
+        //cli.set_buffer(buff); //-> set the buffer with the received data
+        //if (cli.get_buffer().find_first_of("\r\n") == std::string::npos) //-> check if the data is complete
+            //return;      
+        // TODO: GET THE CMD FROM THE BUFFER
+        //std::vector<std::string> cmd = _parse_received_buffer(cli.get_buffer());
+        // TODO: PROCESS THE CMD
+        //for (size_t i = 0; i < cmd.size(); i++)
+        //{
+            //std::cout << YEL << "Client <" << fd << "> Command: " << WHI << cmd[i] << std::endl;
+        //}
+        
+        // -> print the received data
         buff[bytes] = '\0';
         std::cout << YEL << "Client <" << fd << "> Data: " << WHI << buff;
 
         //here you can add your code to process the received data: parse, check, authenticate, handle the command, etc...
     }
+}
+
+/**
+ * @brief Executes the command received from the client.
+ *
+ * This method processes the command received from the client and executes the corresponding action.
+ * It parses the received buffer into individual commands and iterates through each command to execute
+ * the corresponding action. The method is responsible for handling various commands such as authentication,
+ * message sending, and other server operations.
+ *
+ * @param buffer The received buffer containing the command to be executed.
+ * @param fd The file descriptor associated with the client that sent the command.
+ */
+void Server::_execute_command(const std::vector<std::string> &buffer, const int fd)
+{
+    
+}
+
+/**
+ * @brief Parses the received buffer into a vector of strings.
+ *
+ * This method parses the received buffer into a vector of strings based on the newline character '\n'.
+ * It splits the buffer into individual strings based on the newline character and returns the vector
+ * of strings.
+ *
+ * @param data The received buffer to be parsed.
+ * @return A vector of strings containing the parsed data.
+ */
+std::vector<std::string> Server::_parse_received_buffer(const std::string &buffer)
+{
+	std::string line; // -> string for the line
+	std::vector<std::string> vec; // -> vector for the parsed data
+	std::istringstream stm(buffer); // -> create a string stream
+    
+	while(std::getline(stm, line))
+	{
+		size_t pos = line.find_first_of("\r\n");
+		if(pos != std::string::npos) // -> check if the newline character is found
+			line = line.substr(0, pos); // -> remove the newline character
+		vec.push_back(line); // -> add the line to the vector
+	}
+	return vec;
 }
 
 /**
@@ -270,7 +331,7 @@ void Server::_receive_new_data(int fd)
  *
  * @param fd The file descriptor associated with the client to be cleared.
  */
-void Server::_clear_client(int fd)
+void Server::_clear_client(const int fd)
 {
     // Remove the client from the pollfd
     for(size_t i = 0; i < _fds.size(); i++) {
@@ -281,7 +342,7 @@ void Server::_clear_client(int fd)
     }
     // Remove the client from the vector of clients
     for(size_t i = 0; i < _clients.size(); i++) {
-        if (_clients[i].GetFd() == fd) {
+        if (_clients[i].get_fd() == fd) {
             _clients.erase(_clients.begin() + i); 
             break;
         }
@@ -299,13 +360,12 @@ void Server::_clear_client(int fd)
  * @param fd The file descriptor associated with the client to retrieve.
  * @return The client object associated with the specified file descriptor.
  */
-Client& Server::_get_client(int fd)
+const Client& Server::_get_client(const int fd)
 {
     for (size_t i = 0; i < _clients.size(); i++) {
-        if (_clients[i].GetFd() == fd) {
+        if (_clients[i].get_fd() == fd) {
             return _clients[i];
         }
     }
-
     throw std::invalid_argument("Client not found");
 }

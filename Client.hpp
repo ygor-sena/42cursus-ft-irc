@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:19:06 by gilmar            #+#    #+#             */
-/*   Updated: 2024/04/28 18:41:02 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/01 16:37:57 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,15 +33,17 @@ class Client //-> class for client
     public:
         Client();
         
-        int GetFd();
+        int get_fd() const;
+        std::string get_buffer() const;
 
-        void SetFd(int fd);
-        void setIpAdd(std::string ipadd);
+        void set_fd(const int fd);
+        void set_ip_add(const std::string &ipadd);
+        void set_buffer(const std::string &buffer);
 
     private:
-        int fd; //-> client file descriptor
-        std::string ip_addr; //-> client ip address
-        std::string nickname; //-> client nickname
-        std::string username; //-> client username
-        std::string buffer; //-> client buffer
+        int _fd; //-> client file descriptor
+        std::string _ip_addr; //-> client ip address
+        std::string _nickname; //-> client nickname
+        std::string _username; //-> client username
+        std::string _buffer; //-> client buffer
 };

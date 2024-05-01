@@ -6,13 +6,13 @@
 #    By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/23 19:40:24 by gilmar            #+#    #+#              #
-#    Updated: 2024/04/28 15:57:39 by gilmar           ###   ########.fr        #
+#    Updated: 2024/05/01 16:05:50 by gilmar           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = g++
 
-CFLAGS = -std=c++98 -Wall
+CFLAGS = -std=c++98
 
 TARGET = server
 

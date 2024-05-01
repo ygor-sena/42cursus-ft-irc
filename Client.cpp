@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:20:02 by gilmar            #+#    #+#             */
-/*   Updated: 2024/04/28 17:08:27 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/01 16:35:53 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,17 +24,27 @@ Client::Client()
 ** --------------------------------- ACCESSOR ---------------------------------
 */
 
-int Client::GetFd()
+void Client::set_fd(const int fd)
 {
-    return fd;
+    _fd = fd;
 }
 
-void Client::SetFd(int fd)
+void Client::set_ip_add(const std::string &ipadd)
 {
-    fd = fd;
+    _ip_addr = ipadd;
 }
 
-void Client::setIpAdd(std::string ipadd)
+void Client::set_buffer(const std::string &buffer)
 {
-    ip_addr = ipadd;
+    _buffer = buffer;
+}
+
+int Client::get_fd() const
+{
+    return _fd;
+}
+
+std::string Client::get_buffer() const
+{
+    return _buffer;
 }

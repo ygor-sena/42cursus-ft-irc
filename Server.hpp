@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:23:47 by gilmar            #+#    #+#             */
-/*   Updated: 2024/04/28 18:39:21 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/01 16:34:31 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 #include <arpa/inet.h> //-> for inet_ntoa()
 #include <poll.h> //-> for poll()
 #include <csignal> //-> for signal()
+#include <sstream> //-> for std::stringstream
 
 #include "Client.hpp" //-> for client class
 //-------------------------------------------------------//
@@ -51,16 +52,20 @@ class Server //-> class for server
         void _is_valid_port(const std::string &port); //-> check if the port is valid
         
         static bool _signal; //-> static boolean for signal
-        static void _signal_handler(int signum); //-> signal handler
+        static void _signal_handler(const int signum); //-> signal handler
 
         void _set_server_socket(); //-> server socket creation
         void _add_server_signal(); //-> server signal creation
         void _accept_new_client(); //-> accept new client
-        void _receive_new_data(int fd); //-> receive data from a client
-        void _clear_client(int fd); //-> clear clients
+        void _receive_new_data(const int fd); //-> receive data from a client
+        void _clear_client(const int fd); //-> clear clients
         void _server_loop(); //-> server loop
+        
+        void _execute_command(const std::vector<std::string> &buffer, const int fd); //-> execute command
+        std::vector<std::string> _parse_received_buffer(const std::string &buffer); //-> parse received buffer
+        
 
-        Client& _get_client(int fd); //-> get client
+        const Client& _get_client(const int fd); //-> get client
         
         void _close_fds(); //-> close file descriptors
 };
