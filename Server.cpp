@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:26:55 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/01 16:50:17 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/01 19:59:53 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -248,24 +248,21 @@ void Server::_accept_new_client()
 
 void Server::_receive_new_data(const int fd)
 {
-    char buff[1024]; //-> buffer for the received data
-    std::vector<std::string> cmd; //-> vector for the parsed command
-    std::memset(buff, 0, sizeof(buff)); //-> clear the buffer
+    char buffer[1024]; //-> buffer for the received data
+    std::memset(buffer, 0, sizeof(buffer)); //-> clear the buffer
     
     Client &cli = _get_client(fd); // -> get the client object associated with the file descriptor (fd)
-    ssize_t bytes = recv(fd, buff, sizeof(buff) -1 , 0); //-> receive the data
+    ssize_t bytes = recv(fd, buffer, sizeof(buffer) -1 , 0); //-> receive the data
     if(bytes <= 0) { //-> check if the client disconnected
         std::cout << RED << "Client <" << fd << "> Disconnected" << WHI << std::endl;
         _clear_client(fd); //-> clear the client
     }
     else {
-        cli.set_buffer(buff); //-> set the buffer with the received data
+        cli.set_buffer(buffer); //-> set the buffer with the received data
         if (cli.get_buffer().find_first_of("\r\n") == std::string::npos) //-> check if the data is complete
-            return;      
-        std::vector<std::string> cmd = _parse_received_buffer(cli.get_buffer());
-        for (size_t i = 0; i < cmd.size(); i++)
-            _execute_command(cmd[i], fd);
-        // Clear the client buffer
+            return;
+        //std::string cmd = _parse_received_buffer(cli.get_buffer()); //-> parse the received data
+        _execute_command(cli.get_buffer(), fd); //-> execute the command
         //here you can add your code to process the received data: parse, check, authenticate, handle the command, etc...
     }
 }
@@ -278,38 +275,47 @@ void Server::_receive_new_data(const int fd)
  * the corresponding action. The method is responsible for handling various commands such as authentication,
  * message sending, and other server operations.
  *
- * @param buffer The received buffer containing the command to be executed.
+ * @param command The received buffer containing the command to be executed.
  * @param fd The file descriptor associated with the client that sent the command.
  */
-void Server::_execute_command(const std::string &command, const int fd)
+void Server::_execute_command(const std::string &buffer, const int fd)
 {
-    std::cout << YEL << "Client <" << fd << "> Command: " << WHI << command << std::endl;
+    std::string clean_buffer = _cleanse_buffer(buffer);
+
+    // TODO: Nesta parte tenho o buffer limpo dos "\r\n" e posso processar o comando.
+    // Os comandos podem ser autenticação, envio de mensagens, operações do servidor, etc...
+    
+    // Para autenticar no servidor como moderador/administrador, deve-se seguir os seguintes passos:
+    // NICK <nickname> - Define o nickname do usuário
+    // USER <username> - Define o username e a senha do usuário
+    // PASS <password> - Passar a senha do servidor para autenticação
+    // Minha ideia é que se for moderador/administrador ele não pode ser derumbado das salas.
+    
+    
+    std::cout << YEL << "Client <" << fd << "> Command: " << WHI << clean_buffer << std::endl;
 }
 
 /**
- * @brief Parses the received buffer into a vector of strings.
+ * @brief Parses the received buffer into a single string.
  *
- * This method parses the received buffer into a vector of strings based on the newline character '\n'.
- * It splits the buffer into individual strings based on the newline character and returns the vector
- * of strings.
- *
- * @param data The received buffer to be parsed.
- * @return A vector of strings containing the parsed data.
+ * This method parses the received buffer into a single string representing a command.
+ * It extracts the first line from the buffer up to the newline character ('\n') or carriage return ('\r')
+ * and returns this line as the parsed command.
+ * 
+ * If the buffer contains multiple lines, only the first line is processed.
+ * 
+ * @param buffer The received buffer to be parsed.
+ * @return A string containing the parsed command.
+ * @note This function assumes that only one command is present in the buffer.
  */
-std::vector<std::string> Server::_parse_received_buffer(const std::string &buffer)
+std::string Server::_cleanse_buffer(const std::string buffer)
 {
-	std::string line; // -> string for the line
-	std::vector<std::string> vec; // -> vector for the parsed data
-	std::istringstream stm(buffer); // -> create a string stream
+    std::string clean_buffer;
     
-	while(std::getline(stm, line))
-	{
-		size_t pos = line.find_first_of("\r\n");
-		if(pos != std::string::npos) // -> check if the newline character is found
-			line = line.substr(0, pos); // -> remove the newline character
-		vec.push_back(line); // -> add the line to the vector
-	}
-	return vec;
+    size_t pos = buffer.find_first_of("\r\n"); // Find the position of the first newline character
+    if (pos != std::string::npos) // If newline character is found
+        clean_buffer = buffer.substr(0, pos); // Extract the substring up to the newline character
+    return clean_buffer; // Return the parsed command
 }
 
 /**

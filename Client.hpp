@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:19:06 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/01 16:37:57 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/01 19:19:38 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,5 +45,6 @@ class Client //-> class for client
         std::string _ip_addr; //-> client ip address
         std::string _nickname; //-> client nickname
         std::string _username; //-> client username
+        std::string _password; //-> client password
         std::string _buffer; //-> client buffer
 };
