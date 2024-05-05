@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:26:55 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/01 19:59:53 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/05 20:41:40 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -259,11 +259,9 @@ void Server::_receive_new_data(const int fd)
     }
     else {
         cli.set_buffer(buffer); //-> set the buffer with the received data
-        if (cli.get_buffer().find_first_of("\r\n") == std::string::npos) //-> check if the data is complete
+        if (cli.get_buffer().find_first_of(LINE_FEED) == std::string::npos) //-> check if the data is complete
             return;
-        //std::string cmd = _parse_received_buffer(cli.get_buffer()); //-> parse the received data
         _execute_command(cli.get_buffer(), fd); //-> execute the command
-        //here you can add your code to process the received data: parse, check, authenticate, handle the command, etc...
     }
 }
 
@@ -278,44 +276,104 @@ void Server::_receive_new_data(const int fd)
  * @param command The received buffer containing the command to be executed.
  * @param fd The file descriptor associated with the client that sent the command.
  */
-void Server::_execute_command(const std::string &buffer, const int fd)
+void Server::_execute_command(const std::string buffer, const int fd)
 {
-    std::string clean_buffer = _cleanse_buffer(buffer);
-
-    // TODO: Nesta parte tenho o buffer limpo dos "\r\n" e posso processar o comando.
-    // Os comandos podem ser autenticação, envio de mensagens, operações do servidor, etc...
+    if(buffer.empty())
+		return ;
+    std::string clean_buffer = _cleanse_buffer(buffer, LINE_FEED);
+    std::vector<std::string> splitted_buffer = _split_buffer(clean_buffer, DELIMITER);
+    if (splitted_buffer.empty())
+        return ;
     
-    // Para autenticar no servidor como moderador/administrador, deve-se seguir os seguintes passos:
+    // TODO: Até o momento, o servidor apenas limpa e splita o buffer recebido e imprime os tokens obtidos.
+    // Os próximos passos são implementar a lógica para autenticação e execução de comandos.
+
+    // Exemplo de impressão dos tokens obtidos após splitar o buffer:
+    /*
+    for (size_t i = 0; i < splitted_buffer.size(); i++)
+        std::cout << YEL << "Splitted Buffer[" << i << "]: " << WHI << splitted_buffer[i] << std::endl;
+    
+    */
+
+    // Para criar a autenticação do servidor, vou seguir a documentação deste link: https://datatracker.ietf.org/doc/html/rfc1459#section-4.1
+    // Para autenticar no servidor deve-se seguir os seguintes passos:
     // NICK <nickname> - Define o nickname do usuário
     // USER <username> - Define o username e a senha do usuário
     // PASS <password> - Passar a senha do servidor para autenticação
-    // Minha ideia é que se for moderador/administrador ele não pode ser derumbado das salas.
     
-    
-    std::cout << YEL << "Client <" << fd << "> Command: " << WHI << clean_buffer << std::endl;
+    // Se o cliente não autenticar ele não poderá enviar mensagens nas salas de chat
+    // então a condição será a seguinte:
+
+    // if (splitted_buffer[0] == NICK)
+        // regras do nickname no cliente
+    // if (splitted_buffer[0] == USER)
+        // regras do username do cliente
+    // if (splitted_buffer[0] == PASS)
+        // regras do password no cliente
+    // if (cliente autenticado)
+        // então ele pode enviar mensagens nas salas de chat
+        // if (splitted_buffer[0] == JOIN)
+            // regras para entrar em uma sala de chat
+        // if (splitted_buffer[0] == PART)
+            // regras para sair de uma sala de chat
+        // if (splitted_buffer[0] == PRIVMSG)
+            // regras para enviar mensagens privadas
+        // if (splitted_buffer[0] == LIST)
+            // regras para listar as salas de chat
+        // etc...
 }
 
 /**
- * @brief Parses the received buffer into a single string.
- *
- * This method parses the received buffer into a single string representing a command.
- * It extracts the first line from the buffer up to the newline character ('\n') or carriage return ('\r')
- * and returns this line as the parsed command.
+ * @brief Splits a buffer into tokens using a specified delimiter.
  * 
- * If the buffer contains multiple lines, only the first line is processed.
+ * This method splits the original string into tokens using the specified delimiter.
+ * It searches for the delimiter in the original string and splits the string into tokens
+ * based on the delimiter. The tokens are stored in a vector and returned.
  * 
- * @param buffer The received buffer to be parsed.
- * @return A string containing the parsed command.
- * @note This function assumes that only one command is present in the buffer.
+ * @param buffer The original string to be split.
+ * @param delimiter The delimiter used to split the string.
+ * 
+ * @return A vector containing the tokens obtained by splitting the original string.
  */
-std::string Server::_cleanse_buffer(const std::string buffer)
+std::vector<std::string> Server::_split_buffer(const std::string &buffer, const std::string &delimiter)
+{
+    std::vector<std::string> tokens;
+
+    char *str = const_cast<char *>(buffer.c_str());
+    char *token = std::strtok(str, delimiter.c_str());
+    while (token != NULL) {
+        tokens.push_back(token);
+        token = std::strtok(NULL, delimiter.c_str());
+    }
+    return tokens;
+}
+
+/**
+ * @brief Cleanses a buffer by removing specified characters.
+ *
+ * This method removes specified characters from the original string and returns the cleaned string.
+ * The characters to be removed are specified by the `chars_to_remove` parameter.
+ * 
+ * The function searches for the first occurrence of any character specified in `chars_to_remove`
+ * in the original string `original_str`, and truncates the string up to that point, excluding the found character.
+ * 
+ * @param buffer The original string to be cleansed.
+ * @param chars_to_remove A string containing the characters to be removed.
+ * @return A string containing the original string with specified characters removed.
+ * 
+ * @note This function assumes that `original_str` is not empty and contains at least one character to be removed.
+ *       If `chars_to_remove` is empty, the function returns the original string without any changes.
+ */
+std::string Server::_cleanse_buffer(const std::string &buffer, const std::string &chars_to_remove)
 {
     std::string clean_buffer;
-    
-    size_t pos = buffer.find_first_of("\r\n"); // Find the position of the first newline character
-    if (pos != std::string::npos) // If newline character is found
-        clean_buffer = buffer.substr(0, pos); // Extract the substring up to the newline character
-    return clean_buffer; // Return the parsed command
+
+    size_t pos = buffer.find_first_of(chars_to_remove);
+    if (pos != std::string::npos)
+        clean_buffer = buffer.substr(0, pos);
+    else
+        clean_buffer = buffer;
+    return clean_buffer;
 }
 
 /**

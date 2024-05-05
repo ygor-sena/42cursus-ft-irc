@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:19:06 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/01 19:19:38 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/05 20:43:20 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,4 +47,7 @@ class Client //-> class for client
         std::string _username; //-> client username
         std::string _password; //-> client password
         std::string _buffer; //-> client buffer
+        bool _is_registered; //-> boolean for registration
+        bool _is_authenticated; //-> boolean for authentication
+        bool _is_logged; //-> boolean for login
 };

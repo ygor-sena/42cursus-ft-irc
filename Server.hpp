@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:23:47 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/01 19:29:07 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/05 20:25:16 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 #include <poll.h> //-> for poll()
 #include <csignal> //-> for signal()
 #include <sstream> //-> for std::stringstream
+# include <iomanip>
 
 #include "Client.hpp" //-> for client class
 //-------------------------------------------------------//
@@ -32,6 +33,10 @@
 #define GRE "\e[1;32m" //-> for green color
 #define YEL "\e[1;33m" //-> for yellow color
 //-------------------------------------------------------//
+
+
+#define LINE_FEED "\n"
+#define DELIMITER " \t"
 
 class Server //-> class for server
 {
@@ -61,9 +66,10 @@ class Server //-> class for server
         void _clear_client(const int fd); //-> clear clients
         void _server_loop(); //-> server loop
         
-        void _execute_command(const std::string &buffer, const int fd); //-> execute command
+        void _execute_command(const std::string buffer, const int fd); //-> execute command
         
-        std::string _cleanse_buffer(const std::string buffer); //-> parse received buffer
+        std::vector<std::string> _split_buffer(const std::string &buffer, const std::string &delimiter); //-> split string
+        std::string _cleanse_buffer(const std::string &buffer, const std::string &chars_to_remove); //-> parse received buffer
         
 
         Client& _get_client(const int fd); //-> get client
