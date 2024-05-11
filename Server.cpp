@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:26:55 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/05 20:41:40 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/11 16:48:11 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -278,22 +278,33 @@ void Server::_receive_new_data(const int fd)
  */
 void Server::_execute_command(const std::string buffer, const int fd)
 {
-    if(buffer.empty())
+    if (buffer.empty())
 		return ;
     std::string clean_buffer = _cleanse_buffer(buffer, LINE_FEED);
     std::vector<std::string> splitted_buffer = _split_buffer(clean_buffer, DELIMITER);
     if (splitted_buffer.empty())
         return ;
     
+    //TODO: REFATORAR NO FUTURO, NO MOMENTO É APENAS TESTES RSRS
+    if (splitted_buffer[0] == "NICK" || splitted_buffer[0] == "nick")
+    {
+        _set_client_nickname(splitted_buffer[1], fd);
+    }
+        //regras do nickname no cliente
+    // if (splitted_buffer[0] == USER)
+        // regras do username do cliente
+    // if (splitted_buffer[0] == PASS)
+        // regras do password no cliente
+    
     // TODO: Até o momento, o servidor apenas limpa e splita o buffer recebido e imprime os tokens obtidos.
     // Os próximos passos são implementar a lógica para autenticação e execução de comandos.
 
     // Exemplo de impressão dos tokens obtidos após splitar o buffer:
-    /*
-    for (size_t i = 0; i < splitted_buffer.size(); i++)
-        std::cout << YEL << "Splitted Buffer[" << i << "]: " << WHI << splitted_buffer[i] << std::endl;
     
-    */
+    // for (size_t i = 0; i < splitted_buffer.size(); i++)
+    //     std::cout << YEL << "Splitted Buffer[" << i << "]: " << WHI << splitted_buffer[i] << std::endl;
+    
+    
 
     // Para criar a autenticação do servidor, vou seguir a documentação deste link: https://datatracker.ietf.org/doc/html/rfc1459#section-4.1
     // Para autenticar no servidor deve-se seguir os seguintes passos:
@@ -422,4 +433,23 @@ Client& Server::_get_client(const int fd)
         }
     }
     throw std::invalid_argument("Client not found");
+}
+
+void Server::_set_client_nickname(const std::string &nickname, const int fd)
+{
+    Client &client = _get_client(fd);
+    
+    client.set_nickname(nickname);
+
+    _send_response(fd, "Nickname set to: " + nickname + "\n");
+
+    //std::cout << client.get_nickname() << std::endl;
+}
+
+
+void Server::_send_response(const int fd, const std::string &response)
+{
+	std::cout << "Response:\n" << response;
+	if(send(fd, response.c_str(), response.size(), 0) == -1)
+		std::cerr << "Response send() faild" << std::endl;
 }
