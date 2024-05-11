@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:26:55 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/11 18:36:41 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/11 18:37:52 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -270,7 +270,7 @@ void Server::_set_client_password(const std::string &password, const int fd)
     std::string response = NULL;
     Client client = _get_client(fd);
 
-    if (password.length() == 0 || password.empty()) // Faz sentido essa comparação ou existe algo melhor em c++?
+    if (password.empty()) // Faz sentido essa comparação ou existe algo melhor em c++?
         _send_response(fd, ERR_NOTENOUGHPARAM(std::string("*")));
     else if (!client.get_is_registered())
     {
