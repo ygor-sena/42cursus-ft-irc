@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:26:55 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/11 20:11:33 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/11 20:31:08 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,6 +226,10 @@ void Server::_execute_command(const std::string buffer, const int fd)
     if (splitted_buffer[0] == "PASS" || splitted_buffer[0] == "pass")
     {
         _set_client_password(splitted_buffer[1], fd);
+    }
+    if (splitted_buffer[0] == "USER" || splitted_buffer[0] == "user")
+    {
+        _set_client_username(splitted_buffer[1], fd);
     }
     else
     {
