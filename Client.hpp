@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:19:06 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/11 16:10:12 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/11 18:36:09 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ class Client //-> class for client
         std::string get_nickname() const;
         std::string get_username() const;
         std::string get_password() const;
+        bool get_is_registered() const;
 
         void set_fd(const int fd);
         void set_ip_add(const std::string &ipadd);
@@ -45,6 +46,7 @@ class Client //-> class for client
         void set_nickname(const std::string &nickname);
         void set_username(const std::string &username);
         void set_password(const std::string &password);
+        void set_is_registered(const bool is_registered);
 
     private:
         int _fd; //-> client file descriptor

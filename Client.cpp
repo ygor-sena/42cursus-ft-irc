@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:20:02 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/11 16:12:10 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/11 18:11:04 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,17 @@ void Client::set_password(const std::string &password)
     _password = password;
 }
 
+void Client::set_is_registered(const bool is_registered)
+{
+    _is_registered = is_registered;
+}
 
+
+
+bool Client::get_is_registered() const
+{
+    return _is_registered;
+}
 
 int Client::get_fd() const
 {

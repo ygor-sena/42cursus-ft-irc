@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:23:47 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/11 16:47:40 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/11 18:25:08 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@
 #define YEL "\e[1;33m" //-> for yellow color
 //-------------------------------------------------------//
 
+#include "Replies.hpp"
 
 #define LINE_FEED "\n"
 #define DELIMITER " \t"
@@ -57,6 +58,8 @@ class Server //-> class for server
         void _is_valid_port(const std::string &port); //-> check if the port is valid
 
         void _set_client_nickname(const std::string &nickname, const int fd);
+        void _set_client_username(const std::string &username, const int fd);
+        void _set_client_password(const std::string &password, const int fd);
 
         static bool _signal; //-> static boolean for signal
         static void _signal_handler(const int signum); //-> signal handler
