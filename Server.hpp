@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:23:47 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/11 18:25:08 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/11 20:02:56 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ class Server //-> class for server
         std::string _cleanse_buffer(const std::string &buffer, const std::string &chars_to_remove); //-> parse received buffer
 
         Client& _get_client(const int fd); //-> get client
+        bool _client_is_ready_to_login(const int fd);
 
         void _close_fds(); //-> close file descriptors
 };

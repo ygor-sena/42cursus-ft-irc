@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:26:55 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/11 18:37:52 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/11 20:11:33 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -255,10 +255,24 @@ void Server::_set_client_nickname(const std::string &nickname, const int fd)
 void Server::_set_client_username(const std::string &username, const int fd)
 {
     Client &client = _get_client(fd);
-    
-    client.set_username(username);
 
-    _send_response(fd, "Username set to: " + username + "\n");
+    if (!client.get_is_registered())
+        _send_response(fd, ERR_NOTREGISTERED(std::string("*")));
+    else if (!client.get_username().empty())
+        _send_response(fd, ERR_ALREADYREGISTERED(client.get_nickname()));
+    else if (username.size() < 5)
+    {
+        if (client.get_nickname().empty())
+            _send_response(fd, ERR_NOTENOUGHPARAM(std::string("*")));
+        else
+            _send_response(fd, ERR_NOTENOUGHPARAM(client.get_nickname()));
+    }
+    else
+    {
+        client.set_username(username);
+        if (_client_is_ready_to_login(fd))
+            client.set_is_logged(fd);
+    }
 }
 
 /*
@@ -267,10 +281,9 @@ void Server::_set_client_username(const std::string &username, const int fd)
 
 void Server::_set_client_password(const std::string &password, const int fd)
 {
-    std::string response = NULL;
     Client client = _get_client(fd);
 
-    if (password.empty()) // Faz sentido essa comparação ou existe algo melhor em c++?
+    if (password.empty()) //-> Isso é o suficiente?
         _send_response(fd, ERR_NOTENOUGHPARAM(std::string("*")));
     else if (!client.get_is_registered())
     {
@@ -475,6 +488,15 @@ Client& Server::_get_client(const int fd)
         }
     }
     throw std::invalid_argument("Client not found");
+}
+
+bool Server::_client_is_ready_to_login(const int fd)
+{
+    Client &client = _get_client(fd);
+    
+    if (!client.get_username().empty() && !client.get_nickname().empty() && !client.get_is_logged())
+        return true;
+    return false;
 }
 
 /*
