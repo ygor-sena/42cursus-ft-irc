@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+         #
+#    By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/23 19:40:24 by gilmar            #+#    #+#              #
-#    Updated: 2024/05/01 16:05:50 by gilmar           ###   ########.fr        #
+#    Updated: 2024/05/12 00:30:08 by caalbert         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ CC = g++
 
 CFLAGS = -std=c++98
 
-TARGET = server
+TARGET = ircserv
 
 SRCS = main.cpp Client.cpp Server.cpp
 
