@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:26:55 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/11 20:31:08 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/13 20:34:05 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -245,6 +245,18 @@ void Server::_set_client_nickname(const std::string &nickname, const int fd)
 {
     Client &client = _get_client(fd);
 
+    if (!client.get_is_registered())
+        _send_response(fd, ERR_NOTREGISTERED(std::string("*")));
+    else if (!_is_valid_nickname(nickname))
+        _send_response(fd, ERR_ERRONEUSNICK(nickname));
+    else if (!_is_nickname_in_use(fd, nickname))
+        _send_response(fd, ERR_NICKINUSE(nickname));
+    else
+    {
+        //se chegou até aqui é pq eu msm estou utilizando o nickname e vou alterar ele?
+        client.set_nickname(nickname);
+    }
+
     //TODO: Regras para definir o nickname do cliente
     client.set_nickname(nickname);
 
@@ -259,18 +271,13 @@ void Server::_set_client_nickname(const std::string &nickname, const int fd)
 void Server::_set_client_username(const std::string &username, const int fd)
 {
     Client &client = _get_client(fd);
-
-    if (!client.get_is_registered())
+    
+    if (username.empty() || username.size() < 5) //-> Isso é o suficiente?
+        _send_response(fd, ERR_NOTENOUGHPARAM(client.get_nickname()));
+    else if (!client.get_is_registered())
         _send_response(fd, ERR_NOTREGISTERED(std::string("*")));
     else if (!client.get_username().empty())
         _send_response(fd, ERR_ALREADYREGISTERED(client.get_nickname()));
-    else if (username.size() < 5)
-    {
-        if (client.get_nickname().empty())
-            _send_response(fd, ERR_NOTENOUGHPARAM(std::string("*")));
-        else
-            _send_response(fd, ERR_NOTENOUGHPARAM(client.get_nickname()));
-    }
     else
     {
         client.set_username(username);
@@ -395,15 +402,13 @@ void Server::_close_fds()
  */
 void Server::_clear_client(const int fd)
 {
-    // Remove the client from the pollfd
-    for(size_t i = 0; i < _fds.size(); i++) {
+    for(size_t i = 0; i < _fds.size(); i++) { //-> Remove the client from the pollfd
         if (_fds[i].fd == fd){
             _fds.erase(_fds.begin() + i);
             break;
         }
     }
-    // Remove the client from the vector of clients
-    for(size_t i = 0; i < _clients.size(); i++) {
+    for(size_t i = 0; i < _clients.size(); i++) { //-> Remove the client from the vector of clients
         if (_clients[i].get_fd() == fd) {
             _clients.erase(_clients.begin() + i); 
             break;
@@ -468,6 +473,29 @@ void Server::_is_valid_port(const std::string &port)
     {
         throw std::invalid_argument("Invalid port: either contains non-numeric characters or is out of range");
     }
+}
+
+
+bool Server::_is_valid_nickname(const std::string &nickname)
+{
+    if (nickname.size() <= 5)
+        return false;
+    for (std::string::const_iterator it = nickname.begin(); it != nickname.end(); ++it)
+    {
+        if (!std::isalnum(*it)) //-> check if the character is alphanumeric
+            return false;
+    }
+    return true;
+}
+
+bool Server::_is_nickname_in_use(const int fd, const std::string &username)
+{
+    for (std::vector<Client>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+    {
+        if (it->get_nickname() == username && it->get_fd() != fd)
+            return true;
+    }
+    return false;
 }
 
 /*
