@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:20:02 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/11 20:17:57 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/15 21:53:17 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ Client::Client()
     _username = "";
     _password = "";
     _buffer = "";
-    _is_registered = false;
     _is_logged = false;
+    _is_registered = false;
 }
 
 /*
@@ -62,7 +62,7 @@ void Client::set_password(const std::string &password)
     _password = password;
 }
 
-void Client::set_is_registered(const bool is_registered)
+void Client::set_is_registered(bool is_registered)
 {
     _is_registered = is_registered;
 }

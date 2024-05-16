@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:26:55 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/13 20:34:05 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/15 21:51:19 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,17 +179,17 @@ void Server::_receive_new_data(const int fd)
     char buffer[1024]; //-> buffer for the received data
     std::memset(buffer, 0, sizeof(buffer)); //-> clear the buffer
     
-    Client &cli = _get_client(fd); // -> get the client object associated with the file descriptor (fd)
+    Client* cli = _get_client(fd); // -> get the client object associated with the file descriptor (fd)
     ssize_t bytes = recv(fd, buffer, sizeof(buffer) -1 , 0); //-> receive the data
     if(bytes <= 0) { //-> check if the client disconnected
         std::cout << RED << "Client <" << fd << "> Disconnected" << WHI << std::endl;
         _clear_client(fd); //-> clear the client
     }
     else {
-        cli.set_buffer(buffer); //-> set the buffer with the received data
-        if (cli.get_buffer().find_first_of(LINE_FEED) == std::string::npos) //-> check if the data is complete
+        cli->set_buffer(buffer); //-> set the buffer with the received data
+        if (cli->get_buffer().find_first_of(LINE_FEED) == std::string::npos) //-> check if the data is complete
             return;
-        _execute_command(cli.get_buffer(), fd); //-> execute the command
+        _execute_command(cli->get_buffer(), fd); //-> execute the command
     }
 }
 
@@ -231,10 +231,10 @@ void Server::_execute_command(const std::string buffer, const int fd)
     {
         _set_client_username(splitted_buffer[1], fd);
     }
-    else
-    {
-        _send_response(fd, ERR_CMDNOTFOUND(_get_client(fd).get_nickname(), splitted_buffer[0]));
-    }
+    // else
+    // {
+    //     _send_response(fd, ERR_CMDNOTFOUND(_get_client(fd).get_nickname(), splitted_buffer[0]));
+    // }
 }
 
 /*
@@ -243,9 +243,9 @@ void Server::_execute_command(const std::string buffer, const int fd)
 
 void Server::_set_client_nickname(const std::string &nickname, const int fd)
 {
-    Client &client = _get_client(fd);
+    Client* client = _get_client(fd);
 
-    if (!client.get_is_registered())
+    if (!client->get_is_registered())
         _send_response(fd, ERR_NOTREGISTERED(std::string("*")));
     else if (!_is_valid_nickname(nickname))
         _send_response(fd, ERR_ERRONEUSNICK(nickname));
@@ -254,11 +254,11 @@ void Server::_set_client_nickname(const std::string &nickname, const int fd)
     else
     {
         //se chegou até aqui é pq eu msm estou utilizando o nickname e vou alterar ele?
-        client.set_nickname(nickname);
+        client->set_nickname(nickname);
     }
 
     //TODO: Regras para definir o nickname do cliente
-    client.set_nickname(nickname);
+    client->set_nickname(nickname);
 
     _send_response(fd, "Nickname set to: " + nickname + "\n");
 }
@@ -270,19 +270,21 @@ void Server::_set_client_nickname(const std::string &nickname, const int fd)
 
 void Server::_set_client_username(const std::string &username, const int fd)
 {
-    Client &client = _get_client(fd);
+    Client* client = _get_client(fd);
     
+    //client->set_is_registered(true);
+    std::cout << client->get_is_registered() << std::endl;
     if (username.empty() || username.size() < 5) //-> Isso é o suficiente?
-        _send_response(fd, ERR_NOTENOUGHPARAM(client.get_nickname()));
-    else if (!client.get_is_registered())
+        _send_response(fd, ERR_NOTENOUGHPARAM(client->get_nickname()));
+    if (!client->get_is_registered())
         _send_response(fd, ERR_NOTREGISTERED(std::string("*")));
-    else if (!client.get_username().empty())
-        _send_response(fd, ERR_ALREADYREGISTERED(client.get_nickname()));
+    else if (!client->get_username().empty())
+        _send_response(fd, ERR_ALREADYREGISTERED(client->get_nickname()));
     else
     {
-        client.set_username(username);
+        client->set_username(username);
         if (_client_is_ready_to_login(fd))
-            client.set_is_logged(fd);
+            client->set_is_logged(fd);
     }
 }
 
@@ -292,19 +294,19 @@ void Server::_set_client_username(const std::string &username, const int fd)
 
 void Server::_set_client_password(const std::string &password, const int fd)
 {
-    Client client = _get_client(fd);
+    Client* client = _get_client(fd);
 
     if (password.empty()) //-> Isso é o suficiente?
         _send_response(fd, ERR_NOTENOUGHPARAM(std::string("*")));
-    else if (!client.get_is_registered())
+    else if (!client->get_is_registered())
     {
         if (password == _password)
-            client.set_is_registered(true);
+            client->set_is_registered(true);
         else
             _send_response(fd, ERR_INCORPASS(std::string("*")));
     }
     else
-        _send_response(fd, ERR_ALREADYREGISTERED(client.get_nickname()));
+        _send_response(fd, ERR_ALREADYREGISTERED(client->get_nickname()));
 }
 
 /*
@@ -512,11 +514,11 @@ bool Server::_is_nickname_in_use(const int fd, const std::string &username)
  * @param fd The file descriptor associated with the client to retrieve.
  * @return The client object associated with the specified file descriptor.
  */
-Client& Server::_get_client(const int fd)
+Client* Server::_get_client(const int fd)
 {
     for (size_t i = 0; i < _clients.size(); i++) {
         if (_clients[i].get_fd() == fd) {
-            return _clients[i];
+            return &_clients[i];
         }
     }
     throw std::invalid_argument("Client not found");
@@ -524,9 +526,9 @@ Client& Server::_get_client(const int fd)
 
 bool Server::_client_is_ready_to_login(const int fd)
 {
-    Client &client = _get_client(fd);
+    Client *client = _get_client(fd);
     
-    if (!client.get_username().empty() && !client.get_nickname().empty() && !client.get_is_logged())
+    if (!client->get_username().empty() && !client->get_nickname().empty() && !client->get_is_logged())
         return true;
     return false;
 }

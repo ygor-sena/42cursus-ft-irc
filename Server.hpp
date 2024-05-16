@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:23:47 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/13 20:30:42 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/15 21:57:04 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@
 #include <sstream> //-> for std::stringstream
 # include <iomanip>
 
-#include "Client.hpp" //-> for client class
 //-------------------------------------------------------//
 #define RED "\e[1;31m" //-> for red color
 #define WHI "\e[0;37m" //-> for white color
@@ -35,6 +34,7 @@
 //-------------------------------------------------------//
 
 #include "Replies.hpp"
+#include "Client.hpp" //-> for client class
 
 #define LINE_FEED "\n"
 #define DELIMITER " \t"
@@ -79,7 +79,7 @@ class Server
         std::vector<std::string> _split_buffer(const std::string &buffer, const std::string &delimiter); //-> split string
         std::string _cleanse_buffer(const std::string &buffer, const std::string &chars_to_remove); //-> parse received buffer
 
-        Client& _get_client(const int fd); //-> get client
+        Client* _get_client(const int fd); //-> get client
         bool _client_is_ready_to_login(const int fd);
 
         void _close_fds(); //-> close file descriptors

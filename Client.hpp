@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:19:06 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/11 20:08:47 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/15 21:38:09 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ class Client //-> class for client
         void set_nickname(const std::string &nickname);
         void set_username(const std::string &username);
         void set_password(const std::string &password);
-        void set_is_registered(const bool is_registered);
+        void set_is_registered(bool is_registered);
 
     private:
         int _fd; //-> client file descriptor
