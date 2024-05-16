@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:26:55 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/05 20:41:40 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/15 21:51:19 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,48 +29,44 @@ Server::~Server()
 {
 }
 
+
 /*
 ** --------------------------------- METHODS ----------------------------------
 */
 
 /**
- * @brief Signal handler function for the server.
+ * @brief Initializes the server.
  *
- * This function is called when a signal is received by the server process. It handles the signal
- * specified by the `signum` parameter. In this implementation, the function simply prints a message
- * indicating that a signal has been received and sets the static boolean variable `_signal` to true.
- * This variable is used to control the server loop and stop the server gracefully.
+ * This method initializes the server by setting the server port and password,
+ * adding the server signal, creating the server socket, and starting the server loop.
  *
- * @param signum The signal number that triggered the signal handler.
+ * @param port The server port.
+ * @param password The server password.
+ * 
+ * @throws std::invalid_argument if the port is invalid.
+ * @throws std::runtime_error if an error occurs during server initialization.
  */
-bool Server::_signal = false; //-> initialize the static boolean
-void Server::_signal_handler(const int signum)
+void Server::init(const std::string &port, const std::string &password)
 {
-    (void)signum;
-    std::cout << std::endl << "Signal Received!" << std::endl;
-    Server::_signal = true; //-> set the static boolean to true to stop the server
-}
+    _is_valid_port(port);
+    
+    _port = std::atoi(port.c_str());
+    _password = password;
+    
+    try
+    {
+        _add_server_signal();
+        _set_server_socket();
 
-/**
- * @brief Closes all file descriptors associated with the server.
- *
- * This method closes all file descriptors associated with the server, including client connections
- * and the server socket itself. It iterates through the list of client connections, closing each
- * client socket individually. After that, it closes the server socket if it is valid.
- *
- * Upon closing each client connection and the server socket, it prints a message indicating the
- * disconnection to the standard output.
- */
-void Server::_close_fds()
-{
-    //-> close all the clients
-    for(size_t i = 0; i < _clients.size(); i++) {
-        std::cout << RED << "Client <" << _clients[i].get_fd() << "> Disconnected" << WHI << std::endl;
-        close(_clients[i].get_fd());
+        std::cout << "Waiting to accept a connection...\n";
+        
+        _server_loop();
+        _close_fds();
     }
-    if (_server_fdsocket != -1) {
-        std::cout << RED << "Server <" << _server_fdsocket << "> Disconnected" << WHI << std::endl;
-        close(_server_fdsocket);
+    catch(const std::exception& e)
+    {
+        _close_fds();
+        std::cerr << e.what() << '\n';
     }
 }
 
@@ -145,74 +141,6 @@ void Server::_server_loop()
 }
 
 /**
- * @brief Checks if the port is valid.
- *
- * This method verifies whether the provided port is valid by performing the following checks:
- * 1. Ensures that the port consists only of numeric characters.
- * 2. Validates that the port number falls within the range of valid port numbers (1024 - 65535).
- *
- * @param port The port to check represented as a string.
- * @throws std::invalid_argument if the port is invalid (contains non-numeric characters or is out of range).
- */
-void Server::_is_valid_port(const std::string &port)
-{
-    if (!(port.find_first_not_of("0123456789") == std::string::npos && \
-        std::atoi(port.c_str()) >= 1024 && std::atoi(port.c_str()) <= 65535))
-    {
-        throw std::invalid_argument("Invalid port: either contains non-numeric characters or is out of range");
-    }
-}
-
-/**
- * @brief Initializes the server.
- *
- * This method initializes the server by setting the server port and password,
- * adding the server signal, creating the server socket, and starting the server loop.
- *
- * @param port The server port.
- * @param password The server password.
- * 
- * @throws std::invalid_argument if the port is invalid.
- * @throws std::runtime_error if an error occurs during server initialization.
- */
-void Server::init(const std::string &port, const std::string &password)
-{
-    _is_valid_port(port);
-    
-    _port = std::atoi(port.c_str());
-    _password = password;
-    
-    try
-    {
-        _add_server_signal();
-        _set_server_socket();
-
-        std::cout << "Waiting to accept a connection...\n";
-        
-        _server_loop();
-        _close_fds();
-    }
-    catch(const std::exception& e)
-    {
-        _close_fds();
-        std::cerr << e.what() << '\n';
-    }
-}
-
-/**
- * @brief Adds signal handlers for the server.
- *
- * This method sets up signal handlers for the server to catch specific signals, such as SIGINT
- * (generated by pressing Ctrl+C) and SIGQUIT (generated by pressing Ctrl+\). When any of these
- * signals are received, the corresponding signal handler function Server::_signal_handler is invoked.
- */
-void Server::_add_server_signal()
-{
-    signal(SIGINT, Server::_signal_handler); //-> catch the signal (ctrl + c)
-    signal(SIGQUIT, Server::_signal_handler); //-> catch the signal (ctrl + \)
-}
-
-/**
  * @brief Accepts a new client connection.
  *
  * This method is called when a new client connection is detected by the server. It accepts
@@ -251,17 +179,17 @@ void Server::_receive_new_data(const int fd)
     char buffer[1024]; //-> buffer for the received data
     std::memset(buffer, 0, sizeof(buffer)); //-> clear the buffer
     
-    Client &cli = _get_client(fd); // -> get the client object associated with the file descriptor (fd)
+    Client* cli = _get_client(fd); // -> get the client object associated with the file descriptor (fd)
     ssize_t bytes = recv(fd, buffer, sizeof(buffer) -1 , 0); //-> receive the data
     if(bytes <= 0) { //-> check if the client disconnected
         std::cout << RED << "Client <" << fd << "> Disconnected" << WHI << std::endl;
         _clear_client(fd); //-> clear the client
     }
     else {
-        cli.set_buffer(buffer); //-> set the buffer with the received data
-        if (cli.get_buffer().find_first_of(LINE_FEED) == std::string::npos) //-> check if the data is complete
+        cli->set_buffer(buffer); //-> set the buffer with the received data
+        if (cli->get_buffer().find_first_of(LINE_FEED) == std::string::npos) //-> check if the data is complete
             return;
-        _execute_command(cli.get_buffer(), fd); //-> execute the command
+        _execute_command(cli->get_buffer(), fd); //-> execute the command
     }
 }
 
@@ -278,50 +206,112 @@ void Server::_receive_new_data(const int fd)
  */
 void Server::_execute_command(const std::string buffer, const int fd)
 {
-    if(buffer.empty())
+    if (buffer.empty())
 		return ;
     std::string clean_buffer = _cleanse_buffer(buffer, LINE_FEED);
     std::vector<std::string> splitted_buffer = _split_buffer(clean_buffer, DELIMITER);
     if (splitted_buffer.empty())
         return ;
     
-    // TODO: Até o momento, o servidor apenas limpa e splita o buffer recebido e imprime os tokens obtidos.
-    // Os próximos passos são implementar a lógica para autenticação e execução de comandos.
-
-    // Exemplo de impressão dos tokens obtidos após splitar o buffer:
-    /*
-    for (size_t i = 0; i < splitted_buffer.size(); i++)
-        std::cout << YEL << "Splitted Buffer[" << i << "]: " << WHI << splitted_buffer[i] << std::endl;
-    
-    */
-
-    // Para criar a autenticação do servidor, vou seguir a documentação deste link: https://datatracker.ietf.org/doc/html/rfc1459#section-4.1
-    // Para autenticar no servidor deve-se seguir os seguintes passos:
-    // NICK <nickname> - Define o nickname do usuário
-    // USER <username> - Define o username e a senha do usuário
-    // PASS <password> - Passar a senha do servidor para autenticação
-    
-    // Se o cliente não autenticar ele não poderá enviar mensagens nas salas de chat
-    // então a condição será a seguinte:
-
-    // if (splitted_buffer[0] == NICK)
-        // regras do nickname no cliente
-    // if (splitted_buffer[0] == USER)
-        // regras do username do cliente
-    // if (splitted_buffer[0] == PASS)
-        // regras do password no cliente
-    // if (cliente autenticado)
-        // então ele pode enviar mensagens nas salas de chat
-        // if (splitted_buffer[0] == JOIN)
-            // regras para entrar em uma sala de chat
-        // if (splitted_buffer[0] == PART)
-            // regras para sair de uma sala de chat
-        // if (splitted_buffer[0] == PRIVMSG)
-            // regras para enviar mensagens privadas
-        // if (splitted_buffer[0] == LIST)
-            // regras para listar as salas de chat
-        // etc...
+    //TODO: REFATORAR NO FUTURO, NO MOMENTO É APENAS TESTES RSRS
+    // DEVEMOS NORMALIZAR COM TO_UPPPER?
+    // if (splitted_buffer[0] == "NICK" || splitted_buffer[0] == "nick")
+    // {
+    //     _set_client_nickname(splitted_buffer[1], fd);
+    // }
+    // else if (splitted_buffer[0] == "USER" || splitted_buffer[0] == "user")
+    // {
+    //     _set_client_username(splitted_buffer[1], fd);
+    // }
+    if (splitted_buffer[0] == "PASS" || splitted_buffer[0] == "pass")
+    {
+        _set_client_password(splitted_buffer[1], fd);
+    }
+    if (splitted_buffer[0] == "USER" || splitted_buffer[0] == "user")
+    {
+        _set_client_username(splitted_buffer[1], fd);
+    }
+    // else
+    // {
+    //     _send_response(fd, ERR_CMDNOTFOUND(_get_client(fd).get_nickname(), splitted_buffer[0]));
+    // }
 }
+
+/*
+** ------------------------------- NICK COMMAND --------------------------------
+*/
+
+void Server::_set_client_nickname(const std::string &nickname, const int fd)
+{
+    Client* client = _get_client(fd);
+
+    if (!client->get_is_registered())
+        _send_response(fd, ERR_NOTREGISTERED(std::string("*")));
+    else if (!_is_valid_nickname(nickname))
+        _send_response(fd, ERR_ERRONEUSNICK(nickname));
+    else if (!_is_nickname_in_use(fd, nickname))
+        _send_response(fd, ERR_NICKINUSE(nickname));
+    else
+    {
+        //se chegou até aqui é pq eu msm estou utilizando o nickname e vou alterar ele?
+        client->set_nickname(nickname);
+    }
+
+    //TODO: Regras para definir o nickname do cliente
+    client->set_nickname(nickname);
+
+    _send_response(fd, "Nickname set to: " + nickname + "\n");
+}
+
+
+/*
+** ------------------------------- USERNAME COMMAND --------------------------------
+*/
+
+void Server::_set_client_username(const std::string &username, const int fd)
+{
+    Client* client = _get_client(fd);
+    
+    //client->set_is_registered(true);
+    std::cout << client->get_is_registered() << std::endl;
+    if (username.empty() || username.size() < 5) //-> Isso é o suficiente?
+        _send_response(fd, ERR_NOTENOUGHPARAM(client->get_nickname()));
+    if (!client->get_is_registered())
+        _send_response(fd, ERR_NOTREGISTERED(std::string("*")));
+    else if (!client->get_username().empty())
+        _send_response(fd, ERR_ALREADYREGISTERED(client->get_nickname()));
+    else
+    {
+        client->set_username(username);
+        if (_client_is_ready_to_login(fd))
+            client->set_is_logged(fd);
+    }
+}
+
+/*
+** ------------------------------- PASSWORD COMMAND --------------------------------
+*/
+
+void Server::_set_client_password(const std::string &password, const int fd)
+{
+    Client* client = _get_client(fd);
+
+    if (password.empty()) //-> Isso é o suficiente?
+        _send_response(fd, ERR_NOTENOUGHPARAM(std::string("*")));
+    else if (!client->get_is_registered())
+    {
+        if (password == _password)
+            client->set_is_registered(true);
+        else
+            _send_response(fd, ERR_INCORPASS(std::string("*")));
+    }
+    else
+        _send_response(fd, ERR_ALREADYREGISTERED(client->get_nickname()));
+}
+
+/*
+** ------------------------------- PARSER COMMAND --------------------------------
+*/
 
 /**
  * @brief Splits a buffer into tokens using a specified delimiter.
@@ -376,6 +366,33 @@ std::string Server::_cleanse_buffer(const std::string &buffer, const std::string
     return clean_buffer;
 }
 
+/*
+** ------------------------------- CLEAR FUCTIONS --------------------------------
+*/
+
+/**
+ * @brief Closes all file descriptors associated with the server.
+ *
+ * This method closes all file descriptors associated with the server, including client connections
+ * and the server socket itself. It iterates through the list of client connections, closing each
+ * client socket individually. After that, it closes the server socket if it is valid.
+ *
+ * Upon closing each client connection and the server socket, it prints a message indicating the
+ * disconnection to the standard output.
+ */
+void Server::_close_fds()
+{
+    //-> close all the clients
+    for(size_t i = 0; i < _clients.size(); i++) {
+        std::cout << RED << "Client <" << _clients[i].get_fd() << "> Disconnected" << WHI << std::endl;
+        close(_clients[i].get_fd());
+    }
+    if (_server_fdsocket != -1) {
+        std::cout << RED << "Server <" << _server_fdsocket << "> Disconnected" << WHI << std::endl;
+        close(_server_fdsocket);
+    }
+}
+
 /**
  * @brief Clears the client associated with the given file descriptor.
  *
@@ -387,15 +404,13 @@ std::string Server::_cleanse_buffer(const std::string &buffer, const std::string
  */
 void Server::_clear_client(const int fd)
 {
-    // Remove the client from the pollfd
-    for(size_t i = 0; i < _fds.size(); i++) {
+    for(size_t i = 0; i < _fds.size(); i++) { //-> Remove the client from the pollfd
         if (_fds[i].fd == fd){
             _fds.erase(_fds.begin() + i);
             break;
         }
     }
-    // Remove the client from the vector of clients
-    for(size_t i = 0; i < _clients.size(); i++) {
+    for(size_t i = 0; i < _clients.size(); i++) { //-> Remove the client from the vector of clients
         if (_clients[i].get_fd() == fd) {
             _clients.erase(_clients.begin() + i); 
             break;
@@ -403,6 +418,91 @@ void Server::_clear_client(const int fd)
     }
     close(fd);
 }
+
+/*
+** ------------------------------- SIGNAL FUCTIONS --------------------------------
+*/
+
+/**
+ * @brief Signal handler function for the server.
+ *
+ * This function is called when a signal is received by the server process. It handles the signal
+ * specified by the `signum` parameter. In this implementation, the function simply prints a message
+ * indicating that a signal has been received and sets the static boolean variable `_signal` to true.
+ * This variable is used to control the server loop and stop the server gracefully.
+ *
+ * @param signum The signal number that triggered the signal handler.
+ */
+bool Server::_signal = false; //-> initialize the static boolean
+void Server::_signal_handler(const int signum)
+{
+    (void)signum;
+    std::cout << std::endl << "Signal Received!" << std::endl;
+    Server::_signal = true; //-> set the static boolean to true to stop the server
+}
+
+/**
+ * @brief Adds signal handlers for the server.
+ *
+ * This method sets up signal handlers for the server to catch specific signals, such as SIGINT
+ * (generated by pressing Ctrl+C) and SIGQUIT (generated by pressing Ctrl+\). When any of these
+ * signals are received, the corresponding signal handler function Server::_signal_handler is invoked.
+ */
+void Server::_add_server_signal()
+{
+    signal(SIGINT, Server::_signal_handler); //-> catch the signal (ctrl + c)
+    signal(SIGQUIT, Server::_signal_handler); //-> catch the signal (ctrl + \)
+}
+
+/*
+** ------------------------------- VALIDATIONS FUCTIONS --------------------------------
+*/
+
+/**
+ * @brief Checks if the port is valid.
+ *
+ * This method verifies whether the provided port is valid by performing the following checks:
+ * 1. Ensures that the port consists only of numeric characters.
+ * 2. Validates that the port number falls within the range of valid port numbers (1024 - 65535).
+ *
+ * @param port The port to check represented as a string.
+ * @throws std::invalid_argument if the port is invalid (contains non-numeric characters or is out of range).
+ */
+void Server::_is_valid_port(const std::string &port)
+{
+    if (!(port.find_first_not_of("0123456789") == std::string::npos && \
+        std::atoi(port.c_str()) >= 1024 && std::atoi(port.c_str()) <= 65535))
+    {
+        throw std::invalid_argument("Invalid port: either contains non-numeric characters or is out of range");
+    }
+}
+
+
+bool Server::_is_valid_nickname(const std::string &nickname)
+{
+    if (nickname.size() <= 5)
+        return false;
+    for (std::string::const_iterator it = nickname.begin(); it != nickname.end(); ++it)
+    {
+        if (!std::isalnum(*it)) //-> check if the character is alphanumeric
+            return false;
+    }
+    return true;
+}
+
+bool Server::_is_nickname_in_use(const int fd, const std::string &username)
+{
+    for (std::vector<Client>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+    {
+        if (it->get_nickname() == username && it->get_fd() != fd)
+            return true;
+    }
+    return false;
+}
+
+/*
+** ------------------------------- CLIENT FUCTIONS --------------------------------
+*/
 
 /**
  * @brief Retrieves the client associated with the given file descriptor.
@@ -414,12 +514,41 @@ void Server::_clear_client(const int fd)
  * @param fd The file descriptor associated with the client to retrieve.
  * @return The client object associated with the specified file descriptor.
  */
-Client& Server::_get_client(const int fd)
+Client* Server::_get_client(const int fd)
 {
     for (size_t i = 0; i < _clients.size(); i++) {
         if (_clients[i].get_fd() == fd) {
-            return _clients[i];
+            return &_clients[i];
         }
     }
     throw std::invalid_argument("Client not found");
+}
+
+bool Server::_client_is_ready_to_login(const int fd)
+{
+    Client *client = _get_client(fd);
+    
+    if (!client->get_username().empty() && !client->get_nickname().empty() && !client->get_is_logged())
+        return true;
+    return false;
+}
+
+/*
+** ------------------------------- UTILS FUCTIONS --------------------------------
+*/
+
+/**
+ * @brief Sends a response to the client.
+ * 
+ * This method sends a response to the client associated with the specified file descriptor.
+ * It sends the response message to the client socket using the send system call.
+ * 
+ * @param fd The file descriptor associated with the client to send the response.
+ * @param response The response message to send to the client.
+ */
+void Server::_send_response(const int fd, const std::string &response)
+{
+	std::cout << "Response:\n" << response;
+	if(send(fd, response.c_str(), response.size(), 0) == -1)
+		std::cerr << "Response send() faild" << std::endl;
 }

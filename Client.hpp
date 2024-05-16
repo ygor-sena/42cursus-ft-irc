@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:19:06 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/05 20:43:20 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/15 21:38:09 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,21 @@ class Client //-> class for client
         Client();
         
         int get_fd() const;
+        bool get_is_logged() const;
         std::string get_buffer() const;
+        std::string get_nickname() const;
+        std::string get_username() const;
+        std::string get_password() const;
+        bool get_is_registered() const;
 
         void set_fd(const int fd);
+        void set_is_logged(bool is_logged);
         void set_ip_add(const std::string &ipadd);
         void set_buffer(const std::string &buffer);
+        void set_nickname(const std::string &nickname);
+        void set_username(const std::string &username);
+        void set_password(const std::string &password);
+        void set_is_registered(bool is_registered);
 
     private:
         int _fd; //-> client file descriptor
@@ -48,6 +58,5 @@ class Client //-> class for client
         std::string _password; //-> client password
         std::string _buffer; //-> client buffer
         bool _is_registered; //-> boolean for registration
-        bool _is_authenticated; //-> boolean for authentication
         bool _is_logged; //-> boolean for login
 };

@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:23:47 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/05 20:25:16 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/15 21:57:04 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@
 #include <sstream> //-> for std::stringstream
 # include <iomanip>
 
-#include "Client.hpp" //-> for client class
 //-------------------------------------------------------//
 #define RED "\e[1;31m" //-> for red color
 #define WHI "\e[0;37m" //-> for white color
@@ -34,17 +33,19 @@
 #define YEL "\e[1;33m" //-> for yellow color
 //-------------------------------------------------------//
 
+#include "Replies.hpp"
+#include "Client.hpp" //-> for client class
 
 #define LINE_FEED "\n"
 #define DELIMITER " \t"
 
-class Server //-> class for server
+class Server
 {
     public:
-        Server(); //-> constructor
-        ~Server(); //-> destructor
+        Server();
+        ~Server();
 
-        void init(const std::string &port, const std::string &password); //-> server initialization
+        void init(const std::string &port, const std::string &password);
         
     private:
         int _port; //-> server port
@@ -54,25 +55,32 @@ class Server //-> class for server
         std::vector<struct pollfd> _fds; //-> vector of pollfd
         struct sockaddr_in _server_addr; //-> server address
 
-        void _is_valid_port(const std::string &port); //-> check if the port is valid
-        
-        static bool _signal; //-> static boolean for signal
-        static void _signal_handler(const int signum); //-> signal handler
+        void _is_valid_port(const std::string &port);
+        bool _is_valid_nickname(const std::string &nickname);
+        bool _is_nickname_in_use(const int fd, const std::string &nickname);
 
+        void _set_client_nickname(const std::string &nickname, const int fd);
+        void _set_client_username(const std::string &username, const int fd);
+        void _set_client_password(const std::string &password, const int fd);
+
+        static bool _signal; //-> static boolean for signal
+        static void _signal_handler(const int signum);
+
+        void _send_response(const int fd, const std::string &response); //-> send response to client
         void _set_server_socket(); //-> server socket creation
         void _add_server_signal(); //-> server signal creation
         void _accept_new_client(); //-> accept new client
         void _receive_new_data(const int fd); //-> receive data from a client
         void _clear_client(const int fd); //-> clear clients
         void _server_loop(); //-> server loop
-        
+
         void _execute_command(const std::string buffer, const int fd); //-> execute command
-        
+
         std::vector<std::string> _split_buffer(const std::string &buffer, const std::string &delimiter); //-> split string
         std::string _cleanse_buffer(const std::string &buffer, const std::string &chars_to_remove); //-> parse received buffer
-        
 
-        Client& _get_client(const int fd); //-> get client
-        
+        Client* _get_client(const int fd); //-> get client
+        bool _client_is_ready_to_login(const int fd);
+
         void _close_fds(); //-> close file descriptors
 };
