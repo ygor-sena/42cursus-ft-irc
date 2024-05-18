@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:47:49 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/11 14:32:08 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/17 23:06:28 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 int main(int argc, char **argv)
 {
+	(void)argc;
+	(void)argv;
 	Server server;
 	// if (argc != 3)
 	// 	{std::cout << "Usage: " << argv[0] << " <port number> <password>" << std::endl; return 1;}
