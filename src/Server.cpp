@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:26:55 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/15 21:51:19 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/19 17:45:47 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,6 +193,21 @@ void Server::_receive_new_data(const int fd)
     }
 }
 
+
+/**
+ * @brief List of commands and their corresponding handlers.
+ *
+ * This list contains the commands supported by the server and their corresponding handler functions.
+ * Each entry in the list consists of a command string and a pointer to the handler function for that command.
+ * The handler functions are responsible for processing the command and executing the corresponding action.
+ */
+const Server::command_handler Server::_command_list[_command_list_size] = {
+    {"NICK", &Server::_handler_client_nickname},
+    {"USER", &Server::_handler_client_username},
+    {"PASS", &Server::_handler_client_password}
+};
+
+
 /**
  * @brief Executes the command received from the client.
  *
@@ -208,59 +223,43 @@ void Server::_execute_command(const std::string buffer, const int fd)
 {
     if (buffer.empty())
 		return ;
-    std::string clean_buffer = _cleanse_buffer(buffer, LINE_FEED);
+    std::string clean_buffer = _cleanse_buffer(buffer, CRLF);
     std::vector<std::string> splitted_buffer = _split_buffer(clean_buffer, DELIMITER);
     if (splitted_buffer.empty())
         return ;
+    std::string command = splitted_buffer[0];
+    std::string parameters = splitted_buffer[1];
     
-    //TODO: REFATORAR NO FUTURO, NO MOMENTO É APENAS TESTES RSRS
-    // DEVEMOS NORMALIZAR COM TO_UPPPER?
-    // if (splitted_buffer[0] == "NICK" || splitted_buffer[0] == "nick")
-    // {
-    //     _set_client_nickname(splitted_buffer[1], fd);
-    // }
-    // else if (splitted_buffer[0] == "USER" || splitted_buffer[0] == "user")
-    // {
-    //     _set_client_username(splitted_buffer[1], fd);
-    // }
-    if (splitted_buffer[0] == "PASS" || splitted_buffer[0] == "pass")
-    {
-        _set_client_password(splitted_buffer[1], fd);
+    for (size_t i = 0; i < _command_list_size; i++) {
+        if (command == _command_list[i].command) {
+            (this->*_command_list[i].handler)(parameters, fd);
+            break;
+        }
     }
-    if (splitted_buffer[0] == "USER" || splitted_buffer[0] == "user")
-    {
-        _set_client_username(splitted_buffer[1], fd);
-    }
-    // else
-    // {
-    //     _send_response(fd, ERR_CMDNOTFOUND(_get_client(fd).get_nickname(), splitted_buffer[0]));
-    // }
 }
 
 /*
 ** ------------------------------- NICK COMMAND --------------------------------
 */
 
-void Server::_set_client_nickname(const std::string &nickname, const int fd)
+void Server::_handler_client_nickname(const std::string &nickname, const int fd)
 {
     Client* client = _get_client(fd);
 
-    if (!client->get_is_registered())
-        _send_response(fd, ERR_NOTREGISTERED(std::string("*")));
+    if (nickname.empty() || nickname.size() < 5)
+        _send_response(fd, ERR_NOTENOUGHPARAM(std::string("*")));
     else if (!_is_valid_nickname(nickname))
-        _send_response(fd, ERR_ERRONEUSNICK(nickname));
-    else if (!_is_nickname_in_use(fd, nickname))
-        _send_response(fd, ERR_NICKINUSE(nickname));
+        _send_response(fd, ERR_ERRONEUSNICK(client->get_nickname()));
+    else if (_is_nickname_in_use(fd, nickname))
+        _send_response(fd, ERR_NICKINUSE(client->get_nickname()));
+    else if (!client->get_is_registered())
+        _send_response(fd, ERR_NOTREGISTERED(std::string("*")));
     else
     {
-        //se chegou até aqui é pq eu msm estou utilizando o nickname e vou alterar ele?
         client->set_nickname(nickname);
+        if (_client_is_ready_to_login(fd))
+            client->set_is_logged(fd);
     }
-
-    //TODO: Regras para definir o nickname do cliente
-    client->set_nickname(nickname);
-
-    _send_response(fd, "Nickname set to: " + nickname + "\n");
 }
 
 
@@ -268,18 +267,16 @@ void Server::_set_client_nickname(const std::string &nickname, const int fd)
 ** ------------------------------- USERNAME COMMAND --------------------------------
 */
 
-void Server::_set_client_username(const std::string &username, const int fd)
+void Server::_handler_client_username(const std::string &username, const int fd)
 {
     Client* client = _get_client(fd);
-    
-    //client->set_is_registered(true);
-    std::cout << client->get_is_registered() << std::endl;
-    if (username.empty() || username.size() < 5) //-> Isso é o suficiente?
-        _send_response(fd, ERR_NOTENOUGHPARAM(client->get_nickname()));
-    if (!client->get_is_registered())
+
+    if (username.empty() || username.size() < 5)
+        _send_response(fd, ERR_NOTENOUGHPARAM(std::string("*")));
+    else if (!client->get_is_registered())
         _send_response(fd, ERR_NOTREGISTERED(std::string("*")));
     else if (!client->get_username().empty())
-        _send_response(fd, ERR_ALREADYREGISTERED(client->get_nickname()));
+        _send_response(fd, ERR_ALREADYREGISTERED(std::string("*")));
     else
     {
         client->set_username(username);
@@ -292,21 +289,20 @@ void Server::_set_client_username(const std::string &username, const int fd)
 ** ------------------------------- PASSWORD COMMAND --------------------------------
 */
 
-void Server::_set_client_password(const std::string &password, const int fd)
+void Server::_handler_client_password(const std::string &password, const int fd)
 {
     Client* client = _get_client(fd);
 
     if (password.empty()) //-> Isso é o suficiente?
         _send_response(fd, ERR_NOTENOUGHPARAM(std::string("*")));
-    else if (!client->get_is_registered())
-    {
-        if (password == _password)
-            client->set_is_registered(true);
-        else
-            _send_response(fd, ERR_INCORPASS(std::string("*")));
-    }
+    else if (client->get_is_registered())
+        _send_response(fd, ERR_ALREADYREGISTERED(std::string("*")));
+    else if (_password != password)
+        _send_response(fd, ERR_INCORPASS(std::string("*")));
     else
-        _send_response(fd, ERR_ALREADYREGISTERED(client->get_nickname()));
+    {
+        client->set_is_registered(true);
+    }
 }
 
 /*
@@ -329,12 +325,12 @@ std::vector<std::string> Server::_split_buffer(const std::string &buffer, const 
 {
     std::vector<std::string> tokens;
 
-    char *str = const_cast<char *>(buffer.c_str());
-    char *token = std::strtok(str, delimiter.c_str());
-    while (token != NULL) {
-        tokens.push_back(token);
-        token = std::strtok(NULL, delimiter.c_str());
-    }
+    std::string command = buffer.substr(0, buffer.find_first_of(delimiter));
+    std::string parameters = buffer.substr(buffer.find_first_of(delimiter) + 1);
+
+    tokens.push_back(command);
+    tokens.push_back(parameters);
+
     return tokens;
 }
 
@@ -482,9 +478,8 @@ bool Server::_is_valid_nickname(const std::string &nickname)
 {
     if (nickname.size() <= 5)
         return false;
-    for (std::string::const_iterator it = nickname.begin(); it != nickname.end(); ++it)
-    {
-        if (!std::isalnum(*it)) //-> check if the character is alphanumeric
+    for (std::string::const_iterator it = nickname.begin(); it != nickname.end(); ++it) {
+        if (!std::isalnum(*it))
             return false;
     }
     return true;
@@ -492,8 +487,7 @@ bool Server::_is_valid_nickname(const std::string &nickname)
 
 bool Server::_is_nickname_in_use(const int fd, const std::string &username)
 {
-    for (std::vector<Client>::iterator it = _clients.begin(); it != _clients.end(); ++it)
-    {
+    for (std::vector<Client>::iterator it = _clients.begin(); it != _clients.end(); ++it) {
         if (it->get_nickname() == username && it->get_fd() != fd)
             return true;
     }
