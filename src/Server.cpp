@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:26:55 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/19 19:27:22 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/19 19:33:36 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -261,8 +261,7 @@ void Server::_handler_client_join(const std::string &buffer, const int fd)
     Client* client = _get_client(fd);
 
     std::string channel = buffer;
-    if (channel[0] != '#')
-        channel = "#" + channel;
+    
     _send_response(fd, RPL_TOPICIS(client->get_nickname(), channel, std::string("Welcome to the channel")));
 }
 
@@ -782,7 +781,7 @@ void Server::_send_response(const int fd, const std::string &response)
  * @param str The string to convert to uppercase.
  * @return The converted string in uppercase.
  */
-std::string toupper(const std::string& str)
+std::string Server::toupper(const std::string& str)
 {
     std::string result = str;
     for (size_t i = 0; i < result.length(); ++i) {

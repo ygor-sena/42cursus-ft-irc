@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:23:47 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/19 18:55:27 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/19 19:31:23 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,4 +102,6 @@ class Server
         bool _client_is_ready_to_login(const int fd);
 
         void _close_fds(); //-> close file descriptors
+
+        std::string toupper(const std::string& str);
 };
