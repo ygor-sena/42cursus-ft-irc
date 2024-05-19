@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:26:55 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/19 19:17:11 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/19 19:27:22 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -281,6 +281,7 @@ void Server::_handler_client_join(const std::string &buffer, const int fd)
  */
 void Server::_handler_client_quit(const std::string &buffer, const int fd)
 {
+    (void)buffer;
     _send_response(fd, RPL_QUITMESSAGE(_get_client(fd)->get_nickname()));
     _clear_client(fd);
 }
@@ -300,6 +301,8 @@ void Server::_handler_client_quit(const std::string &buffer, const int fd)
  */
 void Server::_handler_client_part(const std::string &buffer, const int fd)
 {
+    (void)fd;
+    (void)buffer;
     Client* client = _get_client(fd);
 
     _send_response(fd, RPL_PART(client->get_hostname(), "ft_trancendence", client->get_nickname()));
@@ -320,6 +323,8 @@ void Server::_handler_client_part(const std::string &buffer, const int fd)
  */
 void Server::_handler_client_mode(const std::string &buffer, const int fd)
 {
+    (void)fd;
+    (void)buffer;
     Client* client = _get_client(fd);
 
     _send_response(fd, RPL_CHANNELMODES(client->get_nickname(), "ft_trancendence", "+nt"));
@@ -340,6 +345,8 @@ void Server::_handler_client_mode(const std::string &buffer, const int fd)
  */
 void Server::_handler_client_kick(const std::string &buffer, const int fd)
 {
+    (void)fd;
+    (void)buffer;
     Client* client = _get_client(fd);
 
     _send_response(fd, RPL_KICK(client->get_nickname(), "ft_trancendence", "gilmar", "Ygor", "You have been kicked"));
@@ -360,6 +367,8 @@ void Server::_handler_client_kick(const std::string &buffer, const int fd)
  */
 void Server::_handler_client_topic(const std::string &buffer, const int fd)
 {
+    (void)fd;
+    (void)buffer;
     Client* client = _get_client(fd);
 
     _send_response(fd, RPL_TOPICIS(client->get_nickname(), "ft_trancendence", "Welcome to the channel"));
@@ -380,6 +389,8 @@ void Server::_handler_client_topic(const std::string &buffer, const int fd)
  */
 void Server::_handler_client_invite(const std::string &buffer, const int fd)
 {
+    (void)fd;
+    (void)buffer;
     Client* client = _get_client(fd);
 
     _send_response(fd, RPL_INVITING(client->get_hostname(), "ft_trancendence", "Gilmar", "Ygor"));
@@ -400,6 +411,8 @@ void Server::_handler_client_invite(const std::string &buffer, const int fd)
  */
 void Server::_handler_client_privmsg(const std::string &buffer, const int fd)
 {
+    (void)fd;
+    (void)buffer;
     Client* client = _get_client(fd);
 
     _send_response(fd, RPL_PRIVMSG(client->get_hostname(), "ft_trancendence", "Hello, Carlos!"));
