@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:20:02 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/15 21:53:17 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/19 18:51:15 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,4 +105,9 @@ std::string Client::get_username() const
 std::string Client::get_password() const
 {
     return _password;
+}
+
+std::string Client::get_hostname() const
+{
+    return _nickname + "@" + _ip_addr;
 }

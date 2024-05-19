@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 18:18:57 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/19 15:12:01 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/19 19:15:59 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,11 @@
 #define RPL_NAMREPLY(nickname, channelname, clientslist) (": 353 " + nickname + " @ #" + channelname + " :" + clientslist + CRLF)
 #define RPL_ENDOFNAMES(nickname, channelname) (": 366 " + nickname + " #" + channelname + " :END of /NAMES list" + CRLF)
 #define RPL_TOPICIS(nickname, channelname, topic) (": 332 " + nickname + " #" +channelname + " :" + topic + "\r\n")
+#define RPL_QUITMESSAGE(nickname) (": 301 " + nickname + " :You have quit the server." + CRLF)
+#define RPL_PART(hostname, channelname, nickname) (":" + hostname + " PART #" + channelname + " :" + nickname + " has left the channel" + CRLF)
+#define RPL_KICK(hostname, channelname, kickername, kickedname, comment) (":" + hostname + " KICK #" + channelname + " " + kickedname + " :" + kickername + " " + comment + CRLF)
+#define RPL_INVITING(hostname, channelname, invitername, invitedname) (":" + hostname + " INVITE " + invitedname + " #" + channelname + CRLF)
+#define RPL_PRIVMSG(hostname, receiver, text) (":" + hostname + " PRIVMSG " + receiver + " :" + text + CRLF)
 
 ///////// ERRORS /////////
 #define ERR_NEEDMODEPARM(channelname, mode) (": 696 #" + channelname + " * You must specify a parameter for the key mode. " + mode + CRLF)

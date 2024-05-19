@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+         #
+#    By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/23 19:40:24 by gilmar            #+#    #+#              #
-#    Updated: 2024/05/17 23:35:03 by yde-goes         ###   ########.fr        #
+#    Updated: 2024/05/19 18:06:20 by gilmar           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -73,7 +73,7 @@ run:
 	./$(NAME) 12345 54321
 
 tel:
-	telnet localhost 12345
+	nc localhost 4444
 
 r: $(NAME)
 	@make $(TEST) -C tests --no-print-directory
