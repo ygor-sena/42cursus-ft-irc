@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:26:55 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/15 21:51:19 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/19 19:33:36 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ Server::Server()
 Server::~Server()
 {
 }
-
 
 /*
 ** --------------------------------- METHODS ----------------------------------
@@ -164,11 +163,11 @@ void Server::_accept_new_client()
 		{std::cout << "accept() failed" << std::endl; return;}
 	if (fcntl(incofd, F_SETFL, O_NONBLOCK) == -1) //-> set the socket to non-blocking mode
 		{std::cout << "fcntl() failed" << std::endl; return;}
-	new_poll.fd = incofd;
-	new_poll.events = POLLIN;
+	new_poll.fd = incofd; //-> set the file descriptor
+	new_poll.events = POLLIN; //-> set the events
 	new_poll.revents = 0;
-	cli.set_fd(incofd);
-	cli.set_ip_add(inet_ntoa((cli_addr.sin_addr)));
+	cli.set_fd(incofd); //-> set the file descriptor
+	cli.set_ip_add(inet_ntoa((cli_addr.sin_addr))); //-> set the ip address
 	_clients.push_back(cli);
 	_fds.push_back(new_poll);
 	std::cout << GRE << "Client <" << incofd << "> Connected" << WHI << std::endl;
@@ -194,6 +193,27 @@ void Server::_receive_new_data(const int fd)
 }
 
 /**
+ * @brief List of commands and their corresponding handlers.
+ *
+ * This list contains the commands supported by the server and their corresponding handler functions.
+ * Each entry in the list consists of a command string and a pointer to the handler function for that command.
+ * The handler functions are responsible for processing the command and executing the corresponding action.
+ */
+const Server::command_handler Server::_command_list[_command_list_size] = {
+    {"JOIN", &Server::_handler_client_join},
+    {"QUIT", &Server::_handler_client_quit},
+    {"PART", &Server::_handler_client_part},
+    {"MODE", &Server::_handler_client_mode},
+    {"KICK", &Server::_handler_client_kick},
+    {"TOPIC", &Server::_handler_client_topic},
+    {"NICK", &Server::_handler_client_nickname},
+    {"USER", &Server::_handler_client_username},
+    {"PASS", &Server::_handler_client_password},
+    {"INVITE", &Server::_handler_client_invite},
+    {"PRIVMSG", &Server::_handler_client_privmsg}
+};
+
+/**
  * @brief Executes the command received from the client.
  *
  * This method processes the command received from the client and executes the corresponding action.
@@ -208,78 +228,251 @@ void Server::_execute_command(const std::string buffer, const int fd)
 {
     if (buffer.empty())
 		return ;
-    std::string clean_buffer = _cleanse_buffer(buffer, LINE_FEED);
+    std::string clean_buffer = _cleanse_buffer(buffer, CRLF);
     std::vector<std::string> splitted_buffer = _split_buffer(clean_buffer, DELIMITER);
     if (splitted_buffer.empty())
         return ;
+    std::string command = toupper(splitted_buffer[0]);
+    std::string parameters = splitted_buffer[1];
     
-    //TODO: REFATORAR NO FUTURO, NO MOMENTO É APENAS TESTES RSRS
-    // DEVEMOS NORMALIZAR COM TO_UPPPER?
-    // if (splitted_buffer[0] == "NICK" || splitted_buffer[0] == "nick")
-    // {
-    //     _set_client_nickname(splitted_buffer[1], fd);
-    // }
-    // else if (splitted_buffer[0] == "USER" || splitted_buffer[0] == "user")
-    // {
-    //     _set_client_username(splitted_buffer[1], fd);
-    // }
-    if (splitted_buffer[0] == "PASS" || splitted_buffer[0] == "pass")
-    {
-        _set_client_password(splitted_buffer[1], fd);
+    for (size_t i = 0; i < _command_list_size; i++) {
+        if (command == _command_list[i].command) {
+            (this->*_command_list[i].handler)(parameters, fd);
+            break;
+        }
     }
-    if (splitted_buffer[0] == "USER" || splitted_buffer[0] == "user")
-    {
-        _set_client_username(splitted_buffer[1], fd);
-    }
-    // else
-    // {
-    //     _send_response(fd, ERR_CMDNOTFOUND(_get_client(fd).get_nickname(), splitted_buffer[0]));
-    // }
+}
+
+/*
+** ------------------------------- JOIN COMMAND --------------------------------
+*/
+
+/**
+ * @brief Handles the JOIN command received from the client.
+ *
+ * This method processes the JOIN command received from the client and sends a response
+ * to the client indicating that the client has joined the channel.
+ *
+ * @param buffer The buffer containing the JOIN command parameters.
+ * @param fd The file descriptor associated with the client that sent the command.
+ */
+void Server::_handler_client_join(const std::string &buffer, const int fd)
+{
+    Client* client = _get_client(fd);
+
+    std::string channel = buffer;
+    
+    _send_response(fd, RPL_TOPICIS(client->get_nickname(), channel, std::string("Welcome to the channel")));
+}
+
+/*
+** ------------------------------- QUIT COMMAND --------------------------------
+*/
+
+/**
+ * @brief Handles the QUIT command received from the client.
+ *
+ * This method processes the QUIT command received from the client and sends a response
+ * to the client indicating that the client has quit the server.
+ *
+ * @param buffer The buffer containing the QUIT command parameters.
+ * @param fd The file descriptor associated with the client that sent the command.
+ */
+void Server::_handler_client_quit(const std::string &buffer, const int fd)
+{
+    (void)buffer;
+    _send_response(fd, RPL_QUITMESSAGE(_get_client(fd)->get_nickname()));
+    _clear_client(fd);
+}
+
+/*
+** ------------------------------- PART COMMAND --------------------------------
+*/
+
+/**
+ * @brief Handles the PART command received from the client.
+ *
+ * This method processes the PART command received from the client and sends a response
+ * to the client indicating that the client has left the channel.
+ *
+ * @param buffer The buffer containing the PART command parameters.
+ * @param fd The file descriptor associated with the client that sent the command.
+ */
+void Server::_handler_client_part(const std::string &buffer, const int fd)
+{
+    (void)fd;
+    (void)buffer;
+    Client* client = _get_client(fd);
+
+    _send_response(fd, RPL_PART(client->get_hostname(), "ft_trancendence", client->get_nickname()));
+}
+
+/*
+** ------------------------------- MODE COMMAND --------------------------------
+*/
+
+/**
+ * @brief Handles the MODE command received from the client.
+ *
+ * This method processes the MODE command received from the client and sends a response
+ * to the client indicating the channel modes supported by the server.
+ *
+ * @param buffer The buffer containing the MODE command parameters.
+ * @param fd The file descriptor associated with the client that sent the command.
+ */
+void Server::_handler_client_mode(const std::string &buffer, const int fd)
+{
+    (void)fd;
+    (void)buffer;
+    Client* client = _get_client(fd);
+
+    _send_response(fd, RPL_CHANNELMODES(client->get_nickname(), "ft_trancendence", "+nt"));
+}
+
+/*
+** ------------------------------- KICK COMMAND --------------------------------
+*/
+
+/**
+ * @brief Handles the KICK command received from the client.
+ *
+ * This method processes the KICK command received from the client and sends a response
+ * to the client indicating that the client has been kicked from the channel.
+ *
+ * @param buffer The buffer containing the KICK command parameters.
+ * @param fd The file descriptor associated with the client that sent the command.
+ */
+void Server::_handler_client_kick(const std::string &buffer, const int fd)
+{
+    (void)fd;
+    (void)buffer;
+    Client* client = _get_client(fd);
+
+    _send_response(fd, RPL_KICK(client->get_nickname(), "ft_trancendence", "gilmar", "Ygor", "You have been kicked"));
+}
+
+/*
+** ------------------------------- TOPIC COMMAND --------------------------------
+*/
+
+/**
+ * @brief Handles the TOPIC command received from the client.
+ *
+ * This method processes the TOPIC command received from the client and sends a response
+ * to the client indicating the topic of the channel.
+ *
+ * @param buffer The buffer containing the TOPIC command parameters.
+ * @param fd The file descriptor associated with the client that sent the command.
+ */
+void Server::_handler_client_topic(const std::string &buffer, const int fd)
+{
+    (void)fd;
+    (void)buffer;
+    Client* client = _get_client(fd);
+
+    _send_response(fd, RPL_TOPICIS(client->get_nickname(), "ft_trancendence", "Welcome to the channel"));
+}
+
+/*
+** ------------------------------- INVITE COMMAND --------------------------------
+*/
+
+/**
+ * @brief Handles the INVITE command received from the client.
+ *
+ * This method processes the INVITE command received from the client and sends a response
+ * to the client indicating that the client has been invited to the channel.
+ *
+ * @param buffer The buffer containing the INVITE command parameters.
+ * @param fd The file descriptor associated with the client that sent the command.
+ */
+void Server::_handler_client_invite(const std::string &buffer, const int fd)
+{
+    (void)fd;
+    (void)buffer;
+    Client* client = _get_client(fd);
+
+    _send_response(fd, RPL_INVITING(client->get_hostname(), "ft_trancendence", "Gilmar", "Ygor"));
+}
+
+/*
+** ------------------------------- INVITE COMMAND --------------------------------
+*/
+
+/**
+ * @brief Handles the PRIVMSG command received from the client.
+ *
+ * This method processes the PRIVMSG command received from the client and sends a response
+ * to the client indicating that the message has been sent.
+ *
+ * @param buffer The buffer containing the PRIVMSG command parameters.
+ * @param fd The file descriptor associated with the client that sent the command.
+ */
+void Server::_handler_client_privmsg(const std::string &buffer, const int fd)
+{
+    (void)fd;
+    (void)buffer;
+    Client* client = _get_client(fd);
+
+    _send_response(fd, RPL_PRIVMSG(client->get_hostname(), "ft_trancendence", "Hello, Carlos!"));
 }
 
 /*
 ** ------------------------------- NICK COMMAND --------------------------------
 */
 
-void Server::_set_client_nickname(const std::string &nickname, const int fd)
+/**
+ * @brief Handles the NICK command received from the client.
+ *
+ * This method processes the NICK command received from the client and sends a response
+ * to the client indicating that the client's nickname has been changed.
+ *
+ * @param nickname The new nickname to be assigned to the client.
+ * @param fd The file descriptor associated with the client that sent the command.
+ */
+void Server::_handler_client_nickname(const std::string &nickname, const int fd)
 {
     Client* client = _get_client(fd);
 
-    if (!client->get_is_registered())
-        _send_response(fd, ERR_NOTREGISTERED(std::string("*")));
+    if (nickname.empty() || nickname.size() < 5)
+        _send_response(fd, ERR_NOTENOUGHPARAM(std::string("*")));
     else if (!_is_valid_nickname(nickname))
-        _send_response(fd, ERR_ERRONEUSNICK(nickname));
-    else if (!_is_nickname_in_use(fd, nickname))
-        _send_response(fd, ERR_NICKINUSE(nickname));
+        _send_response(fd, ERR_ERRONEUSNICK(client->get_nickname()));
+    else if (_is_nickname_in_use(fd, nickname))
+        _send_response(fd, ERR_NICKINUSE(client->get_nickname()));
+    else if (!client->get_is_registered())
+        _send_response(fd, ERR_NOTREGISTERED(std::string("*")));
     else
     {
-        //se chegou até aqui é pq eu msm estou utilizando o nickname e vou alterar ele?
         client->set_nickname(nickname);
+        if (_client_is_ready_to_login(fd))
+            client->set_is_logged(fd);
     }
-
-    //TODO: Regras para definir o nickname do cliente
-    client->set_nickname(nickname);
-
-    _send_response(fd, "Nickname set to: " + nickname + "\n");
 }
-
 
 /*
 ** ------------------------------- USERNAME COMMAND --------------------------------
 */
 
-void Server::_set_client_username(const std::string &username, const int fd)
+/**
+ * @brief Handles the USERNAME command received from the client.
+ *
+ * This method processes the USERNAME command received from the client and sends a response
+ * to the client indicating that the client's username has been set.
+ *
+ * @param username The username to be assigned to the client.
+ * @param fd The file descriptor associated with the client that sent the command.
+ */
+void Server::_handler_client_username(const std::string &username, const int fd)
 {
     Client* client = _get_client(fd);
-    
-    //client->set_is_registered(true);
-    std::cout << client->get_is_registered() << std::endl;
-    if (username.empty() || username.size() < 5) //-> Isso é o suficiente?
-        _send_response(fd, ERR_NOTENOUGHPARAM(client->get_nickname()));
-    if (!client->get_is_registered())
+
+    if (username.empty() || username.size() < 5)
+        _send_response(fd, ERR_NOTENOUGHPARAM(std::string("*")));
+    else if (!client->get_is_registered())
         _send_response(fd, ERR_NOTREGISTERED(std::string("*")));
     else if (!client->get_username().empty())
-        _send_response(fd, ERR_ALREADYREGISTERED(client->get_nickname()));
+        _send_response(fd, ERR_ALREADYREGISTERED(std::string("*")));
     else
     {
         client->set_username(username);
@@ -292,21 +485,29 @@ void Server::_set_client_username(const std::string &username, const int fd)
 ** ------------------------------- PASSWORD COMMAND --------------------------------
 */
 
-void Server::_set_client_password(const std::string &password, const int fd)
+/**
+ * @brief Handles the PASSWORD command received from the client.
+ *
+ * This method processes the PASSWORD command received from the client and sends a response
+ * to the client indicating that the client's password has been set.
+ *
+ * @param password The password to be assigned to the client.
+ * @param fd The file descriptor associated with the client that sent the command.
+ */
+void Server::_handler_client_password(const std::string &password, const int fd)
 {
     Client* client = _get_client(fd);
 
     if (password.empty()) //-> Isso é o suficiente?
         _send_response(fd, ERR_NOTENOUGHPARAM(std::string("*")));
-    else if (!client->get_is_registered())
-    {
-        if (password == _password)
-            client->set_is_registered(true);
-        else
-            _send_response(fd, ERR_INCORPASS(std::string("*")));
-    }
+    else if (client->get_is_registered())
+        _send_response(fd, ERR_ALREADYREGISTERED(std::string("*")));
+    else if (_password != password)
+        _send_response(fd, ERR_INCORPASS(std::string("*")));
     else
-        _send_response(fd, ERR_ALREADYREGISTERED(client->get_nickname()));
+    {
+        client->set_is_registered(true);
+    }
 }
 
 /*
@@ -329,12 +530,12 @@ std::vector<std::string> Server::_split_buffer(const std::string &buffer, const 
 {
     std::vector<std::string> tokens;
 
-    char *str = const_cast<char *>(buffer.c_str());
-    char *token = std::strtok(str, delimiter.c_str());
-    while (token != NULL) {
-        tokens.push_back(token);
-        token = std::strtok(NULL, delimiter.c_str());
-    }
+    std::string command = buffer.substr(0, buffer.find_first_of(delimiter));
+    std::string parameters = buffer.substr(buffer.find_first_of(delimiter) + 1);
+
+    tokens.push_back(command);
+    tokens.push_back(parameters);
+
     return tokens;
 }
 
@@ -477,23 +678,41 @@ void Server::_is_valid_port(const std::string &port)
     }
 }
 
-
+/**
+ * @brief Checks if the nickname is valid.
+ *
+ * This method verifies whether the provided nickname is valid by performing the following checks:
+ * 1. Ensures that the nickname is at least 6 characters long.
+ * 2. Validates that the nickname contains only alphanumeric characters.
+ *
+ * @param nickname The nickname to check.
+ * @return true if the nickname is valid, false otherwise.
+ */
 bool Server::_is_valid_nickname(const std::string &nickname)
 {
     if (nickname.size() <= 5)
         return false;
-    for (std::string::const_iterator it = nickname.begin(); it != nickname.end(); ++it)
-    {
-        if (!std::isalnum(*it)) //-> check if the character is alphanumeric
+    for (std::string::const_iterator it = nickname.begin(); it != nickname.end(); ++it) {
+        if (!std::isalnum(*it))
             return false;
     }
     return true;
 }
 
+/**
+ * @brief Checks if the nickname is already in use.
+ *
+ * This method checks if the provided nickname is already in use by another client. It iterates
+ * through the list of active clients and compares the provided nickname with the nicknames of
+ * other clients. If a match is found, the method returns true, indicating that the nickname is in use.
+ *
+ * @param fd The file descriptor associated with the client.
+ * @param username The nickname to check.
+ * @return true if the nickname is in use, false otherwise.
+ */
 bool Server::_is_nickname_in_use(const int fd, const std::string &username)
 {
-    for (std::vector<Client>::iterator it = _clients.begin(); it != _clients.end(); ++it)
-    {
+    for (std::vector<Client>::iterator it = _clients.begin(); it != _clients.end(); ++it) {
         if (it->get_nickname() == username && it->get_fd() != fd)
             return true;
     }
@@ -551,4 +770,22 @@ void Server::_send_response(const int fd, const std::string &response)
 	std::cout << "Response:\n" << response;
 	if(send(fd, response.c_str(), response.size(), 0) == -1)
 		std::cerr << "Response send() faild" << std::endl;
+}
+
+/**
+ * @brief Converts a string to uppercase.
+ *
+ * This method converts the provided string to uppercase by iterating through each character
+ * in the string and converting it to its uppercase equivalent using the std::toupper function.
+ *
+ * @param str The string to convert to uppercase.
+ * @return The converted string in uppercase.
+ */
+std::string Server::toupper(const std::string& str)
+{
+    std::string result = str;
+    for (size_t i = 0; i < result.length(); ++i) {
+        result[i] = std::toupper(result[i]);
+    }
+    return result;
 }

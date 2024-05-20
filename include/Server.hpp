@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:23:47 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/15 21:57:04 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/19 19:31:23 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,9 @@
 #include <poll.h> //-> for poll()
 #include <csignal> //-> for signal()
 #include <sstream> //-> for std::stringstream
-# include <iomanip>
+#include <iomanip>
+#include <map> //-> for map
+#include <functional> //-> for std::function
 
 //-------------------------------------------------------//
 #define RED "\e[1;31m" //-> for red color
@@ -36,6 +38,7 @@
 #include "Replies.hpp"
 #include "Client.hpp" //-> for client class
 
+#define CRLF "\r\n"
 #define LINE_FEED "\n"
 #define DELIMITER " \t"
 
@@ -59,10 +62,18 @@ class Server
         bool _is_valid_nickname(const std::string &nickname);
         bool _is_nickname_in_use(const int fd, const std::string &nickname);
 
-        void _set_client_nickname(const std::string &nickname, const int fd);
-        void _set_client_username(const std::string &username, const int fd);
-        void _set_client_password(const std::string &password, const int fd);
-
+        void _handler_client_join(const std::string &buffer, const int fd);
+        void _handler_client_quit(const std::string &buffer, const int fd);
+        void _handler_client_part(const std::string &buffer, const int fd);
+        void _handler_client_mode(const std::string &buffer, const int fd);
+        void _handler_client_kick(const std::string &buffer, const int fd);
+        void _handler_client_topic(const std::string &buffer, const int fd);
+        void _handler_client_invite(const std::string &buffer, const int fd);
+        void _handler_client_privmsg(const std::string &buffer, const int fd);
+        void _handler_client_nickname(const std::string &nickname, const int fd);
+        void _handler_client_username(const std::string &username, const int fd);
+        void _handler_client_password(const std::string &password, const int fd);
+        
         static bool _signal; //-> static boolean for signal
         static void _signal_handler(const int signum);
 
@@ -73,14 +84,24 @@ class Server
         void _receive_new_data(const int fd); //-> receive data from a client
         void _clear_client(const int fd); //-> clear clients
         void _server_loop(); //-> server loop
-
+        
+        struct command_handler
+        {
+            std::string command;
+            void (Server::*handler)(const std::string &, const int);
+        };
+        
+        static const int _command_list_size = 12; //-> command list size
+        static const command_handler _command_list[_command_list_size]; //-> command list
         void _execute_command(const std::string buffer, const int fd); //-> execute command
-
-        std::vector<std::string> _split_buffer(const std::string &buffer, const std::string &delimiter); //-> split string
+        
         std::string _cleanse_buffer(const std::string &buffer, const std::string &chars_to_remove); //-> parse received buffer
+        std::vector<std::string> _split_buffer(const std::string &buffer, const std::string &delimiter); //-> split string
 
         Client* _get_client(const int fd); //-> get client
         bool _client_is_ready_to_login(const int fd);
 
         void _close_fds(); //-> close file descriptors
+
+        std::string toupper(const std::string& str);
 };
