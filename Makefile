@@ -6,7 +6,7 @@
 #    By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/23 19:40:24 by gilmar            #+#    #+#              #
-#    Updated: 2024/05/19 18:06:20 by gilmar           ###   ########.fr        #
+#    Updated: 2024/05/21 09:14:13 by gilmar           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,7 @@ OBJ_DIR   := obj
 INC_DIRS  := include
 
 # If there are subdirectories in src, add them here
-SRC_DIRS  := 
+SRC_DIRS  := commands
 # If the line above is not enough, add the subdirectories here
 #SRC_DIRS  += 
 SRC_DIRS  := $(addprefix src/, $(SRC_DIRS))
@@ -39,11 +39,12 @@ SRC_DIRS  += src
 vpath %.hpp $(INC_DIRS)
 vpath %.cpp $(SRC_DIRS)
 
-HEADERS := Server.hpp Client.hpp Replies.hpp
+HEADERS := Server.hpp Client.hpp Replies.hpp Channel.hpp
 # If the line above is not enough, add the headers here
 #HEADERS +=
 
-SOURCES := main.cpp Client.cpp Server.cpp
+SOURCES := main.cpp Client.cpp Server.cpp Channel.cpp \
+		Invite.cpp Join.cpp Kick.cpp Nick.cpp Part.cpp Privmsg.cpp Quit.cpp Topic.cpp User.cpp Mode.cpp Pass.cpp
 # If the line above is not enough, add the sources here
 #SOURCES +=
 

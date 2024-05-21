@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:23:47 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/19 19:31:23 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/21 08:29:08 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,9 @@
 #define YEL "\e[1;33m" //-> for yellow color
 //-------------------------------------------------------//
 
-#include "Replies.hpp"
 #include "Client.hpp" //-> for client class
+#include "Replies.hpp" //-> for replies class
+#include "Channel.hpp" //-> for channel class
 
 #define CRLF "\r\n"
 #define LINE_FEED "\n"
@@ -57,7 +58,8 @@ class Server
         std::vector<Client> _clients; //-> vector of clients
         std::vector<struct pollfd> _fds; //-> vector of pollfd
         struct sockaddr_in _server_addr; //-> server address
-
+        std::vector<Channel> _channels; //-> vector of channels
+        
         void _is_valid_port(const std::string &port);
         bool _is_valid_nickname(const std::string &nickname);
         bool _is_nickname_in_use(const int fd, const std::string &nickname);
@@ -77,13 +79,13 @@ class Server
         static bool _signal; //-> static boolean for signal
         static void _signal_handler(const int signum);
 
-        void _send_response(const int fd, const std::string &response); //-> send response to client
+        void _server_loop(); //-> server loop
         void _set_server_socket(); //-> server socket creation
         void _add_server_signal(); //-> server signal creation
         void _accept_new_client(); //-> accept new client
-        void _receive_new_data(const int fd); //-> receive data from a client
         void _clear_client(const int fd); //-> clear clients
-        void _server_loop(); //-> server loop
+        void _receive_new_data(const int fd); //-> receive data from a client
+        void _send_response(const int fd, const std::string &response); //-> send response to client
         
         struct command_handler
         {

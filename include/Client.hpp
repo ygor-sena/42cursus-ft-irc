@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:19:06 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/19 18:50:03 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/21 08:53:14 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,12 @@ class Client //-> class for client
 
     private:
         int _fd; //-> client file descriptor
+        bool _is_logged; //-> boolean for login
+        std::string _buffer; //-> client buffer
+        bool _is_registered; //-> boolean for registration
         std::string _ip_addr; //-> client ip address
         std::string _nickname; //-> client nickname
         std::string _username; //-> client username
         std::string _password; //-> client password
-        std::string _buffer; //-> client buffer
-        bool _is_registered; //-> boolean for registration
-        bool _is_logged; //-> boolean for login
+        std::vector<std::string> _channels_invited; //-> vector of channels invited
 };
