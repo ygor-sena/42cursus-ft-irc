@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:30:59 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/21 08:50:13 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/24 18:26:37 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@
  */
 void Server::_handler_client_topic(const std::string &buffer, const int fd)
 {
-    (void)fd;
-    (void)buffer;
-    Client* client = _get_client(fd);
+	(void)fd;
+	(void)buffer;
+	Client* client = _get_client(fd);
 
-    _send_response(fd, RPL_TOPICIS(client->get_nickname(), "ft_trancendence", "Welcome to the channel"));
+	_send_response(fd, RPL_TOPICIS(client->get_nickname(), "ft_transcendence", "Welcome to the channel"));
 }
