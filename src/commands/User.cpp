@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:32:16 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/21 08:50:38 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/24 18:26:49 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,18 +29,28 @@
  */
 void Server::_handler_client_username(const std::string &username, const int fd)
 {
-    Client* client = _get_client(fd);
+	Client* client = _get_client(fd);
 
-    if (username.empty() || username.size() < 5)
-        _send_response(fd, ERR_NOTENOUGHPARAM(std::string("*")));
-    else if (!client->get_is_registered())
-        _send_response(fd, ERR_NOTREGISTERED(std::string("*")));
-    else if (!client->get_username().empty())
-        _send_response(fd, ERR_ALREADYREGISTERED(std::string("*")));
-    else
-    {
-        client->set_username(username);
-        if (_client_is_ready_to_login(fd))
-            client->set_is_logged(fd);
-    }
+	if (username.empty() || username.size() < 5)
+	{
+		_send_response(fd, ERR_NEEDMOREPARAMS(std::string("*")));
+		_reply_code = 461;
+	}
+	else if (!client->get_is_registered())
+	{
+		_send_response(fd, ERR_NOTREGISTERED(std::string("*")));
+		_reply_code = 451;
+	}
+	else if (!client->get_username().empty())
+	{
+		_send_response(fd, ERR_ALREADYREGISTERED(std::string("*")));
+		_reply_code = 462;
+	}
+	else
+	{
+		client->set_username(username);
+		if (_client_is_ready_to_login(fd))
+			client->set_is_logged(fd);
+		_reply_code = 200;
+	}
 }

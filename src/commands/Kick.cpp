@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Kick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:30:47 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/21 08:43:50 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/24 18:25:46 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,83 @@
  */
 void Server::_handler_client_kick(const std::string &buffer, const int fd)
 {
-    (void)fd;
-    (void)buffer;
-    Client* client = _get_client(fd);
+	Client* client = _get_client(fd);
 
-    _send_response(fd, RPL_KICK(client->get_nickname(), "ft_trancendence", "gilmar", "Ygor", "You have been kicked"));
+	if (client->get_is_authenticated() && client->get_is_registered())
+	{
+		std::vector<std::string> params = _split_buffer(buffer, " ");
+
+		// Check if the command has the minimum number of parameters
+		if (params.size() < 2)
+		{
+			_send_response(fd, ERR_NEEDMOREPARAMS(client->get_nickname()));
+			_reply_code = 461;
+			return;
+		}
+
+		std::string channel_name = params[0];
+
+		// Check if the channel exists
+		Channel *channel = this->_get_channel(channel_name);
+		if (!channel)
+		{
+			_send_response(fd, ERR_NOSUCHCHANNEL(channel_name));
+			_reply_code = 403;
+			return;
+		}
+
+		// Check if the client is in the channel
+		if (!channel->has_client(client))
+		{
+			_send_response(fd, ERR_NOTONCHANNEL(channel_name));
+			_reply_code = 442;
+			return;
+		}
+
+		// Check if the client is a channel operator
+		if (!channel->is_channel_operator(client->get_nickname()))
+		{
+			_send_response(fd, ERR_CHANOPRIVSNEEDED(client->get_nickname(), channel_name));
+			_reply_code = 482;
+			return;
+		}
+
+		Client *target_client = this->_get_client(params[1]);
+
+		// Check if the target client exists
+		if (!target_client)
+		{
+			_send_response(fd, ERR_NOSUCHNICK(channel_name, client->get_nickname()));
+			_reply_code = 401;
+			return;
+		}
+
+		// Check if the target client is in the channel
+		if (!channel->has_client(target_client))
+		{
+			_send_response(fd, ERR_USERNOTINCHANNEL(target_client->get_nickname(), channel_name));
+			_reply_code = 441;
+			return;
+		}
+
+		// Check if option parameter <comment> exists
+		if (params.size() > 2)
+		{
+			std::string comment = params[2];
+			_send_response(fd, RPL_KICK(client->get_hostname(), channel_name, client->get_nickname(), target_client->get_nickname(), comment));
+		}
+		else
+		{
+			_send_response(fd, RPL_KICK(client->get_hostname(), channel_name, client->get_nickname(), target_client->get_nickname(), ""));
+		}
+		channel->kick(target_client);
+		_reply_code = 200;
+	}
+	else
+	{
+		_send_response(fd, ERR_NOTREGISTERED(client->get_nickname()));
+		_reply_code = 451;
+		return ;
+	}
+	//_send_response(fd, RPL_KICK(client->get_nickname(), "ft_transcendence", "gilmar", "Ygor", "You have been kicked"));
 }
