@@ -1,25 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Utils.hpp                                          :+:      :+:    :+:   */
+/*   TestJoin.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/24 18:03:01 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/24 18:27:53 by yde-goes         ###   ########.fr       */
+/*   Created: 2024/05/24 18:15:35 by yde-goes          #+#    #+#             */
+/*   Updated: 2024/05/24 18:15:36 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef UTILS_HPP
-# define UTILS_HPP
-
-# define EPSILON 0.0001
-
-#include <vector>
-#include <string>
-#include <sstream>
-
-std::pair<std::vector<std::string>, std::string> splitMessage(
-	const std::string& message);
-
-# endif // UTILS_HPP
