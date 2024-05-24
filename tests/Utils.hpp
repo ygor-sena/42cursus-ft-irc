@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 18:03:01 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/24 18:27:53 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/24 18:51:12 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #include <string>
 #include <sstream>
 
-std::pair<std::vector<std::string>, std::string> splitMessage(
+std::pair<std::vector<std::string>, std::string> split_message(
 	const std::string& message);
 
 # endif // UTILS_HPP

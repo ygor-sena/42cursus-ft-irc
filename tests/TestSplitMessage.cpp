@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 18:03:20 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/24 18:27:36 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/24 18:51:38 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@
 #include <string>
 #include <utility>
 
-Test(splitMessage, should_split_message_into_receivers_and_text_1) {
+Test(split_message, should_split_message_into_receivers_and_text_1) {
 	std::string message = "receiver1,receiver2,receiver3 This is a test message";
 
-	std::pair<std::vector<std::string>, std::string> result = splitMessage(message);
+	std::pair<std::vector<std::string>, std::string> result = split_message(message);
 
 	std::vector<std::string> expectedReceivers = {"receiver1", "receiver2", "receiver3"};
 	std::string expectedText = "This is a test message";
@@ -32,10 +32,10 @@ Test(splitMessage, should_split_message_into_receivers_and_text_1) {
 	cr_assert_str_eq(result.second.c_str(), expectedText.c_str(), "Text does not match");
 }
 
-Test(splitMessage, should_split_message_into_receivers_and_text_2) {
+Test(split_message, should_split_message_into_receivers_and_text_2) {
 	std::string message = "receiver1,receiver2,receiver3, This is a test message";
 
-	std::pair<std::vector<std::string>, std::string> result = splitMessage(message);
+	std::pair<std::vector<std::string>, std::string> result = split_message(message);
 
 	std::vector<std::string> expectedReceivers = {"receiver1", "receiver2", "receiver3"};
 	std::string expectedText = "This is a test message";
@@ -49,10 +49,10 @@ Test(splitMessage, should_split_message_into_receivers_and_text_2) {
 }
 
 
-Test(splitMessage, should_split_message_into_receivers_and_text_3) {
+Test(split_message, should_split_message_into_receivers_and_text_3) {
 	std::string message = "channel This is a test message";
 
-	std::pair<std::vector<std::string>, std::string> result = splitMessage(message);
+	std::pair<std::vector<std::string>, std::string> result = split_message(message);
 
 	std::vector<std::string> expectedReceivers = {"channel"};
 	std::string expectedText = "This is a test message";
