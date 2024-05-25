@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 18:18:57 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/24 22:22:19 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/24 22:38:37 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,5 +55,6 @@
 # define ERR_NOTONCHANNEL(channelname) ("442 " + channelname + " :You're not on that channel" + CRLF)
 # define ERR_USERONCHANNEL(user, channelname) ("443 " + user + " " + channelname + " :is already on channel" + CRLF) 
 # define ERR_CHANOPRIVSNEEDED(nickname, channelname) ("482 " + nickname + " " + channelname + " :You're not channel operator" + CRLF)
+# define ERR_NOPRIVILEGES(nickname) ("481 " + nickname + " :Permission Denied- You're not an IRC operator" + CRLF)
 
 #endif // REPLIES_HPP

@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:31:16 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/24 22:24:05 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/24 22:39:23 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,15 @@ void Server::_handler_client_invite(const std::string &buffer, const int fd)
 		}
 
 		Client *invited_client = this->_get_client(target_nickname);
+
+		// Check if the client is a channel operator
+		if (channel->is_channel_operator(client->get_nickname()) == false)
+		{
+			_send_response(fd, ERR_NOPRIVILEGES(client->get_nickname()));
+			_reply_code = 481;
+			return;
+		}
+		
 		if (!invited_client)
 		{
 			_send_response(fd, ERR_NOSUCHNICK(target_channel, target_nickname));
