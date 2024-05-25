@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:19:06 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/24 18:25:19 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/24 22:23:57 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ class Client //-> class for client
 		std::string get_hostname() const;
 		bool get_is_registered() const;
 		bool get_is_authenticated() const;
+		bool get_is_operator() const;
 
 		void set_fd(const int fd);
 		void set_is_logged(bool is_logged);
@@ -55,6 +56,7 @@ class Client //-> class for client
 		void set_password(const std::string &password);
 		void set_is_registered(bool is_registered);
 		void set_is_authenticated(bool is_authenticated);
+		void set_is_operator(bool is_operator);
 
 	private:
 		int _fd; //-> client file descriptor
@@ -62,6 +64,7 @@ class Client //-> class for client
 		std::string _buffer; //-> client buffer
 		bool _is_registered; //-> boolean for registration
 		bool _is_authenticated; //-> boolean for authentication
+		bool _is_operator; //-> boolean for channel operator
 		std::string _ip_addr; //-> client ip address
 		std::string _nickname; //-> client nickname
 		std::string _username; //-> client username

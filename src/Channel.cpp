@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:26:17 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/24 18:27:04 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/24 22:24:12 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,13 @@ std::string Channel::get_name(void) const
 	return _name;
 }
 
+// Getter for _operator_clients
+std::vector<Client *> Channel::get_operator_clients(void)
+{
+	return this->_operator_clients;
+}
+
+
 std::string Channel::get_client_names(void) const
 {
 	std::string names;
@@ -53,12 +60,18 @@ std::string Channel::get_client_names(void) const
 	return names;
 }
 
+void Channel::set_channel_operator(Client *client)
+{
+	this->_operator_clients.push_back(client);
+	return ;
+}
+
 // Channel STATUS and checker functions
 bool Channel::has_client(Client *client)
 {
 	for (std::vector<Client *>::const_iterator it = this->_clients.begin(); it != this->_clients.end(); ++it)
 	{
-		if((*it)->get_nickname() == client->get_nickname())
+		if ((*it)->get_nickname() == client->get_nickname())
 			return true;
 	}
 	return false;
@@ -71,9 +84,9 @@ bool Channel::has_key(void)
 
 bool Channel::is_channel_operator(std::string nickname)
 {
-	for (std::vector<Client *>::const_iterator it = this->_operator_clients.begin(); it != this->_operator_clients.end(); ++it)
+	for (std::vector<Client *>::iterator it = this->_operator_clients.begin(); it != this->_operator_clients.end(); ++it)
 	{
-		if((*it)->get_nickname() == nickname)
+		if ((*it)->get_nickname() == nickname)
 			return true;
 	}
 	return false;

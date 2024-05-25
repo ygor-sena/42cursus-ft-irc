@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:24:04 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/24 18:25:15 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/24 22:23:53 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,12 @@ class Channel
 */
 		std::string get_name(void) const;
 		std::string get_client_names(void) const;
+        std::vector<Client *> get_operator_clients(void);
+
+/*
+** --------------------------------- SETTERS----------------------------------
+*/
+		void set_channel_operator(Client *client);
 
 /*
 ** ----------------- Member functions for CHANNEL MANAGEMENT ------------------

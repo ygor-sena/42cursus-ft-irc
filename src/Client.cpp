@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:20:02 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/24 18:27:08 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/24 22:24:15 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ Client::Client()
 	_is_logged = false;
 	_is_registered = false;
 	_is_authenticated = true;
+	_is_operator = false;
 }
 
 /*
@@ -73,6 +74,11 @@ void Client::set_is_authenticated(bool is_authenticated)
 	_is_authenticated = is_authenticated;
 }
 
+void Client::set_is_operator(bool is_operator)
+{
+	_is_operator = is_operator;
+}
+
 void Client::set_is_logged(bool is_logged)
 {
 	_is_logged = is_logged;
@@ -86,6 +92,11 @@ bool Client::get_is_registered() const
 bool Client::get_is_authenticated() const
 {
 	return _is_authenticated;
+}
+
+bool Client::get_is_operator() const
+{
+	return _is_operator;
 }
 
 bool Client::get_is_logged() const

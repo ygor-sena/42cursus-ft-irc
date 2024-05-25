@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:30:47 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/24 18:25:46 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/24 22:24:08 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,17 @@ void Server::_handler_client_kick(const std::string &buffer, const int fd)
 {
 	Client* client = _get_client(fd);
 
+/* 	std::cout << client->get_nickname() << " is trying to kick a user" << std::endl;
+	std::cout << client->get_fd() << std::endl;
+	std::cout << client->get_password() << std::endl;
+	std::cout << client->get_is_authenticated() << std::endl;
+	std::cout << client->get_is_registered() << std::endl;
+	std::cout << client->get_is_operator() << std::endl; */
+
 	if (client->get_is_authenticated() && client->get_is_registered())
 	{
 		std::vector<std::string> params = _split_buffer(buffer, " ");
+		std::vector<std::string> comments = _split_buffer(params[1], " ");
 
 		// Check if the command has the minimum number of parameters
 		if (params.size() < 2)
@@ -63,14 +71,14 @@ void Server::_handler_client_kick(const std::string &buffer, const int fd)
 		}
 
 		// Check if the client is a channel operator
-		if (!channel->is_channel_operator(client->get_nickname()))
+		if (channel->is_channel_operator(client->get_nickname()) == false)
 		{
 			_send_response(fd, ERR_CHANOPRIVSNEEDED(client->get_nickname(), channel_name));
 			_reply_code = 482;
 			return;
 		}
 
-		Client *target_client = this->_get_client(params[1]);
+		Client *target_client = this->_get_client(comments[0]);
 
 		// Check if the target client exists
 		if (!target_client)
@@ -91,8 +99,7 @@ void Server::_handler_client_kick(const std::string &buffer, const int fd)
 		// Check if option parameter <comment> exists
 		if (params.size() > 2)
 		{
-			std::string comment = params[2];
-			_send_response(fd, RPL_KICK(client->get_hostname(), channel_name, client->get_nickname(), target_client->get_nickname(), comment));
+			_send_response(fd, RPL_KICK(client->get_hostname(), channel_name, client->get_nickname(), target_client->get_nickname(), comments[1]));
 		}
 		else
 		{

@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:31:16 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/24 18:25:36 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/24 22:24:05 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,8 @@ void Server::_handler_client_invite(const std::string &buffer, const int fd)
 			return;
 		}
 
-		std::string target_nickname = params[1];
-		std::string target_channel = params[2];
+		std::string target_nickname = params[0];
+		std::string target_channel = params[1];
 
 		Channel *channel = this->_get_channel(target_channel);
 		if (!channel)
@@ -80,7 +80,7 @@ void Server::_handler_client_invite(const std::string &buffer, const int fd)
 		}
 
 		channel->invite(invited_client);
-		_send_response(fd, RPL_INVITING(invited_client->get_nickname(), "", channel, ""));
+		_send_response(fd, RPL_INVITING(client->get_hostname(), target_channel, client->get_nickname(), target_nickname));
 		_reply_code = 200;
 
 		}

@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 18:03:34 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/24 18:27:32 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/24 22:24:31 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ Test(NickCommand, err_norregistered)
 	cr_assert(eq(int, server._reply_code, 451));
 }
 
-Test(NickCommand, sucess_setnickname)
+Test(NickCommand, success_setnickname)
 {
 	Client* client = mockClient();
 
