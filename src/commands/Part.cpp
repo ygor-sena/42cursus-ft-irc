@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:30:20 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/24 18:26:00 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/25 09:36:06 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,48 @@
  */
 void Server::_handler_client_part(const std::string &buffer, const int fd)
 {
-	(void)fd;
-	(void)buffer;
 	Client* client = _get_client(fd);
 
-	_send_response(fd, RPL_PART(client->get_hostname(), "ft_transcendence", client->get_nickname()));
+	if (client->get_is_authenticated() && client->get_is_registered())
+	{
+		std::vector<std::string> params = _split_buffer(buffer, " ");
+		if (params.size() < 1)
+		{
+			_send_response(fd, ERR_NEEDMOREPARAMS(client->get_nickname()));
+			_reply_code = 461;
+			return ;
+		}
+
+		std::string channel_name = params[0];
+		Channel *channel = this->_get_channel(channel_name);
+
+		// Check if the channel exists
+		if (!channel)
+		{
+			_send_response(fd, ERR_NOSUCHCHANNEL(channel_name));
+			_reply_code = 403;
+			return ;
+		}
+
+		// Verify if the client is in the channel
+		if (channel->get_client_names().find(client->get_nickname()) == std::string::npos)
+		{
+			_send_response(fd, ERR_NOTONCHANNEL(channel_name));
+			_reply_code = 442;
+			return ;
+		}
+
+		// Remove the client from the channel
+		channel->part(client);
+
+		// Send a response to the client
+		_send_response(fd, RPL_PART(client->get_hostname(), channel_name, client->get_nickname()));
+		_reply_code = 200;
+	}
+	else
+	{
+		_send_response(fd, ERR_NOTREGISTERED(client->get_nickname()));
+		_reply_code = 451;
+	}
+	//_send_response(fd, RPL_PART(client->get_hostname(), "ft_transcendence", client->get_nickname()));
 }

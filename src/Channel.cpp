@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:26:17 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/24 22:24:12 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/25 09:38:07 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,14 @@ std::string Channel::get_client_names(void) const
 	return names;
 }
 
+int Channel::get_clients_size(void) const
+{
+	return this->_clients.size();
+}
+
 void Channel::set_channel_operator(Client *client)
 {
+	client->set_is_operator(true);
 	this->_operator_clients.push_back(client);
 	return ;
 }
@@ -116,4 +122,37 @@ void Channel::kick(Client *client)
 		}
 	}
 	return ;
+}
+
+void Channel::part(Client *client)
+{
+    // Remove client from channel operators
+	for (std::vector<Client *>::iterator it_op = this->_operator_clients.begin(); it_op != this->_operator_clients.end(); ++it_op)
+	{
+		if((*it_op)->get_nickname() == client->get_nickname())
+		{
+			this->_operator_clients.erase(it_op);
+			return;
+		}
+	}
+
+	for (std::vector<Client *>::iterator it = this->_clients.begin(); it != this->_clients.end(); ++it)
+	{
+		if((*it)->get_nickname() == client->get_nickname())
+		{
+                  std::cout << (*it)->get_nickname() << std::endl;
+                  this->_clients.erase(it);
+                  return;
+		}
+	}
+    /* std::vector<Client *>::iterator it_op = std::find(this->_operator_clients.begin(), this->_operator_clients.end(), client);
+    if (it_op != this->_operator_clients.end())
+        this->_operator_clients.erase(it_op); */
+
+    // Remove client from channel
+    /* std::vector<Client *>::iterator it = std::find(this->_clients.begin(), this->_clients.end(), client); 
+    if (it != this->_clients.end()) {
+		 std::cout << (*it)->get_nickname() << std::endl;
+        this->_clients.erase(it);
+    } */
 }
