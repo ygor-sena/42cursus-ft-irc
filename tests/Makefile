@@ -1,5 +1,5 @@
 # Insert the test rules here
-TESTS := server
+TESTS := server user nick invite join kick
 #TESTS += 
 
 CYAN  := \33[1;36m
@@ -36,7 +36,27 @@ endef
 all: $(TESTS) clean
 
 .PHONY: server
-server: $(OBJS) TestServer.cpp
+server: $(OBJS) TestSplitMessage.cpp
+	@$(call run, "$^")
+
+.PHONY: user
+user: $(OBJS) TestUser.cpp
+	@$(call run, "$^")
+
+.PHONY: nick
+nick: $(OBJS) TestNick.cpp
+	@$(call run, "$^")
+
+.PHONY: invite
+invite: $(OBJS) TestInvite.cpp
+	@$(call run, "$^")
+
+.PHONY: join
+join: $(OBJS) TestJoin.cpp
+	@$(call run, "$^")
+
+.PHONY: kick
+kick: $(OBJS) TestKick.cpp
 	@$(call run, "$^")
 
 # Insert the test rules here, follwing the example above.
