@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:23:47 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/24 18:25:33 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/25 09:49:40 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ class Server
 		std::vector<Client> _clients; //-> vector of clients
 		std::vector<struct pollfd> _fds; //-> vector of pollfd
 		struct sockaddr_in _server_addr; //-> server address
-		std::vector<Channel> _channels; //-> vector of channels
+		std::vector<Channel *> _channels; //-> vector of channels
 
 		int _reply_code; // -> This a workaround to test the IRC commands without mocking up a client-server connection
 

@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:26:55 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/24 18:27:21 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/25 09:51:18 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -547,8 +547,8 @@ std::string Server::toupper(const std::string& str)
 Channel* Server::_get_channel(const std::string &channel_name)
 {
 	for (size_t i = 0; i < _channels.size(); i++) {
-		if (_channels[i].get_name() == channel_name) {
-			return &_channels[i];
+		if (_channels[i]->get_name() == channel_name) {
+			return _channels[i];
 		}
 	}
 	return NULL;
@@ -556,7 +556,7 @@ Channel* Server::_get_channel(const std::string &channel_name)
 
 void Server::_add_channel(Channel *channel)
 {
-	_channels.push_back(*channel);
+	_channels.push_back(channel);
 }
 
 int Server::get_reply_code(void)

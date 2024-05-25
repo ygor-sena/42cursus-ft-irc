@@ -1,5 +1,5 @@
 # Insert the test rules here
-TESTS := server user nick invite join kick
+TESTS := server user nick invite join kick part topic
 #TESTS += 
 
 CYAN  := \33[1;36m
@@ -57,6 +57,14 @@ join: $(OBJS) TestJoin.cpp
 
 .PHONY: kick
 kick: $(OBJS) TestKick.cpp
+	@$(call run, "$^")
+
+.PHONY: part
+part: $(OBJS) TestPart.cpp
+	@$(call run, "$^")
+
+.PHONY: topic
+topic: $(OBJS) TestTopic.cpp
 	@$(call run, "$^")
 
 # Insert the test rules here, follwing the example above.

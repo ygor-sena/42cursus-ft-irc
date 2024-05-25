@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:19:06 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/24 22:23:57 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/24 23:14:06 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@
 # include <arpa/inet.h> //-> for inet_ntoa()
 # include <poll.h> //-> for poll()
 # include <csignal> //-> for signal()
+# include <string>
+# include <algorithm>
 
 //-------------------------------------------------------//
 # define RED "\e[1;31m" //-> for red color

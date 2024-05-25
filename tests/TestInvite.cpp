@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 18:15:32 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/24 22:45:11 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/25 10:23:06 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,22 +46,22 @@ Client *mockInsideClient()
 	return client;
 }
 
-Test(KickCommand, succesfully_invite_client_to_channel)
+Test(InviteCommand, succesfully_invite_client_to_channel)
 {
 	Client* outsideClient = mockOutsideClient();
 	Client* insideClient = mockInsideClient();
 
 	Server server;
-	Channel channel = Channel("#world");
+	Channel *channel = new Channel("#world");
 
-	channel.set_channel_operator(insideClient);
+	channel->set_channel_operator(insideClient);
 
 	// Add clients to the server clients list
     server._clients.push_back(*outsideClient);
 	server._clients.push_back(*insideClient);
 
 	// Add clients as channel member
-	channel.invite(insideClient);
+	channel->invite(insideClient);
 
 	// Add channel to the server channels list
     server._channels.push_back(channel);
@@ -69,15 +69,16 @@ Test(KickCommand, succesfully_invite_client_to_channel)
 	// Invite client to channel
 	server._handler_client_invite("outsideUser #world", 4);
 	cr_assert(eq(int, server._reply_code, 200));
+	cr_assert(eq(int, server._get_channel(channel->get_name())->get_clients_size(), 2));
 }
 
-Test(KickCommand, err_nosuchchannel)
+Test(InviteCommand, err_nosuchchannel)
 {
 	Client* outsideClient = mockOutsideClient();
 	Client* insideClient = mockInsideClient();
 
 	Server server;
-	Channel channel = Channel("#world");
+	Channel *channel = new Channel("#world");
 
 	// Add clients to the server clients list
     server._clients.push_back(*outsideClient);
@@ -91,19 +92,19 @@ Test(KickCommand, err_nosuchchannel)
 	cr_assert(eq(int, server._reply_code, 403));
 }
 
-Test(KickCommand, err_notonchannel)
+Test(InviteCommand, err_notonchannel)
 {
 	Client* outsideClient = mockOutsideClient();
 	Client* insideClient = mockInsideClient();
 
 	Server server;
-	Channel channel = Channel("#world");
+	Channel *channel = new Channel("#world");
 
 	// Add clients to the server clients list
     server._clients.push_back(*outsideClient);
 	server._clients.push_back(*insideClient);
 
-	channel.invite(outsideClient);
+	channel->invite(outsideClient);
 	
 	// Add channel to the server channels list
     server._channels.push_back(channel);
@@ -113,19 +114,19 @@ Test(KickCommand, err_notonchannel)
 	cr_assert(eq(int, server._reply_code, 442));
 }
 
-Test(KickCommand, err_nosuchnick)
+Test(InviteCommand, err_nosuchnick)
 {
 	Client* insideClient = mockInsideClient();
 
 	Server server;
-	Channel channel = Channel("#world");
+	Channel *channel = new Channel("#world");
 
-	channel.set_channel_operator(insideClient);
+	channel->set_channel_operator(insideClient);
 
 	// Add clients to the server clients list
 	server._clients.push_back(*insideClient);
 
-	channel.invite(insideClient);
+	channel->invite(insideClient);
 	
 	// Add channel to the server channels list
     server._channels.push_back(channel);
@@ -135,18 +136,18 @@ Test(KickCommand, err_nosuchnick)
 	cr_assert(eq(int, server._reply_code, 401));
 }
 
-Test(KickCommand, err_noprivileges)
+Test(InviteCommand, err_noprivileges)
 {
 	Client* insideClient = mockInsideClient();
 
 	Server server;
-	Channel channel = Channel("#world");
+	Channel *channel = new Channel("#world");
 
 	// Add clients to the server clients list
 	server._clients.push_back(*insideClient);
 
 	// Add clients as channel member
-	channel.invite(insideClient);
+	channel->invite(insideClient);
 
 	// Add channel to the server channels list
     server._channels.push_back(channel);
@@ -156,19 +157,19 @@ Test(KickCommand, err_noprivileges)
 	cr_assert(eq(int, server._reply_code, 481));
 }
 	
-Test(KickCommand, err_useronchannel)
+Test(InviteCommand, err_useronchannel)
 {
 	Client* insideClient = mockInsideClient();
 
 	Server server;
-	Channel channel = Channel("#world");
+	Channel *channel = new Channel("#world");
 
-	channel.set_channel_operator(insideClient);
+	channel->set_channel_operator(insideClient);
 
 	// Add clients to the server clients list
 	server._clients.push_back(*insideClient);
 
-	channel.invite(insideClient);
+	channel->invite(insideClient);
 	
 	// Add channel to the server channels list
     server._channels.push_back(channel);
@@ -178,19 +179,19 @@ Test(KickCommand, err_useronchannel)
 	cr_assert(eq(int, server._reply_code, 443));
 }
 
-Test(KickCommand, err_notregistered)
+Test(InviteCommand, err_notregistered)
 {
 	Client* insideClient = mockInsideClient();
 
 	Server server;
-	Channel channel = Channel("#world");
+	Channel *channel = new Channel("#world");
 
 	insideClient->set_is_registered(false);
 
 	// Add clients to the server clients list
 	server._clients.push_back(*insideClient);
 
-	channel.invite(insideClient);
+	channel->invite(insideClient);
 	
 	// Add channel to the server channels list
     server._channels.push_back(channel);

@@ -6,14 +6,13 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:24:04 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/24 22:23:53 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/25 09:12:10 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CHANNEL_HPP
 # define CHANNEL_HPP
 
-# include <string>
 # include "Client.hpp"
 
 class Channel
@@ -29,6 +28,7 @@ class Channel
 		std::string get_name(void) const;
 		std::string get_client_names(void) const;
         std::vector<Client *> get_operator_clients(void);
+		int get_clients_size(void) const;
 
 /*
 ** --------------------------------- SETTERS----------------------------------
@@ -41,6 +41,7 @@ class Channel
 		void invite(Client *client);
 		void join(Client *client);
 		void kick(Client *client);
+		void part(Client *client);
 
 /*
 ** ------------------ Channel STATUS and checker functions --------------------
