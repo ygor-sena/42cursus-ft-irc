@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 18:03:11 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/24 18:27:41 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/25 21:19:12 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ Client *mockClient()
 	client->set_nickname("oldNickname");
 	client->set_password("password");
 	client->set_buffer("USER new_username");
-	client->set_is_registered(true);
 	client->set_is_logged(true);
 	client->set_is_authenticated(true);
 	return client;
@@ -45,7 +44,8 @@ Test(UserCommand, err_needmoreparams)
 Test(UserCommand, err_notregistered)
 {
 	Client* client = mockClient();
-	client->set_is_registered(false);
+	client->set_is_authenticated(false);
+	client->set_is_logged(false);
 
 	Server server;
 

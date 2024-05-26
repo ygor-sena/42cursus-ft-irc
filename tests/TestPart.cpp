@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 08:56:56 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/25 10:13:11 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/25 21:14:47 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ Client *genericClient()
 	client->set_nickname("soAndSoUser");
 	client->set_password("password");
 	client->set_buffer("");
-	client->set_is_registered(true);
 	client->set_is_logged(true);
 	client->set_is_authenticated(true);
 	return client;
@@ -39,7 +38,6 @@ Client *toPartClient()
 	client->set_nickname("toPartUser");
 	client->set_password("password");
 	client->set_buffer("");
-	client->set_is_registered(true);
 	client->set_is_logged(true);
 	client->set_is_authenticated(true);
 	client->set_is_operator(false);
@@ -128,7 +126,7 @@ Test(PartCommand, err_notregistered)
 
 	Channel *channel = new Channel("#channel");
 
-	toPart->set_is_registered(false);
+	toPart->set_is_logged(false);
 
 	server._clients.push_back(*toPart);
 	server._clients.push_back(*channelMember);

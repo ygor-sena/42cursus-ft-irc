@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:23:47 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/25 09:49:40 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/25 16:39:43 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@
 
 # include "Client.hpp" //-> for client class
 # include "Replies.hpp" //-> for replies class
-# include "Channel.hpp" //-> for channel class 
+# include "Channel.hpp" //-> for channel class
 
 # define CRLF "\r\n"
 # define LINE_FEED "\n"
@@ -83,7 +83,7 @@ class Server
 		void _handler_client_nickname(const std::string &nickname, const int fd);
 		void _handler_client_username(const std::string &username, const int fd);
 		void _handler_client_password(const std::string &password, const int fd);
-		
+
 		static bool _signal; //-> static boolean for signal
 		static void _signal_handler(const int signum);
 

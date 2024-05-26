@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:31:54 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/24 18:25:54 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/25 21:27:35 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,14 @@ void Server::_handler_client_nickname(const std::string &nickname, const int fd)
 		_send_response(fd, ERR_NEEDMOREPARAMS(std::string("*")));
 		_reply_code = 461;
 	}
-	else if (!client->get_is_registered())
+	else if (!client->get_is_authenticated())
 	{
 		_send_response(fd, ERR_NOTREGISTERED(std::string("*")));
 		_reply_code = 451;
 	}
 	else if (!_is_valid_nickname(nickname))
 	{
-	   _send_response(fd, ERR_ERRONEUSNICK(client->get_nickname()));
+		_send_response(fd, ERR_ERRONEUSNICK(client->get_nickname()));
 		_reply_code = 432;
 	}
 	else if (_is_nickname_in_use(fd, nickname))

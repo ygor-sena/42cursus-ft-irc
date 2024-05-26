@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 18:03:34 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/24 22:24:31 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/25 21:21:28 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ Client *mockClient()
 	client->set_nickname("oldNickname");
 	client->set_password("password");
 	client->set_buffer("NICK new_nickname");
-	client->set_is_registered(true);
 	client->set_is_logged(true);
 	client->set_is_authenticated(true);
 	return client;
@@ -56,7 +55,8 @@ Test(NickCommand, err_erroneusnick_2)
 Test(NickCommand, err_norregistered)
 {
 	Client* client = mockClient();
-	client->set_is_registered(false);
+	client->set_is_authenticated(false);
+	client->set_is_logged(false);
 
 	Server server;
 

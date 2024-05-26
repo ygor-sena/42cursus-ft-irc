@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:31:16 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/24 22:39:23 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/25 21:12:54 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void Server::_handler_client_invite(const std::string &buffer, const int fd)
 	Client* client = _get_client(fd);
 
 	// if client is not registered or authenticated, send ERR_NOTREGISTERED
-	if (client->get_is_authenticated() && client->get_is_registered())
+	if (client->get_is_logged())
 	{
 		std::vector<std::string> params = _split_buffer(buffer, " ");
 		if (params.size() < 2)
@@ -91,14 +91,13 @@ void Server::_handler_client_invite(const std::string &buffer, const int fd)
 		channel->invite(invited_client);
 		_send_response(fd, RPL_INVITING(client->get_hostname(), target_channel, client->get_nickname(), target_nickname));
 		_reply_code = 200;
-
-		}
-		else
-		{
-			_send_response(fd, ERR_NOTREGISTERED(client->get_nickname()));
-			_reply_code = 451;
-		}
-		//_send_response(fd, RPL_INVITING(client->get_hostname(), "ft_transcendence", "Gilmar", "Ygor"));
-		std::cout << "INVITE command received from client " << buffer << std::endl;
-		return ;
+	}
+	else
+	{
+		_send_response(fd, ERR_NOTREGISTERED(client->get_nickname()));
+		_reply_code = 451;
+	}
+	//_send_response(fd, RPL_INVITING(client->get_hostname(), "ft_transcendence", "Gilmar", "Ygor"));
+	std::cout << "INVITE command received from client " << buffer << std::endl;
+	return ;
 }

@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 18:15:38 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/25 10:14:29 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/25 21:08:45 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ Client *mockOutsideClient()
 	client->set_nickname("outsideUser");
 	client->set_password("password");
 	client->set_buffer("");
-	client->set_is_registered(true);
 	client->set_is_logged(true);
 	client->set_is_authenticated(true);
 	return client;
@@ -39,7 +38,6 @@ Client *mockCommonClient()
 	client->set_nickname("trollUser");
 	client->set_password("password");
 	client->set_buffer("");
-	client->set_is_registered(true);
 	client->set_is_logged(true);
 	client->set_is_authenticated(true);
 	return client;
@@ -53,7 +51,6 @@ Client *mockOperatorClient()
 	client->set_nickname("channelOperator");
 	client->set_password("password");
 	client->set_buffer("");
-	client->set_is_registered(true);
 	client->set_is_logged(true);
 	client->set_is_authenticated(true);
 	client->set_is_operator(false);

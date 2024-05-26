@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 18:18:57 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/25 08:44:57 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/25 15:17:29 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 # define RPL_PART(hostname, channelname, nickname) (":" + hostname + " PART " + channelname + " :" + nickname + " has left the channel" + CRLF)
 # define RPL_KICK(hostname, channelname, kickername, kickedname, comment) (":" + hostname + " KICK " + channelname + " " + kickedname + " :" + kickername + " " + comment + CRLF)
 # define RPL_INVITING(hostname, channelname, invitername, invitedname) (":" + hostname + " INVITE " + invitedname + " " + channelname + CRLF)
-# define RPL_PRIVMSG(hostname, receiver, text) (":" + hostname + " PRIVMSG " + receiver + " :" + text + CRLF)
+# define RPL_PRIVMSG(hostname, receiver, text) (":" + hostname + " PRIVMSG " + receiver + " " + text + CRLF)
 
 ///////// ERRORS /////////
 # define ERR_NEEDMODEPARM(channelname, mode) (": 696 " + channelname + " * You must specify a parameter for the key mode. " + mode + CRLF)

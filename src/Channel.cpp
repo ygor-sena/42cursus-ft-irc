@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:26:17 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/25 09:38:07 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/25 21:25:19 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ Channel::Channel(std::string name)
 Channel::~Channel()
 {
 	this->_clients.clear();
+	this->_operator_clients.clear();
 	return ;
 }
 
@@ -48,6 +49,10 @@ std::vector<Client *> Channel::get_operator_clients(void)
 	return this->_operator_clients;
 }
 
+std::vector<Client *> Channel::get_channel_clients(void)
+{
+	return this->_clients;
+}
 
 std::string Channel::get_client_names(void) const
 {
@@ -126,13 +131,13 @@ void Channel::kick(Client *client)
 
 void Channel::part(Client *client)
 {
-    // Remove client from channel operators
+	// Remove client from channel operators
 	for (std::vector<Client *>::iterator it_op = this->_operator_clients.begin(); it_op != this->_operator_clients.end(); ++it_op)
 	{
 		if((*it_op)->get_nickname() == client->get_nickname())
 		{
 			this->_operator_clients.erase(it_op);
-			return;
+			return ;
 		}
 	}
 
@@ -140,19 +145,20 @@ void Channel::part(Client *client)
 	{
 		if((*it)->get_nickname() == client->get_nickname())
 		{
-                  std::cout << (*it)->get_nickname() << std::endl;
-                  this->_clients.erase(it);
-                  return;
+			std::cout << (*it)->get_nickname() << std::endl;
+			this->_clients.erase(it);
+			return ;
 		}
 	}
-    /* std::vector<Client *>::iterator it_op = std::find(this->_operator_clients.begin(), this->_operator_clients.end(), client);
-    if (it_op != this->_operator_clients.end())
-        this->_operator_clients.erase(it_op); */
+}
 
-    // Remove client from channel
-    /* std::vector<Client *>::iterator it = std::find(this->_clients.begin(), this->_clients.end(), client); 
-    if (it != this->_clients.end()) {
-		 std::cout << (*it)->get_nickname() << std::endl;
-        this->_clients.erase(it);
-    } */
+void Channel::broadcast(Client *sender, std::string command, std::string target, std::string message)
+{
+	for (std::vector<Client *>::iterator it = this->_clients.begin(); it != this->_clients.end(); it++) {
+		if (*it == sender)
+			continue ;
+		std::cout << "2) " << this->get_name() << " : " << (*it)->get_nickname() << std::endl;
+		(*it)->broadcast(sender, command, target, message);
+	}
+	return ;
 }

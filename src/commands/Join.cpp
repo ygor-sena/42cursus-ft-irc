@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:33:05 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/24 18:25:42 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/25 21:05:37 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void Server::_handler_client_join(const std::string &buffer, const int fd)
 {
 	Client* client = _get_client(fd);
 
-	if (client->get_is_authenticated() && client->get_is_registered())
+	if (client->get_is_logged())
 	{
 		std::vector<std::string> params = _split_buffer(buffer, " ");
 		if (params.size() < 1)

@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:32:16 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/24 18:26:49 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/25 21:07:24 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void Server::_handler_client_username(const std::string &username, const int fd)
 		_send_response(fd, ERR_NEEDMOREPARAMS(std::string("*")));
 		_reply_code = 461;
 	}
-	else if (!client->get_is_registered())
+	else if (!client->get_is_authenticated())
 	{
 		_send_response(fd, ERR_NOTREGISTERED(std::string("*")));
 		_reply_code = 451;

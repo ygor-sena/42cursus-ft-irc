@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:30:47 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/24 23:18:15 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/25 21:05:57 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void Server::_handler_client_kick(const std::string &buffer, const int fd)
 	std::cout << client->get_is_registered() << std::endl;
 	std::cout << client->get_is_operator() << std::endl; */
 
-	if (client->get_is_authenticated() && client->get_is_registered())
+	if (client->get_is_logged())
 	{
 		std::vector<std::string> params = _split_buffer(buffer, " ");
 		std::vector<std::string> comments = _split_buffer(params[1], " ");
