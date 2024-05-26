@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:26:17 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/26 05:00:42 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/26 05:39:32 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ Channel::Channel()
 	_key = "";
 	_name = "";
 	_topic = "";
+	_password = "";
 	_created_at = "";
 	_has_key = false;
 }
@@ -28,8 +29,9 @@ Channel::Channel()
 Channel::Channel(std::string name)
 {
 	_key = "";
-	_name = name;
 	_topic = "";
+	_name = name;
+	_password = "";
 	_created_at = "";
 	_has_key = false;
 }
@@ -83,6 +85,11 @@ int Channel::get_clients_size(void) const
 std::string Channel::get_topic(void) const
 {
 	return _topic;
+}
+
+std::string Channel::get_channel_password(void) const
+{
+	return _password;
 }
 
 void Channel::set_channel_operator(Client *client)
@@ -165,14 +172,14 @@ bool Channel::has_client(Client *client)
 	return false;
 }
 
-bool Channel::has_key(void)
+bool Channel::has_key(void) const
 {
 	return this->_has_key;
 }
 
 bool Channel::is_channel_operator(std::string nickname)
 {
-	for (std::vector<Client *>::iterator it = this->_operator_clients.begin(); it != this->_operator_clients.end(); ++it)
+	for (std::vector<Client *>::iterator it = _operator_clients.begin(); it != this->_operator_clients.end(); ++it)
 	{
 		if ((*it)->get_nickname() == nickname)
 			return true;
@@ -250,11 +257,21 @@ bool Channel::is_client_in_channel(std::string nickname)
 	return false;
 }
 
-bool Channel::is_channel_full(void)
+bool Channel::is_channel_full(void) const
 {
 	if (_limit == -1)
 		return false;
-	if (this->_clients.size() >= _limit)
+	if (_clients.size() >= _limit)
 		return true;
 	return false;
+}
+
+bool Channel::is_channel_invite_only(void) const
+{
+	return _invite_only;
+}
+
+bool Channel::has_password(void) const
+{
+	return _password != "";
 }

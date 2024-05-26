@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 18:18:57 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/26 05:03:19 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/26 05:30:57 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@
 # define ERR_NOTREGISTERED(nickname) (": 451 " + nickname + " :You have not registered!" + CRLF)
 # define ERR_CMDNOTFOUND(nickname, command) (": 421 " + nickname + " " + command + " :Unknown command" + CRLF)
 
+# define ERR_BADCHANNELKEY(clientnickname, channelname) ("475 " + clientnickname + " " + channelname + " :Cannot join channel (incorrect key)" + CRLF)
+# define ERR_INVITEONLYCHAN(clientnickname, channelname) ("473 " + clientnickname + " " + channelname + " :Cannot join channel (+i)" + CRLF)
 # define ERR_CHANNELISFULL(clientnickname, channelname) ("422 " + clientnickname + " " + channelname + " :Cannot join channel (+l)" + CRLF)
 # define ERR_NOSUCHCHANNEL(channelname) ("403 " + channelname + " :No such channel" + CRLF)
 # define ERR_USERNOTINCHANNEL(nickname, channelname) ("441 " + nickname + " " + channelname + " :They aren't on that channel" + CRLF)
