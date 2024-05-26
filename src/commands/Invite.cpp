@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:31:16 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/26 04:37:52 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/26 12:17:23 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void Server::_handler_client_invite(const std::string &buffer, const int fd)
     }
 
     // Verifica se o cliente convidado existe
-    Client *invited_client = this->_get_client(target_nickname);
+    Client *invited_client = _get_client(target_nickname);
     if (!invited_client) {
         _send_response(fd, ERR_NOSUCHNICK(target_channel, target_nickname));
         _reply_code = 401;

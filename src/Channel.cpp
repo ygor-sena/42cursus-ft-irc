@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:26:17 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/26 05:39:32 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/26 18:26:12 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -261,7 +261,7 @@ bool Channel::is_channel_full(void) const
 {
 	if (_limit == -1)
 		return false;
-	if (_clients.size() >= _limit)
+	if (_clients.size() >= static_cast<size_t>(_limit))
 		return true;
 	return false;
 }

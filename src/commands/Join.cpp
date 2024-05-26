@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:33:05 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/26 05:54:05 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/26 12:04:42 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ void Server::_handler_client_join(const std::string &buffer, const int fd)
         // Se eu estou criando o canal eu devo me incluir e enviar a resposta para o cliente?
         channel = new Channel(joining_channel);
         _add_channel(channel);
+        return;
     } else {
         if (channel->has_client(client)) {
             _send_response(fd, ERR_ALREADYREGISTERED(client->get_nickname()));

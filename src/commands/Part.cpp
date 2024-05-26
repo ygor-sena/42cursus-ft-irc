@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:30:20 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/26 04:38:58 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/26 11:52:13 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void Server::_handler_client_part(const std::string &buffer, const int fd)
 
     // Extrai o nome do canal a ser deixado
     std::string channel_name = params[0];
-	
+
     Channel *channel = _get_channel(channel_name);
     if (!channel) {
         _send_response(fd, ERR_NOSUCHCHANNEL(channel_name));

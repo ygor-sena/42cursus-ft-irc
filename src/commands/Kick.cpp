@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:30:47 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/26 04:51:04 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/26 20:29:27 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void Server::_handler_client_kick(const std::string &buffer, const int fd)
 
     // Verifica se o cliente é um operador do canal
     if (!channel->is_channel_operator(client->get_nickname())) {
-        _send_response(fd, ERR_CHANOPRIVSNEEDED(client->get_nickname(), channel_name));
+        _send_response(fd, ERR_CHANOPRIVSNEEDED(channel_name));
         _reply_code = 482;
         return;
     }
@@ -102,6 +102,7 @@ void Server::_handler_client_kick(const std::string &buffer, const int fd)
 	} else {
 		_send_response(fd, RPL_KICK(client->get_hostname(), channel_name, client->get_nickname(), target_client->get_nickname(), ""));
 	}
+    
 	channel->kick(target_client);
 	_reply_code = 200;
 

@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:26:55 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/26 02:51:21 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/26 19:06:33 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -238,8 +238,6 @@ void Server::_execute_command(const std::string buffer, const int fd)
 	std::string command = toupper(splitted_buffer[0]);
 	std::string parameters = splitted_buffer[1];
 
-	std::cout << "parameters: " << parameters << std::endl;
-
 	//TODO: Add a default handler for unknown commands
 	for (size_t i = 0; i < _command_list_size; i++) {
 		if (command == _command_list[i].command) {
@@ -269,15 +267,20 @@ void Server::_execute_command(const std::string buffer, const int fd)
  */
 std::vector<std::string> Server::_split_buffer(const std::string &buffer, const std::string &delimiter)
 {
-	std::vector<std::string> tokens;
+    std::string command;
+    std::string parameters;
+    std::vector<std::string> tokens;
+    std::istringstream iss(buffer);
 
-	std::string command = buffer.substr(0, buffer.find_first_of(delimiter));
-	std::string parameters = buffer.substr(buffer.find_first_of(delimiter) + 1);
 
-	tokens.push_back(command);
-	tokens.push_back(parameters);
+    iss >> command;
+    tokens.push_back(command);
 
-	return tokens;
+    std::getline(iss >> std::ws, parameters);
+    parameters.erase(0, parameters.find_first_not_of(delimiter));
+    tokens.push_back(parameters);
+
+    return tokens;
 }
 
 /**

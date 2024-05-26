@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:32:16 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/26 04:35:52 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/26 20:42:13 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,31 +31,32 @@
  */
 void Server::_handler_client_username(const std::string &buffer, const int fd)
 {
-	if (buffer.empty() || buffer.size() < 5 || buffer == USER_CMD) {
-		_send_response(fd, ERR_NEEDMOREPARAMS(std::string("*")));
-		_reply_code = 461;
-		return;
-	}
-	
-	Client* client = _get_client(fd);
-
-	if (!client->get_is_authenticated()) {
-		_send_response(fd, ERR_NOTREGISTERED(std::string("*")));
-		_reply_code = 451;
-		return;
-	}
-	
-	if (!client->get_username().empty()) {
-		_send_response(fd, ERR_ALREADYREGISTERED(std::string("*")));
-		_reply_code = 462;
-	} else {
-		client->set_username(buffer);
-		if (_client_is_ready_to_login(fd)) {
-			client->set_is_logged(fd);
-		}
-		_reply_code = 200;
-	}
-	
-	// Registra o comando USER recebido
-    std::cout << "USER command received from client " << buffer << std::endl;
+    // Registra o comando USER recebido
+    std::cout << "USER command received: " << buffer << std::endl;
+    
+    Client* client = _get_client(fd);
+    
+    if (buffer.size() < 5) {
+        // Verifica se há parâmetros suficientes
+        _send_response(fd, ERR_NEEDMOREPARAMS(std::string("*")));
+        _reply_code = 461;
+    } else if (!client || !client->get_is_authenticated()) {
+        // Verifica se o cliente está autenticado
+        _send_response(fd, ERR_NOTREGISTERED(std::string("*")));
+        _reply_code = 451;
+    } else if (!client->get_username().empty()) {
+        // Verifica se o nome de usuário já está registrado
+        _send_response(fd, ERR_ALREADYREGISTERED(client->get_nickname()));
+        _reply_code = 462;
+    } else {
+        // Define o nome de usuário do cliente e verifica se está pronto para login
+        client->set_username(buffer);
+        if (_client_is_ready_to_login(fd)) {
+            client->set_is_logged(fd);
+            _send_response(fd, RPL_CONNECTED(client->get_nickname()));
+            _reply_code = 001;
+        } else {
+            _reply_code = 200;
+        }
+    }
 }
