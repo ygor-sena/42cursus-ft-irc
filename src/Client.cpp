@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:20:02 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/24 22:24:15 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/25 21:03:38 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,7 @@ Client::Client()
 	_password = "";
 	_buffer = "";
 	_is_logged = false;
-	_is_registered = false;
-	_is_authenticated = true;
+	_is_authenticated = false;
 	_is_operator = false;
 }
 
@@ -64,11 +63,6 @@ void Client::set_password(const std::string &password)
 	_password = password;
 }
 
-void Client::set_is_registered(bool is_registered)
-{
-	_is_registered = is_registered;
-}
-
 void Client::set_is_authenticated(bool is_authenticated)
 {
 	_is_authenticated = is_authenticated;
@@ -82,11 +76,6 @@ void Client::set_is_operator(bool is_operator)
 void Client::set_is_logged(bool is_logged)
 {
 	_is_logged = is_logged;
-}
-
-bool Client::get_is_registered() const
-{
-	return _is_registered;
 }
 
 bool Client::get_is_authenticated() const
@@ -132,4 +121,15 @@ std::string Client::get_password() const
 std::string Client::get_hostname() const
 {
 	return _nickname + "@" + _ip_addr;
+}
+
+void Client::broadcast(Client *sender, std::string command, std::string target, std::string message)
+{
+	(void)command;
+	std::string response = RPL_PRIVMSG(sender->get_hostname(), target, message);
+
+	if (send(sender->get_fd(), response.c_str(), response.size(), 0) == -1)
+		std::cerr << "Response send() failed" << std::endl;
+
+  //_send_response(fd, RPL_PRIVMSG(client->get_hostname(),
 }

@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 18:15:32 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/25 10:23:06 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/25 21:14:16 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ Client *mockOutsideClient()
 	client->set_nickname("outsideUser");
 	client->set_password("password");
 	client->set_buffer("");
-	client->set_is_registered(true);
 	client->set_is_logged(true);
 	client->set_is_authenticated(true);
 	return client;
@@ -39,7 +38,6 @@ Client *mockInsideClient()
 	client->set_nickname("insideUser");
 	client->set_password("password");
 	client->set_buffer("");
-	client->set_is_registered(true);
 	client->set_is_logged(true);
 	client->set_is_authenticated(true);
 	client->set_is_operator(false);
@@ -186,7 +184,7 @@ Test(InviteCommand, err_notregistered)
 	Server server;
 	Channel *channel = new Channel("#world");
 
-	insideClient->set_is_registered(false);
+	insideClient->set_is_logged(false);
 
 	// Add clients to the server clients list
 	server._clients.push_back(*insideClient);

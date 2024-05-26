@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:32:39 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/24 18:26:27 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/25 21:06:37 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,12 @@ void Server::_handler_client_password(const std::string &password, const int fd)
 
 	if (password.empty()) //-> Isso é o suficiente?
 		_send_response(fd, ERR_NEEDMOREPARAMS(std::string("*")));
-	else if (client->get_is_registered())
+	else if (client->get_is_authenticated())
 		_send_response(fd, ERR_ALREADYREGISTERED(std::string("*")));
 	else if (_password != password)
 		_send_response(fd, ERR_INCORPASS(std::string("*")));
 	else
 	{
-		client->set_is_registered(true);
+		client->set_is_authenticated(true);
 	}
 }
