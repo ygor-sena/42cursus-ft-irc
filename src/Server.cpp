@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:26:55 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/25 20:58:03 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/26 02:51:21 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -237,6 +237,8 @@ void Server::_execute_command(const std::string buffer, const int fd)
 		return ;
 	std::string command = toupper(splitted_buffer[0]);
 	std::string parameters = splitted_buffer[1];
+
+	std::cout << "parameters: " << parameters << std::endl;
 
 	//TODO: Add a default handler for unknown commands
 	for (size_t i = 0; i < _command_list_size; i++) {
@@ -479,7 +481,7 @@ Client* Server::_get_client(const int fd)
 			return &_clients[i]; 
 		}
 	}
-	throw std::invalid_argument("Client not found");
+	return NULL;
 }
 
 Client* Server::_get_client(const std::string nickname)

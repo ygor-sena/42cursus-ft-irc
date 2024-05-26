@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:23:47 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/25 16:39:43 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/26 04:11:59 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@
 # include <sstream> //-> for std::stringstream
 # include <iomanip>
 # include <map> //-> for map
-# include <functional> //-> for std::function
 
 //-------------------------------------------------------//
 # define RED "\e[1;31m" //-> for red color
@@ -42,6 +41,7 @@
 # include "Replies.hpp" //-> for replies class
 # include "Channel.hpp" //-> for channel class
 
+# define SPACE " "
 # define CRLF "\r\n"
 # define LINE_FEED "\n"
 # define DELIMITER " \t"
@@ -93,7 +93,7 @@ class Server
 		void _accept_new_client(); //-> accept new client
 		void _clear_client(const int fd); //-> clear clients
 		void _receive_new_data(const int fd); //-> receive data from a client
-		void _send_response(const int fd, const std::string &response); //-> send response to client
+		void _send_response(const int fd, const std::string &response); //-> send response to client		
 		
 		struct command_handler
 		{
@@ -113,11 +113,13 @@ class Server
 		bool _client_is_ready_to_login(const int fd);
 
 		Channel* _get_channel(const std::string &channel_name); //-> get channel
+		
 		void _close_fds(); //-> close file descriptors
 
 		void _add_channel(Channel *channel); // -> add a new channel to server channels
 
 		std::string toupper(const std::string& str);
 };
+
 
 #endif // SERVER_HPP

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Replies.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 18:18:57 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/25 15:17:29 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/26 05:03:19 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,16 @@
 # define RPL_CHANNELMODES(nickname, channelname, modes) ": 324 " + nickname + " " + channelname + " " + modes + CRLF
 # define RPL_CHANGEMODE(hostname, channelname, mode, arguments) (":" + hostname + " MODE " + channelname + " " + mode + " " + arguments + CRLF)
 # define RPL_NICKCHANGE(oldnickname, nickname) (":" + oldnickname + " NICK " + nickname + CRLF)
+
 # define RPL_JOINMSG(hostname, ipaddress, channelname) (":" + hostname + "@" + ipaddress + " JOIN " + channelname + CRLF)
+
 # define RPL_NAMREPLY(nickname, channelname, clientslist) (": 353 " + nickname + " @ " + channelname + " :" + clientslist + CRLF)
 # define RPL_ENDOFNAMES(nickname, channelname) (": 366 " + nickname + " " + channelname + " :END of /NAMES list" + CRLF)
-# define RPL_TOPICIS(nickname, channelname, topic) (": 332 " + nickname + " " +channelname + " :" + topic + "\r\n")
+
+// Topic
+# define RPL_TOPIC(nickname, channelname, topic) (": 332 " + nickname + " " +channelname + " :" + topic + CRLF)
+# define RPL_NOTOPIC(nickname, channelname) (": 332 " + nickname + " " +channelname + " : No topic is set " + CRLF)
+
 # define RPL_QUITMESSAGE(nickname) (": 301 " + nickname + " :You have quit the server." + CRLF)
 # define RPL_PART(hostname, channelname, nickname) (":" + hostname + " PART " + channelname + " :" + nickname + " has left the channel" + CRLF)
 # define RPL_KICK(hostname, channelname, kickername, kickedname, comment) (":" + hostname + " KICK " + channelname + " " + kickedname + " :" + kickername + " " + comment + CRLF)
@@ -50,6 +56,7 @@
 # define ERR_NOTREGISTERED(nickname) (": 451 " + nickname + " :You have not registered!" + CRLF)
 # define ERR_CMDNOTFOUND(nickname, command) (": 421 " + nickname + " " + command + " :Unknown command" + CRLF)
 
+# define ERR_CHANNELISFULL(clientnickname, channelname) ("422 " + clientnickname + " " + channelname + " :Cannot join channel (+l)" + CRLF)
 # define ERR_NOSUCHCHANNEL(channelname) ("403 " + channelname + " :No such channel" + CRLF)
 # define ERR_USERNOTINCHANNEL(nickname, channelname) ("441 " + nickname + " " + channelname + " :They aren't on that channel" + CRLF)
 # define ERR_NOTONCHANNEL(channelname) ("442 " + channelname + " :You're not on that channel" + CRLF)

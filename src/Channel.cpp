@@ -3,32 +3,40 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:26:17 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/25 21:25:19 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/26 05:00:42 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Channel.hpp"
 
+/*
+** ------------------------------- CONSTRUCTOR --------------------------------
+*/
+
 Channel::Channel()
 {
-	topic = 0;
-	_name = "";
 	_key = "";
+	_name = "";
+	_topic = "";
 	_created_at = "";
 	_has_key = false;
 }
 
 Channel::Channel(std::string name)
 {
-	topic = 0;
-	_name = name;
 	_key = "";
+	_name = name;
+	_topic = "";
 	_created_at = "";
 	_has_key = false;
 }
+
+/*
+** -------------------------------- DESTRUCTOR --------------------------------
+*/
 
 Channel::~Channel()
 {
@@ -37,13 +45,15 @@ Channel::~Channel()
 	return ;
 }
 
-// GETTERS
+/*
+** --------------------------------- ACCESSOR ---------------------------------
+*/
+
 std::string Channel::get_name(void) const
 {
 	return _name;
 }
 
-// Getter for _operator_clients
 std::vector<Client *> Channel::get_operator_clients(void)
 {
 	return this->_operator_clients;
@@ -70,12 +80,79 @@ int Channel::get_clients_size(void) const
 	return this->_clients.size();
 }
 
+std::string Channel::get_topic(void) const
+{
+	return _topic;
+}
+
 void Channel::set_channel_operator(Client *client)
 {
 	client->set_is_operator(true);
 	this->_operator_clients.push_back(client);
 	return ;
 }
+
+void Channel::set_topic(std::string topic)
+{
+	_topic = topic;
+}
+
+void Channel::set_limit(int limit)
+{
+	_limit = limit;
+}
+
+void Channel::set_invite_only()
+{
+	_invite_only = true;
+}
+
+void Channel::set_topic_restriction()
+{
+	_topic_restriction = true;
+}
+
+void Channel::set_password(std::string password)
+{
+	_password = password;
+}
+
+void Channel::remove_limit(void)
+{
+	_limit = -1;
+}
+
+void Channel::remove_password(void)
+{
+	_password = "";
+}
+
+void Channel::remove_topic_restriction(void)
+{
+	_topic_restriction = false;
+}
+
+void Channel::remove_invite_only(void)
+{
+	_invite_only = false;
+}
+
+void Channel::remove_channel_operator(Client *client)
+{
+	client->set_is_operator(false);
+	for (std::vector<Client *>::iterator it = this->_operator_clients.begin(); it != this->_operator_clients.end(); ++it)
+	{
+		if((*it)->get_nickname() == client->get_nickname())
+		{
+			this->_operator_clients.erase(it);
+			return ;
+		}
+	}
+}
+
+/*
+** --------------------------------- OTHERS ---------------------------------
+*/
 
 // Channel STATUS and checker functions
 bool Channel::has_client(Client *client)
@@ -161,4 +238,23 @@ void Channel::broadcast(Client *sender, std::string command, std::string target,
 		(*it)->broadcast(sender, command, target, message);
 	}
 	return ;
+}
+
+bool Channel::is_client_in_channel(std::string nickname)
+{
+	for (std::vector<Client *>::iterator it = this->_clients.begin(); it != this->_clients.end(); ++it)
+	{
+		if((*it)->get_nickname() == nickname)
+			return true;
+	}
+	return false;
+}
+
+bool Channel::is_channel_full(void)
+{
+	if (_limit == -1)
+		return false;
+	if (this->_clients.size() >= _limit)
+		return true;
+	return false;
 }
