@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:26:55 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/26 19:06:33 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/26 21:06:22 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -457,7 +457,7 @@ bool Server::_is_valid_nickname(const std::string &nickname)
 bool Server::_is_nickname_in_use(const int fd, const std::string &username)
 {
 	for (std::vector<Client>::iterator it = _clients.begin(); it != _clients.end(); ++it) {
-		if (it->get_nickname() == username && it->get_fd() != fd)
+		if (it->get_nickname() == username && it->get_fd() == fd)
 			return true;
 	}
 	return false;
