@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Kick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:30:47 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/25 21:05:57 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/26 20:29:27 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,88 +31,81 @@ void Server::_handler_client_kick(const std::string &buffer, const int fd)
 {
 	Client* client = _get_client(fd);
 
-/* 	std::cout << client->get_nickname() << " is trying to kick a user" << std::endl;
+	/*
+	std::cout << client->get_nickname() << " is trying to kick a user" << std::endl;
 	std::cout << client->get_fd() << std::endl;
 	std::cout << client->get_password() << std::endl;
 	std::cout << client->get_is_authenticated() << std::endl;
 	std::cout << client->get_is_registered() << std::endl;
-	std::cout << client->get_is_operator() << std::endl; */
+	std::cout << client->get_is_operator() << std::endl;
+	*/
 
-	if (client->get_is_logged())
-	{
-		std::vector<std::string> params = _split_buffer(buffer, " ");
-		std::vector<std::string> comments = _split_buffer(params[1], " ");
+	if (!client->get_is_logged()) {
+        _send_response(fd, ERR_NOTREGISTERED(client->get_nickname()));
+        _reply_code = 451;
+        return;
+    }
 
-		// Check if the command has the minimum number of parameters
-		if (params.size() < 2)
-		{
-			_send_response(fd, ERR_NEEDMOREPARAMS(client->get_nickname()));
-			_reply_code = 461;
-			return;
-		}
+    // Divide o buffer em parâmetros e verifica se há parâmetros suficientes
+    std::vector<std::string> params = _split_buffer(buffer, SPACE);
+    if (params.size() < 2) {
+        _send_response(fd, ERR_NEEDMOREPARAMS(client->get_nickname()));
+        _reply_code = 461;
+        return;
+    }
 
-		std::string channel_name = params[0];
+    // Extrai o nome do canal e o apelido do cliente a ser expulso
+    std::string channel_name = params[0];
+    std::vector<std::string> comments = _split_buffer(params[1], SPACE);
+    std::string target_nickname = comments[0];
 
-		// Check if the channel exists
-		Channel *channel = this->_get_channel(channel_name);
-		if (!channel)
-		{
-			_send_response(fd, ERR_NOSUCHCHANNEL(channel_name));
-			_reply_code = 403;
-			return;
-		}
+    // Verifica se o canal existe
+    Channel *channel = _get_channel(channel_name);
+    if (!channel) {
+        _send_response(fd, ERR_NOSUCHCHANNEL(channel_name));
+        _reply_code = 403;
+        return;
+    }
 
-		// Check if the client is in the channel
-		if (!channel->has_client(client))
-		{
-			_send_response(fd, ERR_NOTONCHANNEL(channel_name));
-			_reply_code = 442;
-			return;
-		}
+    // Verifica se o cliente está no canal
+    if (!channel->has_client(client)) {
+        _send_response(fd, ERR_NOTONCHANNEL(channel_name));
+        _reply_code = 442;
+        return;
+    }
 
-		// Check if the client is a channel operator
-		if (channel->is_channel_operator(client->get_nickname()) == false)
-		{
-			_send_response(fd, ERR_CHANOPRIVSNEEDED(client->get_nickname(), channel_name));
-			_reply_code = 482;
-			return;
-		}
+    // Verifica se o cliente é um operador do canal
+    if (!channel->is_channel_operator(client->get_nickname())) {
+        _send_response(fd, ERR_CHANOPRIVSNEEDED(channel_name));
+        _reply_code = 482;
+        return;
+    }
 
-		Client *target_client = this->_get_client(comments[0]);
+    // Verifica se o cliente alvo existe
+    Client *target_client = _get_client(target_nickname);
+    if (!target_client) {
+        _send_response(fd, ERR_NOSUCHNICK(channel_name, target_nickname));
+        _reply_code = 401;
+        return;
+    }
 
-		// Check if the target client exists
-		if (!target_client)
-		{
-			_send_response(fd, ERR_NOSUCHNICK(channel_name, client->get_nickname()));
-			_reply_code = 401;
-			return;
-		}
+    // Verifica se o cliente alvo está no canal
+    if (!channel->has_client(target_client)) {
+        _send_response(fd, ERR_USERNOTINCHANNEL(target_nickname, channel_name));
+        _reply_code = 441;
+        return;
+    }
 
-		// Check if the target client is in the channel
-		if (!channel->has_client(target_client))
-		{
-			_send_response(fd, ERR_USERNOTINCHANNEL(target_client->get_nickname(), channel_name));
-			_reply_code = 441;
-			return;
-		}
-
-		// Check if option parameter <comment> exists
-		if (params.size() > 2)
-		{
-			_send_response(fd, RPL_KICK(client->get_hostname(), channel_name, client->get_nickname(), target_client->get_nickname(), comments[1]));
-		}
-		else
-		{
-			_send_response(fd, RPL_KICK(client->get_hostname(), channel_name, client->get_nickname(), target_client->get_nickname(), ""));
-		}
-		channel->kick(target_client);
-		_reply_code = 200;
+	// Check if option parameter <comment> exists
+	if (params.size() > 2) {
+		_send_response(fd, RPL_KICK(client->get_hostname(), channel_name, client->get_nickname(), target_client->get_nickname(), comments[1]));
+	} else {
+		_send_response(fd, RPL_KICK(client->get_hostname(), channel_name, client->get_nickname(), target_client->get_nickname(), ""));
 	}
-	else
-	{
-		_send_response(fd, ERR_NOTREGISTERED(client->get_nickname()));
-		_reply_code = 451;
-		return ;
-	}
-	//_send_response(fd, RPL_KICK(client->get_nickname(), "ft_transcendence", "gilmar", "Ygor", "You have been kicked"));
+    
+	channel->kick(target_client);
+	_reply_code = 200;
+
+    // Registra o comando KICK recebido
+    std::cout << "KICK command received from client " << buffer << std::endl;
 }

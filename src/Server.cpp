@@ -267,15 +267,20 @@ void Server::_execute_command(const std::string buffer, const int fd)
  */
 std::vector<std::string> Server::_split_buffer(const std::string &buffer, const std::string &delimiter)
 {
-	std::vector<std::string> tokens;
+    std::string command;
+    std::string parameters;
+    std::vector<std::string> tokens;
+    std::istringstream iss(buffer);
 
-	std::string command = buffer.substr(0, buffer.find_first_of(delimiter));
-	std::string parameters = buffer.substr(buffer.find_first_of(delimiter) + 1);
 
-	tokens.push_back(command);
-	tokens.push_back(parameters);
+    iss >> command;
+    tokens.push_back(command);
 
-	return tokens;
+    std::getline(iss >> std::ws, parameters);
+    parameters.erase(0, parameters.find_first_not_of(delimiter));
+    tokens.push_back(parameters);
+
+    return tokens;
 }
 
 /**
@@ -452,7 +457,7 @@ bool Server::_is_valid_nickname(const std::string &nickname)
 bool Server::_is_nickname_in_use(const int fd, const std::string &username)
 {
 	for (std::vector<Client>::iterator it = _clients.begin(); it != _clients.end(); ++it) {
-		if (it->get_nickname() == username && it->get_fd() != fd)
+		if (it->get_nickname() == username && it->get_fd() == fd)
 			return true;
 	}
 	return false;
@@ -479,7 +484,7 @@ Client* Server::_get_client(const int fd)
 			return &_clients[i]; 
 		}
 	}
-	throw std::invalid_argument("Client not found");
+	return NULL;
 }
 
 Client* Server::_get_client(const std::string nickname)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:20:02 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/25 21:03:38 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/26 19:10:24 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,16 @@ std::string Client::get_password() const
 std::string Client::get_hostname() const
 {
 	return _nickname + "@" + _ip_addr;
+}
+
+void Client::add_channel_invited(const std::string &channel)
+{
+	_channels_invited.push_back(channel);
+}
+
+bool Client::is_channel_invited(const std::string &channel)
+{
+	return std::find(_channels_invited.begin(), _channels_invited.end(), channel) != _channels_invited.end();
 }
 
 void Client::broadcast(Client *sender, std::string command, std::string target, std::string message)

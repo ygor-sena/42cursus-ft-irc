@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:19:06 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/25 21:04:15 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/26 05:24:43 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,9 @@ class Client //-> class for client
 		void set_password(const std::string &password);
 		void set_is_authenticated(bool is_authenticated);
 		void set_is_operator(bool is_operator);
+
+		bool is_channel_invited(const std::string &channel);
+		void add_channel_invited(const std::string &channel);
 
 		void broadcast(Client *sender, std::string command, std::string target, std::string message);
 
