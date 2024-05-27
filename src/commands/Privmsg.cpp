@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:31:33 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/25 21:06:58 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/27 09:29:00 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ void Server::_handler_client_privmsg(const std::string &buffer, const int fd)
 				
 				std::cout << "1) THIS IS CHANNEL TARGET:" << target_channel->get_name() << std::endl;
 				
-				target_channel->broadcast(client, "PRIVMSG", target_channel->get_name(), params[1]);
+				target_channel->broadcast(client, target_channel->get_name(), params[1]);
 				
 				_send_response(fd, RPL_PRIVMSG(client->get_hostname(), target_channel->get_name(), params[1]));
 			}

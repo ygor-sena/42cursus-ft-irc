@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:24:04 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/25 17:17:43 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/27 09:28:11 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ class Channel
 		void join(Client *client);
 		void kick(Client *client);
 		void part(Client *client);
-		void broadcast(Client *sender, std::string command, std::string target, std::string message);
+		void broadcast(Client *sender, std::string target, std::string message);
 
 		/*
 		** ------------------ Channel STATUS and checker functions

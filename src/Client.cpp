@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:20:02 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/25 21:03:38 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/27 09:27:08 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,12 +123,11 @@ std::string Client::get_hostname() const
 	return _nickname + "@" + _ip_addr;
 }
 
-void Client::broadcast(Client *sender, std::string command, std::string target, std::string message)
+void Client::broadcast(Client *sender, std::string target, std::string message)
 {
-	(void)command;
 	std::string response = RPL_PRIVMSG(sender->get_hostname(), target, message);
 
-	if (send(sender->get_fd(), response.c_str(), response.size(), 0) == -1)
+	if (send(this->get_fd(), response.c_str(), response.size(), 0) == -1)
 		std::cerr << "Response send() failed" << std::endl;
 
   //_send_response(fd, RPL_PRIVMSG(client->get_hostname(),

@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:19:06 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/25 21:04:15 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/27 09:27:24 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ class Client //-> class for client
 		void set_is_authenticated(bool is_authenticated);
 		void set_is_operator(bool is_operator);
 
-		void broadcast(Client *sender, std::string command, std::string target, std::string message);
+		void broadcast(Client *sender, std::string target, std::string message);
 
 	private:
 		int _fd; //-> client file descriptor

@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:26:17 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/25 21:25:19 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/27 09:36:11 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,13 +152,19 @@ void Channel::part(Client *client)
 	}
 }
 
-void Channel::broadcast(Client *sender, std::string command, std::string target, std::string message)
+void Channel::broadcast(Client *sender, std::string target, std::string message)
 {
 	for (std::vector<Client *>::iterator it = this->_clients.begin(); it != this->_clients.end(); it++) {
 		if (*it == sender)
 			continue ;
 		std::cout << "2) " << this->get_name() << " : " << (*it)->get_nickname() << std::endl;
-		(*it)->broadcast(sender, command, target, message);
+		(*it)->broadcast(sender, target, message);
+	}
+	for (std::vector<Client *>::iterator it = this->_operator_clients.begin(); it != this->_operator_clients.end(); it++) {
+		if (*it == sender)
+			continue ;
+		std::cout << "2) " << this->get_name() << " : " << (*it)->get_nickname() << std::endl;
+		(*it)->broadcast(sender, target, message);
 	}
 	return ;
 }
