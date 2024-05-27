@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:33:05 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/26 12:04:42 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/26 22:51:03 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,11 @@ void Server::_handler_client_join(const std::string &buffer, const int fd)
     if (!channel) {
         // Channel does not exist, create it
         // Se eu estou criando o canal eu devo me incluir e enviar a resposta para o cliente?
+        // Quem cria o canal já é moodn então ele é único a adicionar outrs mood e qlqr outra coisa.
         channel = new Channel(joining_channel);
         _add_channel(channel);
+        channel->join(client);
+        channel->set_channel_operator(client);
         return;
     } else {
         if (channel->has_client(client)) {
@@ -80,14 +83,14 @@ void Server::_handler_client_join(const std::string &buffer, const int fd)
             return;
         } else {
             // O cliente possui o convite, agr precisamos validar se precisa de senha para entrar canal.
-            if (channel->has_password()) {
+            if (channel->has_key()) {
                 // Verifica se o cliente tem a senha correta
                 if (params.size() < 2) {
                     _send_response(fd, ERR_BADCHANNELKEY(client->get_nickname(), joining_channel));
                     return;
                 } else {
                     std::string channel_key = params[1];
-                    if (channel_key != channel->get_channel_password()) {
+                    if (channel_key != channel->get_channel_key()) {
                         _send_response(fd, ERR_BADCHANNELKEY(client->get_nickname(), joining_channel));
                         return;
                     } else {

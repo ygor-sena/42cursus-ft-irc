@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:26:17 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/26 18:26:12 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/26 23:09:04 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ Channel::Channel()
 	_key = "";
 	_name = "";
 	_topic = "";
-	_password = "";
+	_limit = -1;
 	_created_at = "";
 	_has_key = false;
 }
@@ -30,8 +30,8 @@ Channel::Channel(std::string name)
 {
 	_key = "";
 	_topic = "";
+	_limit = -1;
 	_name = name;
-	_password = "";
 	_created_at = "";
 	_has_key = false;
 }
@@ -87,9 +87,9 @@ std::string Channel::get_topic(void) const
 	return _topic;
 }
 
-std::string Channel::get_channel_password(void) const
+std::string Channel::get_channel_key(void) const
 {
-	return _password;
+	return _key;
 }
 
 void Channel::set_channel_operator(Client *client)
@@ -119,9 +119,9 @@ void Channel::set_topic_restriction()
 	_topic_restriction = true;
 }
 
-void Channel::set_password(std::string password)
+void Channel::set_key(std::string key)
 {
-	_password = password;
+	_key = key;
 }
 
 void Channel::remove_limit(void)
@@ -129,9 +129,9 @@ void Channel::remove_limit(void)
 	_limit = -1;
 }
 
-void Channel::remove_password(void)
+void Channel::remove_key(void)
 {
-	_password = "";
+	_key = "";
 }
 
 void Channel::remove_topic_restriction(void)
@@ -174,7 +174,7 @@ bool Channel::has_client(Client *client)
 
 bool Channel::has_key(void) const
 {
-	return this->_has_key;
+	return _key != "";
 }
 
 bool Channel::is_channel_operator(std::string nickname)
@@ -269,9 +269,4 @@ bool Channel::is_channel_full(void) const
 bool Channel::is_channel_invite_only(void) const
 {
 	return _invite_only;
-}
-
-bool Channel::has_password(void) const
-{
-	return _password != "";
 }

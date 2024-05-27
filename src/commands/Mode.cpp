@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:30:34 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/26 20:46:35 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/26 23:00:29 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,9 @@
 void _handler_invite_only_mode(Channel* channel, bool set);
 void _handler_topic_restriction_mode(Channel* channel, bool set);
 bool _handler_mode_command(const std::string &modes, char &mode, bool &set);
+bool _handler_mode_flags(Channel* channel, Client *client, char mode, bool &set);
 void _handle_limit_mode(Channel* channel, const std::string &argument, bool set);
-void _handle_operator_privilages_mode(Channel* channel, Client *client, bool set);
+void _handle_operator_privileges_mode(Channel* channel, Client *client, bool set);
 void _handle_password_mode(Channel* channel, const std::string &argument, bool set);
 
 /**
@@ -45,25 +46,23 @@ void Server::_handler_client_mode(const std::string &buffer, const int fd)
 	bool set;
 	char mode = 0;
     std::istringstream iss(buffer);
-    std::string channelName, modes, nickname;
-    iss >> channelName >> modes >> nickname;
+    std::string chnl, modes, nick;
+    iss >> chnl >> modes >> nick;
 
-    // Obter o cliente e o canal associados aos argumentos
-    Client* client = _get_client(nickname);
-    Channel* channel = _get_channel(channelName);
+    Client* client = _get_client(nick);
+    Channel* channel = _get_channel(chnl);
 
-    // Verificar se o cliente é nulo antes de acessar seus métodos
-    if (!channel) {
-        _send_response(fd, ERR_NOSUCHCHANNEL(channelName));
-        _reply_code = 403;
-    } else if (!client->get_is_logged()) { // Verificar se o cliente está logado
+	if (!client->get_is_logged()) { // Verificar se o cliente está logado
         _send_response(fd, ERR_NOTREGISTERED(client->get_nickname()));
         _reply_code = 451;
-    } else if (channelName.empty() || modes.empty() || nickname.empty()) { // Verificar se todos os parâmetros foram fornecidos
+    } else if (chnl.empty() || modes.empty() || nick.empty()) { // Verificar se todos os parâmetros foram fornecidos
         _send_response(fd, ERR_NEEDMOREPARAMS(client->get_nickname()));
         _reply_code = 461;
-    } else if (!channel->is_channel_operator(nickname)) { // Verificar se o cliente tem privilégios de operador no canal
-        _send_response(fd, ERR_CHANOPRIVSNEEDED(channelName));
+    } else if (!channel) {
+        _send_response(fd, ERR_NOSUCHCHANNEL(chnl));
+        _reply_code = 403;
+	} else if (!channel->is_channel_operator(nick)) { // Verificar se o cliente tem privilégios de operador no canal
+        _send_response(fd, ERR_CHANOPRIVSNEEDED(chnl));
         _reply_code = 482;
     } else { // Tratar o comando MODE
         if (!_handler_mode_command(modes, mode, set)) {
@@ -71,29 +70,36 @@ void Server::_handler_client_mode(const std::string &buffer, const int fd)
             _reply_code = 696;
         }
         else { // Executar a ação correspondente ao modo
-            switch (mode) {
-                case 'i':
-                    _handler_invite_only_mode(channel, set);
-                    break;
-                case 't':
-                    _handler_topic_restriction_mode(channel, set);
-                    break;
-                case 'k':
-                    _handle_password_mode(channel, nickname, set);
-                    break;
-                case 'o':
-                    _handle_operator_privilages_mode(channel, client, set);
-                    break;
-                case 'l':
-                    _handle_limit_mode(channel, nickname, set);
-                    break;
-                default:
-                    _send_response(fd, ERR_UNKNOWNMODE(nickname, channelName, mode));
-                    _reply_code = 472;
-                    break;
-            }
+            if (_handler_mode_flags(channel, client, mode, set)) {
+				_send_response(fd, ERR_UNKNOWNMODE(client->get_nickname(), channel->get_name(), mode));
+				_reply_code = 472;
+			}
         }
     }
+}
+
+bool _handler_mode_flags(Channel* channel, Client *client, char mode, bool &set)
+{
+	switch (mode) {
+		case 'i':
+			_handler_invite_only_mode(channel, set);
+			break;
+		case 't':
+			_handler_topic_restriction_mode(channel, set);
+			break;
+		case 'k':
+			_handle_password_mode(channel, client->get_nickname(), set);
+			break;
+		case 'o':
+			_handle_operator_privileges_mode(channel, client, set);
+			break;
+		case 'l':
+			_handle_limit_mode(channel, client->get_nickname(), set);
+			break;
+		default:
+			return false;
+	}
+    return true;
 }
 
 bool _handler_mode_command(const std::string &modes, char &mode, bool &set)
@@ -131,14 +137,14 @@ void _handler_topic_restriction_mode(Channel* channel, bool set)
 void _handle_password_mode(Channel* channel, const std::string &argument, bool set)
 {
 	if (set) {
-		channel->set_password(argument);
+		channel->set_key(argument);
 	}
 	else {
-		channel->remove_password();
+		channel->remove_key();
 	}
 }
 
-void _handle_operator_privilages_mode(Channel* channel, Client *client, bool set)
+void _handle_operator_privileges_mode(Channel* channel, Client *client, bool set)
 {
 	if (set) {
 		if (client) {

@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:32:16 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/26 20:58:36 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/26 22:15:40 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,16 +36,16 @@ void Server::_handler_client_username(const std::string &buffer, const int fd)
     
     Client* client = _get_client(fd);
     
-    if (buffer.size() < 5) { // Verifica se há parâmetros suficientes
+    if (buffer.size() < 5) {
         _send_response(fd, ERR_NEEDMOREPARAMS(std::string("*")));
         _reply_code = 461;
-    } else if (!client->get_is_authenticated()) { // Verifica se o cliente está autenticado
+    } else if (!client || !client->get_is_authenticated()) {
         _send_response(fd, ERR_NOTREGISTERED(std::string("*")));
         _reply_code = 451;
-    } else if (!client->get_username().empty()) { // Verifica se o nome de usuário já está registrado
+    } else if (!client->get_username().empty()) {
         _send_response(fd, ERR_ALREADYREGISTERED(client->get_nickname()));
         _reply_code = 462;
-    } else { // Define o nome de usuário do cliente e verifica se está pronto para login
+    } else {
         client->set_username(buffer);
         if (_client_is_ready_to_login(fd)) {
             client->set_is_logged(fd);

@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:30:59 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/26 19:49:38 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/26 22:46:34 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,20 +35,17 @@ void Server::_handler_client_topic(const std::string &buffer, const int fd)
     std::cout << "TOPIC command received: " << buffer << std::endl;
 	
 	std::istringstream iss(buffer);
-	std::string channel_name, topic;
-	iss >> channel_name >> topic;
+	std::string chnl, topic;
+	iss >> chnl >> topic;
 
 	Client* client = _get_client(fd);
-	Channel* channel = _get_channel(channel_name);
+	Channel* channel = _get_channel(chnl);
 
 	if (!client->get_is_logged()) {
 		_send_response(fd, ERR_NOTREGISTERED(client->get_nickname()));
 		_reply_code = 451;
-	} else if (buffer == TOPIC_CMD) {
-		_send_response(fd, ERR_NEEDMOREPARAMS(client->get_nickname()));
-		_reply_code = 461;
 	} else if (!channel) {
-        _send_response(fd, ERR_NOSUCHCHANNEL(channel_name));
+        _send_response(fd, ERR_NOSUCHCHANNEL(chnl));
 		_reply_code = 403;
     } else if (!channel->is_client_in_channel(client->get_nickname())) {
         _send_response(fd, ERR_NOTONCHANNEL(client->get_nickname()));
@@ -67,7 +64,7 @@ void Server::_handler_client_topic(const std::string &buffer, const int fd)
 			_reply_code = 482;
         } else {
 			channel->set_topic(topic);
-        	_send_response(fd, RPL_TOPIC(client->get_nickname(), channel_name, topic));
+        	_send_response(fd, RPL_TOPIC(client->get_nickname(), chnl, topic));
 			_reply_code = 332;
 		}
 	}

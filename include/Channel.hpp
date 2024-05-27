@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:24:04 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/26 05:38:51 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/26 22:19:57 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ class Channel
 		int get_clients_size(void) const;
 		std::string get_name(void) const;
 		std::string get_topic(void) const;
+		std::string get_channel_key(void) const;
 		std::string get_client_names(void) const;
-		std::string get_channel_password(void) const;
 		std::vector<Client *> get_channel_clients(void);
 		std::vector<Client *> get_operator_clients(void);
 
@@ -36,11 +36,11 @@ class Channel
 		void set_invite_only(void);
 		void set_topic_restriction(void);
 		void set_topic(std::string topic);
-		void set_password(std::string password);
+		void set_key(std::string password);
 		void set_channel_operator(Client *client);
 
+		void remove_key(void);
 		void remove_limit(void);
-		void remove_password(void);
 		void remove_invite_only(void);
 		void remove_topic_restriction(void);
 		void remove_channel_operator(Client *client);
@@ -52,7 +52,6 @@ class Channel
 		void broadcast(Client *sender, std::string command, std::string target, std::string message);
 		
 		bool has_key(void) const;
-		bool has_password(void) const;
 		bool has_client(Client *client);
 		
 		bool is_channel_full(void) const;
@@ -66,7 +65,6 @@ class Channel
 		std::string _name;
 		bool _invite_only;
 		std::string _topic;
-		std::string _password;
 		bool _topic_restriction;
 		std::string _created_at;
 		
