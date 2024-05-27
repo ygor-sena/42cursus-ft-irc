@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:30:59 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/24 18:26:37 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/26 22:46:34 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+
+#define TOPIC_CMD "TOPIC"
 
 /*
  * Command: TOPIC
@@ -29,9 +31,41 @@
  */
 void Server::_handler_client_topic(const std::string &buffer, const int fd)
 {
-	(void)fd;
-	(void)buffer;
-	Client* client = _get_client(fd);
+	// Registra o comando TOPIC recebido
+    std::cout << "TOPIC command received: " << buffer << std::endl;
+	
+	std::istringstream iss(buffer);
+	std::string chnl, topic;
+	iss >> chnl >> topic;
 
-	_send_response(fd, RPL_TOPICIS(client->get_nickname(), "ft_transcendence", "Welcome to the channel"));
+	Client* client = _get_client(fd);
+	Channel* channel = _get_channel(chnl);
+
+	if (!client->get_is_logged()) {
+		_send_response(fd, ERR_NOTREGISTERED(client->get_nickname()));
+		_reply_code = 451;
+	} else if (!channel) {
+        _send_response(fd, ERR_NOSUCHCHANNEL(chnl));
+		_reply_code = 403;
+    } else if (!channel->is_client_in_channel(client->get_nickname())) {
+        _send_response(fd, ERR_NOTONCHANNEL(client->get_nickname()));
+		_reply_code = 442;
+    } else if (topic.empty()) {
+		if (channel->get_topic().empty()) {
+        	_send_response(fd, RPL_NOTOPIC(client->get_nickname(), channel->get_name()));
+			_reply_code = 331;
+		} else {
+			_send_response(fd, RPL_TOPIC(client->get_nickname(), channel->get_name(), channel->get_topic()));
+			_reply_code = 332;
+		}
+    } else {
+		if (!channel->is_channel_operator(client->get_nickname())) {
+			_send_response(fd, ERR_NOTOPERATOR(channel->get_name()));
+			_reply_code = 482;
+        } else {
+			channel->set_topic(topic);
+        	_send_response(fd, RPL_TOPIC(client->get_nickname(), chnl, topic));
+			_reply_code = 332;
+		}
+	}
 }

@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:32:16 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/25 21:07:24 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/26 22:15:40 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+
+#define USER_CMD "USER"
 
 /*
  * Command: USER
@@ -27,30 +29,30 @@
  * @param username The username to be assigned to the client.
  * @param fd The file descriptor associated with the client that sent the command.
  */
-void Server::_handler_client_username(const std::string &username, const int fd)
+void Server::_handler_client_username(const std::string &buffer, const int fd)
 {
-	Client* client = _get_client(fd);
-
-	if (username.empty() || username.size() < 5)
-	{
-		_send_response(fd, ERR_NEEDMOREPARAMS(std::string("*")));
-		_reply_code = 461;
-	}
-	else if (!client->get_is_authenticated())
-	{
-		_send_response(fd, ERR_NOTREGISTERED(std::string("*")));
-		_reply_code = 451;
-	}
-	else if (!client->get_username().empty())
-	{
-		_send_response(fd, ERR_ALREADYREGISTERED(std::string("*")));
-		_reply_code = 462;
-	}
-	else
-	{
-		client->set_username(username);
-		if (_client_is_ready_to_login(fd))
-			client->set_is_logged(fd);
-		_reply_code = 200;
-	}
+    // Registra o comando USER recebido
+    std::cout << "USER command received: " << buffer << std::endl;
+    
+    Client* client = _get_client(fd);
+    
+    if (buffer.size() < 5) {
+        _send_response(fd, ERR_NEEDMOREPARAMS(std::string("*")));
+        _reply_code = 461;
+    } else if (!client || !client->get_is_authenticated()) {
+        _send_response(fd, ERR_NOTREGISTERED(std::string("*")));
+        _reply_code = 451;
+    } else if (!client->get_username().empty()) {
+        _send_response(fd, ERR_ALREADYREGISTERED(client->get_nickname()));
+        _reply_code = 462;
+    } else {
+        client->set_username(buffer);
+        if (_client_is_ready_to_login(fd)) {
+            client->set_is_logged(fd);
+            _send_response(fd, RPL_CONNECTED(client->get_nickname()));
+            _reply_code = 001;
+        } else {
+            _reply_code = 200;
+        }
+    }
 }

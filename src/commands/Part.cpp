@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Part.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:30:20 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/25 21:06:24 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/26 11:52:13 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,48 +29,48 @@
  */
 void Server::_handler_client_part(const std::string &buffer, const int fd)
 {
-	Client* client = _get_client(fd);
+    // Obtém o cliente associado ao descritor de arquivo (fd)
+    Client* client = _get_client(fd);
 
-	if (client->get_is_logged())
-	{
-		std::vector<std::string> params = _split_buffer(buffer, " ");
-		if (params.size() < 1)
-		{
-			_send_response(fd, ERR_NEEDMOREPARAMS(client->get_nickname()));
-			_reply_code = 461;
-			return ;
-		}
+    // Verifica se o cliente está registrado e autenticado
+    if (!client->get_is_logged()) {
+        _send_response(fd, ERR_NOTREGISTERED(client->get_nickname()));
+        _reply_code = 451;
+        return;
+    }
 
-		std::string channel_name = params[0];
-		Channel *channel = this->_get_channel(channel_name);
+    // Divide o buffer em parâmetros
+    std::vector<std::string> params = _split_buffer(buffer, SPACE);
+    if (params.size() < 1) {
+        _send_response(fd, ERR_NEEDMOREPARAMS(client->get_nickname()));
+        _reply_code = 461;
+        return;
+    }
 
-		// Check if the channel exists
-		if (!channel)
-		{
-			_send_response(fd, ERR_NOSUCHCHANNEL(channel_name));
-			_reply_code = 403;
-			return ;
-		}
+    // Extrai o nome do canal a ser deixado
+    std::string channel_name = params[0];
 
-		// Verify if the client is in the channel
-		if (channel->get_client_names().find(client->get_nickname()) == std::string::npos)
-		{
-			_send_response(fd, ERR_NOTONCHANNEL(channel_name));
-			_reply_code = 442;
-			return ;
-		}
+    Channel *channel = _get_channel(channel_name);
+    if (!channel) {
+        _send_response(fd, ERR_NOSUCHCHANNEL(channel_name));
+        _reply_code = 403;
+        return;
+    }
 
-		// Remove the client from the channel
-		channel->part(client);
+    // Verifica se o cliente está no canal
+    if (!channel->has_client(client)) {
+        _send_response(fd, ERR_NOTONCHANNEL(channel_name));
+        _reply_code = 442;
+        return;
+    }
 
-		// Send a response to the client
-		_send_response(fd, RPL_PART(client->get_hostname(), channel_name, client->get_nickname()));
-		_reply_code = 200;
-	}
-	else
-	{
-		_send_response(fd, ERR_NOTREGISTERED(client->get_nickname()));
-		_reply_code = 451;
-	}
-	//_send_response(fd, RPL_PART(client->get_hostname(), "ft_transcendence", client->get_nickname()));
+    // Remove o cliente do canal
+    channel->part(client);
+
+    // Envia uma resposta ao cliente
+    _send_response(fd, RPL_PART(client->get_hostname(), channel_name, client->get_nickname()));
+    _reply_code = 200;
+
+    // Registra o comando PART recebido
+    std::cout << "PART command received from client " << buffer << std::endl;
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Invite.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:31:16 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/25 21:12:54 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/26 12:17:23 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,73 +31,72 @@
  */
 void Server::_handler_client_invite(const std::string &buffer, const int fd)
 {
-	Client* client = _get_client(fd);
+    // Obtém o cliente associado ao descritor de arquivo (fd)
+    Client* client = _get_client(fd);
 
-	// if client is not registered or authenticated, send ERR_NOTREGISTERED
-	if (client->get_is_logged())
-	{
-		std::vector<std::string> params = _split_buffer(buffer, " ");
-		if (params.size() < 2)
-		{
-			_send_response(fd, ERR_NEEDMOREPARAMS(client->get_nickname()));
-			_reply_code = 461;
-			return;
-		}
+    // Verifica se o cliente está registrado e autenticado
+    if (!client->get_is_logged()) {
+        _send_response(fd, ERR_NOTREGISTERED(client->get_nickname()));
+        _reply_code = 451;
+        return;
+    }
 
-		std::string target_nickname = params[0];
-		std::string target_channel = params[1];
+    // Divide o buffer em parâmetros
+    std::vector<std::string> params = _split_buffer(buffer, " ");
+    if (params.size() < 2) {
+        _send_response(fd, ERR_NEEDMOREPARAMS(client->get_nickname()));
+        _reply_code = 461;
+        return;
+    }
 
-		Channel *channel = this->_get_channel(target_channel);
-		if (!channel)
-		{
-			_send_response(fd, ERR_NOSUCHCHANNEL(target_channel));
-			_reply_code = 403;
-			return;
-		}
+    // Extrai o apelido do cliente convidado e o nome do canal
+    std::string target_nickname = params[0];
+    std::string target_channel = params[1];
 
-		// Verify if the client is in the channel
-		if (channel->get_client_names().find(client->get_nickname()) == std::string::npos)
-		{
-			_send_response(fd, ERR_NOTONCHANNEL(target_channel));
-			_reply_code = 442;
-			return;
-		}
+    // Verifica se o canal existe
+    Channel *channel = _get_channel(target_channel);
+    if (!channel) {
+        _send_response(fd, ERR_NOSUCHCHANNEL(target_channel));
+        _reply_code = 403;
+        return;
+    }
 
-		Client *invited_client = this->_get_client(target_nickname);
+    // Verifica se o cliente está no canal
+    if (!channel->has_client(client)) {
+        _send_response(fd, ERR_NOTONCHANNEL(target_channel));
+        _reply_code = 442;
+        return;
+    }
 
-		// Check if the client is a channel operator
-		if (channel->is_channel_operator(client->get_nickname()) == false)
-		{
-			_send_response(fd, ERR_NOPRIVILEGES(client->get_nickname()));
-			_reply_code = 481;
-			return;
-		}
-		
-		if (!invited_client)
-		{
-			_send_response(fd, ERR_NOSUCHNICK(target_channel, target_nickname));
-			_reply_code = 401;
-			return;
-		}
+    // Verifica se o cliente é um operador do canal
+    if (!channel->is_channel_operator(client->get_nickname())) {
+        _send_response(fd, ERR_NOPRIVILEGES(client->get_nickname()));
+        _reply_code = 481;
+        return;
+    }
 
-		// Verify if the invited_client is already in the channel
-		if (channel->has_client(invited_client))
-		{
-			_send_response(fd, ERR_USERONCHANNEL(target_nickname, target_channel));
-			_reply_code = 443;
-			return;
-		}
+    // Verifica se o cliente convidado existe
+    Client *invited_client = _get_client(target_nickname);
+    if (!invited_client) {
+        _send_response(fd, ERR_NOSUCHNICK(target_channel, target_nickname));
+        _reply_code = 401;
+        return;
+    }
 
-		channel->invite(invited_client);
-		_send_response(fd, RPL_INVITING(client->get_hostname(), target_channel, client->get_nickname(), target_nickname));
-		_reply_code = 200;
-	}
-	else
-	{
-		_send_response(fd, ERR_NOTREGISTERED(client->get_nickname()));
-		_reply_code = 451;
-	}
-	//_send_response(fd, RPL_INVITING(client->get_hostname(), "ft_transcendence", "Gilmar", "Ygor"));
-	std::cout << "INVITE command received from client " << buffer << std::endl;
-	return ;
+    // Verifica se o cliente convidado já está no canal
+    if (channel->has_client(invited_client)) {
+        _send_response(fd, ERR_USERONCHANNEL(target_nickname, target_channel));
+        _reply_code = 443;
+        return;
+    }
+
+    // Envia o convite ao cliente convidado
+    invited_client->add_channel_invited(target_channel);
+
+    // Envia a resposta de convite ao cliente que enviou o convite
+    _send_response(fd, RPL_INVITING(client->get_hostname(), target_channel, client->get_nickname(), target_nickname));
+    _reply_code = 200;
+
+    // Registra o comando INVITE recebido
+    std::cout << "INVITE command received from client " << buffer << std::endl;
 }
