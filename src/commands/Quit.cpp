@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Quit.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:29:45 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/26 04:32:42 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/26 22:44:04 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,17 @@
 void Server::_handler_client_quit(const std::string &buffer, const int fd)
 {
     (void)buffer;
-    _send_response(fd, RPL_QUITMESSAGE(_get_client(fd)->get_nickname()));
-    _clear_client(fd);
+     Client* client = _get_client(fd);
+
+    // FOR CHANELLS
+    for (std::vector<Channel *>::iterator it = _channels.begin(); it != _channels.end(); ++it) 
+    {
+        Channel *channel = *it;
+        if (channel->has_client(client)) 
+        {
+            channel->part(client);
+        }
+    }
+    
+    _send_response(fd, RPL_QUITMESSAGE(client->get_nickname()));
 }
