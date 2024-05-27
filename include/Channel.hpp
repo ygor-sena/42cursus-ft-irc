@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:24:04 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/26 22:19:57 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/27 10:28:45 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ class Channel
 		void join(Client *client);
 		void kick(Client *client);
 		void part(Client *client);
-		void broadcast(Client *sender, std::string command, std::string target, std::string message);
+		void broadcast(Client *sender, std::string target, std::string message);
 		
 		bool has_key(void) const;
 		bool has_client(Client *client);

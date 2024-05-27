@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:20:02 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/26 19:10:24 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/27 10:28:12 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,11 @@ std::string Client::get_hostname() const
 	return _nickname + "@" + _ip_addr;
 }
 
+std::vector<std::string> Client::get_channels_invited() const
+{
+	return _channels_invited;
+}
+
 void Client::add_channel_invited(const std::string &channel)
 {
 	_channels_invited.push_back(channel);
@@ -133,13 +138,12 @@ bool Client::is_channel_invited(const std::string &channel)
 	return std::find(_channels_invited.begin(), _channels_invited.end(), channel) != _channels_invited.end();
 }
 
-void Client::broadcast(Client *sender, std::string command, std::string target, std::string message)
+void Client::broadcast(Client *sender, std::string target, std::string message)
 {
-	(void)command;
 	std::string response = RPL_PRIVMSG(sender->get_hostname(), target, message);
 
-	if (send(sender->get_fd(), response.c_str(), response.size(), 0) == -1)
+	if (send(this->get_fd(), response.c_str(), response.size(), 0) == -1)
 		std::cerr << "Response send() failed" << std::endl;
 
-  //_send_response(fd, RPL_PRIVMSG(client->get_hostname(),
+	//_send_response(fd, RPL_PRIVMSG(client->get_hostname(),
 }
