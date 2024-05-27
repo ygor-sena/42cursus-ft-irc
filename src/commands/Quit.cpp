@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:29:45 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/26 12:06:40 by user42           ###   ########.fr       */
+/*   Updated: 2024/05/26 22:44:04 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,9 @@ void Server::_handler_client_quit(const std::string &buffer, const int fd)
         Channel *channel = *it;
         if (channel->has_client(client)) 
         {
-            channel->broadcast(client, "QUIT", "", client->get_nickname() + " has quit the server");
             channel->part(client);
         }
     }
     
     _send_response(fd, RPL_QUITMESSAGE(client->get_nickname()));
-    _clear_client(fd);
-    close(fd);
 }
