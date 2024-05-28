@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:33:05 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/26 22:51:03 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/27 21:41:16 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void Server::_handler_client_join(const std::string &buffer, const int fd)
     }
 
     Channel *channel = _get_channel(joining_channel);
-    if (!channel) {
+    if (!channel) { // Está funcionando.
         // Channel does not exist, create it
         // Se eu estou criando o canal eu devo me incluir e enviar a resposta para o cliente?
         // Quem cria o canal já é moodn então ele é único a adicionar outrs mood e qlqr outra coisa.
@@ -57,38 +57,36 @@ void Server::_handler_client_join(const std::string &buffer, const int fd)
         _add_channel(channel);
         channel->join(client);
         channel->set_channel_operator(client);
+        _send_response(fd, "canal criado\n\r");
         return;
     } else {
-        if (channel->has_client(client)) {
+        bool teste = channel->has_client(client);
+        if (teste) { // Está funcionando
             _send_response(fd, ERR_ALREADYREGISTERED(client->get_nickname()));
             return;
         }
     }
 
     //Verifica se o canal está full e envia mensagem de erro
-    if (channel->is_channel_full()) {
+    if (channel->is_channel_full()) { // Está funcionando
         _send_response(fd, ERR_CHANNELISFULL(client->get_nickname(), joining_channel));
         return;
     }
 
-    //TODO: Ygor, não me julgue pelo código criminoso que coloquei abaixo, eu sei que está errado, mas não consegui pensar em outra forma de fazer isso
-    // pq estou com sono e não consigo pensar direito, mas amanhã eu arrumamos isso. Eu não testei mas acredito estar funcional...
-    // precisa verificar os retornos do servidor para verificar se está tudo ok.
-
     // Verifica se o canal é apenas para convidados/invitados
-    if (channel->is_channel_invite_only()) {
+    if (channel->is_channel_invite_only()) { // Está funcionando.
         // Verifica se o cliente tem convite para entrar no canal
         if (!client->is_channel_invited(joining_channel)) {
             _send_response(fd, ERR_INVITEONLYCHAN(client->get_nickname(), joining_channel));
             return;
         } else {
             // O cliente possui o convite, agr precisamos validar se precisa de senha para entrar canal.
-            if (channel->has_key()) {
-                // Verifica se o cliente tem a senha correta
-                if (params.size() < 2) {
+            if (channel->has_key()) { // Verifica se o cliente tem a senha correta
+                if (params.size() < 2) { // ESTÁ FUNCIONANDO
                     _send_response(fd, ERR_BADCHANNELKEY(client->get_nickname(), joining_channel));
                     return;
-                } else {
+                } else { 
+                    // ESTÁ FUNCIONANDO
                     std::string channel_key = params[1];
                     if (channel_key != channel->get_channel_key()) {
                         _send_response(fd, ERR_BADCHANNELKEY(client->get_nickname(), joining_channel));
@@ -104,7 +102,29 @@ void Server::_handler_client_join(const std::string &buffer, const int fd)
             }
         }
     } else {
-        channel->join(client);
+        if (channel->has_key()) {
+            // Sempre vai cair nesta condição quando o canal não for apenas para convidados/invitados
+            if (params.size() < 2) { // ESTÁ FUNCIONANDO
+                _send_response(fd, ERR_BADCHANNELKEY(client->get_nickname(), joining_channel));
+                return;
+            } else { 
+                // ESTÁ FUNCIONANDO
+                std::string channel_key = params[1];
+                if (channel_key != channel->get_channel_key()) {
+                    _send_response(fd, ERR_BADCHANNELKEY(client->get_nickname(), joining_channel));
+                    return;
+                } else {
+                    channel->join(client);
+                    _reply_code = 200;
+                    return;
+                }
+            }
+        }
+        else {
+            channel->join(client);
+            _reply_code = 200;
+            return;
+        }
     }
 
     // Registra o comando JOIN recebido

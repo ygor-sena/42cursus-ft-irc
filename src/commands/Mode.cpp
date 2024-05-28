@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:30:34 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/26 23:00:29 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/27 21:41:33 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 
 void _handler_invite_only_mode(Channel* channel, bool set);
 void _handler_topic_restriction_mode(Channel* channel, bool set);
-bool _handler_mode_command(const std::string &modes, char &mode, bool &set);
+bool _parse_mode_command(const std::string &modes, char &mode, bool &set);
 bool _handler_mode_flags(Channel* channel, Client *client, char mode, bool &set);
 void _handle_limit_mode(Channel* channel, const std::string &argument, bool set);
 void _handle_operator_privileges_mode(Channel* channel, Client *client, bool set);
@@ -65,12 +65,12 @@ void Server::_handler_client_mode(const std::string &buffer, const int fd)
         _send_response(fd, ERR_CHANOPRIVSNEEDED(chnl));
         _reply_code = 482;
     } else { // Tratar o comando MODE
-        if (!_handler_mode_command(modes, mode, set)) {
+        if (!_parse_mode_command(modes, mode, set)) {
             _send_response(fd, ERR_INVALIDMODEPARM(client->get_nickname(), mode));
             _reply_code = 696;
         }
         else { // Executar a ação correspondente ao modo
-            if (_handler_mode_flags(channel, client, mode, set)) {
+            if (!_handler_mode_flags(channel, client, mode, set)) {
 				_send_response(fd, ERR_UNKNOWNMODE(client->get_nickname(), channel->get_name(), mode));
 				_reply_code = 472;
 			}
@@ -82,19 +82,19 @@ bool _handler_mode_flags(Channel* channel, Client *client, char mode, bool &set)
 {
 	switch (mode) {
 		case 'i':
-			_handler_invite_only_mode(channel, set);
+			_handler_invite_only_mode(channel, set); //Está funcionando
 			break;
 		case 't':
 			_handler_topic_restriction_mode(channel, set);
 			break;
 		case 'k':
-			_handle_password_mode(channel, client->get_nickname(), set);
+			_handle_password_mode(channel, "321", set); //Está funcionando
 			break;
 		case 'o':
 			_handle_operator_privileges_mode(channel, client, set);
 			break;
 		case 'l':
-			_handle_limit_mode(channel, client->get_nickname(), set);
+			_handle_limit_mode(channel, "2", set); //Está funcionando
 			break;
 		default:
 			return false;
@@ -102,7 +102,7 @@ bool _handler_mode_flags(Channel* channel, Client *client, char mode, bool &set)
     return true;
 }
 
-bool _handler_mode_command(const std::string &modes, char &mode, bool &set)
+bool _parse_mode_command(const std::string &modes, char &mode, bool &set)
 {
 	if (modes.size() != 2) {
 		return false;
@@ -120,7 +120,7 @@ void _handler_invite_only_mode(Channel* channel, bool set)
 		channel->set_invite_only();
 	}
 	else {
-		channel->set_invite_only();
+		channel->remove_invite_only();
 	}
 }
 

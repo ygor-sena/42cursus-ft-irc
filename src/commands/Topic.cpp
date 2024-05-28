@@ -6,13 +6,11 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:30:59 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/26 22:46:34 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/27 21:49:54 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
-
-#define TOPIC_CMD "TOPIC"
 
 /*
  * Command: TOPIC
