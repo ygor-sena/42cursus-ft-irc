@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:24:04 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/28 21:34:08 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/29 16:23:52 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include "Client.hpp"
 # include "Replies.hpp"
-		
+
 class Channel
 {
 	public:
@@ -52,7 +52,7 @@ class Channel
 		
 		bool has_key(void) const;
 		bool has_client(Client *client);
-		
+
 		bool is_channel_full(void) const;
 		bool is_channel_operator(const int fd);
 		bool is_channel_invite_only(void) const;
@@ -67,8 +67,8 @@ class Channel
 		std::string _topic;
 		bool _topic_restriction;
 		std::string _created_at;
-		
-		bool _has_password;
+
+		// bool _has_password;
 		bool _has_key;
 		std::vector<Client *>_clients;  // -> list of clients that are channel members
 		std::vector<Client *>_operator_clients;  // -> list of channel operators

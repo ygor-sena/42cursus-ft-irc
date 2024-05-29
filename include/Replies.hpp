@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Replies.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 18:18:57 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/26 20:30:59 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/29 16:22:57 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,10 @@
 # define ERR_NEEDMOREPARAMS(nickname) (": 461 " + nickname + " :Not enough parameters." + CRLF)
 # define ERR_CHANNELNOTFOUND(nickname, channelname) (": 403 " + nickname + " " + channelname + " :No such channel" + CRLF)
 # define ERR_NOTOPERATOR(channelname) (": 482 " + channelname + " :You're not a channel operator" + CRLF)
-# define ERR_NOSUCHNICK(channelname, name) (": 401 " + channelname + " " + name + " :No such nick/channel" + CRLF )
+# define ERR_NOSUCHNICK(channelname, name) (": 401 " + channelname + " " + name + " :No such nick/channel" + CRLF)
 # define ERR_INCORPASS(nickname) (": 464 " + nickname + " :Password incorrect !" + CRLF )
 # define ERR_NONICKNAME(nickname) (": 431 " + nickname + " :No nickname given" + CRLF )
 # define ERR_NICKINUSE(nickname) (": 433 " + nickname + " :Nickname is already in use" + CRLF)
-# define ERR_ERRONEUSNICK(nickname) (": 432 " + nickname + " :Erroneus nickname" + CRLF)
 
 
 # define ERR_ALREADYREGISTERED(nickname) (": 462 " + nickname + " :You may not reregister !" + CRLF )
@@ -71,7 +70,7 @@
 # define ERR_NOSUCHCHANNEL(channelname) (": 403 " + channelname + " :No such channel" + CRLF)
 # define ERR_USERNOTINCHANNEL(nickname, channelname) ("441 " + nickname + " " + channelname + " :They aren't on that channel" + CRLF)
 # define ERR_NOTONCHANNEL(channelname) (": 442 " + channelname + " :You're not on that channel" + CRLF)
-# define ERR_USERONCHANNEL(user, channelname) (": 443 " + user + " " + channelname + " :is already on channel" + CRLF) 
+# define ERR_USERONCHANNEL(user, channelname) (": 443 " + user + " " + channelname + " :is already on channel" + CRLF)
 # define ERR_CHANOPRIVSNEEDED(channelname) (": 482 " + channelname + " :You're not a channel operator" + CRLF)
 # define ERR_NOPRIVILEGES(nickname) (": 481 " + nickname + " :Permission Denied- You're not an IRC operator" + CRLF)
 

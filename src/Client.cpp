@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:20:02 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/27 10:28:12 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/29 16:21:21 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,11 @@ void Client::set_fd(const int fd)
 void Client::set_ip_add(const std::string &ipadd)
 {
 	_ip_addr = ipadd;
+}
+
+std::string Client::get_ip_address() const
+{
+	return _ip_addr;
 }
 
 void Client::set_buffer(const std::string &buffer)
