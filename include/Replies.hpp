@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 18:18:57 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/29 18:18:54 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/29 19:19:18 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@
 # define BOT_CMDWHOIS(nickname, username, ipaddr) (": 4242 marvin_bot " + nickname + " :Whois " + username + " " + ipaddr + " :End of WHOIS list" + CRLF)
 # define BOT_CMDQUOTE(nickname, quote) (": 4242 marvin_bot " + nickname + " :" + quote + CRLF)
 # define BOT_CLIENTNOTINCHANNEL(nickname) (": 2424 marvin_bot " + nickname + ": Must be part of at least one channel to use marvin commands" + CRLF)
+# define BOT_WHOISDOESNTEXIST(nickname) (": 4242 marvin_bot " + nickname + " :No such user" + CRLF)
 
 ///////// ERRORS /////////
 # define ERR_NEEDMODEPARM(channelname, mode) (": 696 " + channelname + " * You must specify a parameter for the key mode. " + mode + CRLF)

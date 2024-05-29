@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:23:47 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/29 18:10:52 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/29 19:17:18 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,7 @@ class Server
 		void _handler_bot_marvin(const std::string &buffer, int fd);
 		void _handler_bot_time(const std::string &buffer, int fd);
 		void _handler_bot_whois(const std::string &buffer, int fd);
+		void _handler_bot_whoami(const std::string &buffer, int fd);
 		void _handler_bot_quote(const std::string &buffer, int fd);
 
 		void _handler_invite_only_mode(Channel* channel, bool set);
@@ -114,7 +115,7 @@ class Server
 			void (Server::*handler)(const std::string &, const int);
 		};
 
-		static const int _command_list_size = 15; //-> command list size
+		static const int _command_list_size = 16; //-> command list size
 		static const command_handler _command_list[_command_list_size]; //-> command list
 		void _execute_command(const std::string buffer, const int fd); //-> execute command
 		

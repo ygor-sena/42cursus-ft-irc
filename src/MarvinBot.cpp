@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 11:32:28 by caalbert          #+#    #+#             */
-/*   Updated: 2024/05/29 18:39:51 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/29 19:19:32 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,12 +83,8 @@ void Server::_handler_bot_time(const std::string &/* buffer */, int fd)
 		this->_send_response(fd, BOT_CLIENTNOTINCHANNEL(client->get_nickname()));
 }
 
-void Server::_handler_bot_whois(const std::string &buffer, int fd)
+void Server::_handler_bot_whoami(const std::string &/* buffer */, int fd)
 {
-	std::istringstream iss(buffer);
-	std::string nickname;
-	iss >> nickname;
-
 	Client* client = _get_client(fd);
 
 	if (!client->get_is_logged())
@@ -99,6 +95,30 @@ void Server::_handler_bot_whois(const std::string &buffer, int fd)
 	}
 	else if (this->_is_client_in_any_channel(fd))
 		this->_send_response(fd, BOT_CMDWHOIS(client->get_nickname(), client->get_username(), client->get_ip_address()));
+	else
+		this->_send_response(fd, BOT_CLIENTNOTINCHANNEL(client->get_nickname()));
+}
+
+void Server::_handler_bot_whois(const std::string &buffer, int fd)
+{
+	std::istringstream iss(buffer);
+	std::string nickname;
+	iss >> nickname;
+
+	Client *client = _get_client(fd);
+	Client *whois = _get_client(nickname);
+
+	if (!client->get_is_logged())
+	{
+		_send_response(fd, ERR_NOTREGISTERED(client->get_nickname()));
+		_reply_code = 451;
+		return;
+	}
+	else if (this->_is_client_in_any_channel(fd))
+		if (whois)
+			this->_send_response(fd, BOT_CMDWHOIS(whois->get_nickname(), whois->get_username(), whois->get_ip_address()));
+		else
+			this->_send_response(fd, BOT_WHOISDOESNTEXIST(client->get_nickname()));
 	else
 		this->_send_response(fd, BOT_CLIENTNOTINCHANNEL(client->get_nickname()));
 }

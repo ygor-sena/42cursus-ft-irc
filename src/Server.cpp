@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:26:55 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/29 18:11:51 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/29 19:13:14 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,7 +217,8 @@ const Server::command_handler Server::_command_list[_command_list_size] = {
 	{"PRIVMSG", &Server::_handler_client_privmsg},
     {"!MARVIN", &Server::_handler_bot_marvin},
     {"!TIME", &Server::_handler_bot_time},
-    {"!WHOIS", &Server::_handler_bot_whois},
+	{"!WHOIS", &Server::_handler_bot_whois},
+    {"!WHOAMI", &Server::_handler_bot_whoami},
 	{"!QUOTE", &Server::_handler_bot_quote},
 };
 
