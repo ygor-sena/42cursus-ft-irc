@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:19:06 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/27 10:28:38 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/29 16:23:31 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ class Client //-> class for client
 {
 	public:
 		Client();
-		
+
 		int get_fd() const;
 		bool get_is_logged() const;
 		std::string get_buffer() const;
@@ -47,6 +47,7 @@ class Client //-> class for client
 		std::string get_password() const;
 		std::string get_hostname() const;
 		std::vector<std::string> get_channels_invited() const;
+		std::string get_ip_address() const;
 		bool get_is_authenticated() const;
 		bool get_is_operator() const;
 

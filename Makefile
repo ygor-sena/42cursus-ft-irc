@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+         #
+#    By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/23 19:40:24 by gilmar            #+#    #+#              #
-#    Updated: 2024/05/24 18:16:38 by yde-goes         ###   ########.fr        #
+#    Updated: 2024/05/27 20:14:13 by caalbert         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,20 +32,20 @@ INC_DIRS  := include
 # If there are subdirectories in src, add them here
 SRC_DIRS  := commands
 # If the line above is not enough, add the subdirectories here
-#SRC_DIRS  += 
+#SRC_DIRS  +=
 SRC_DIRS  := $(addprefix src/, $(SRC_DIRS))
 SRC_DIRS  += src
 
 vpath %.hpp $(INC_DIRS)
 vpath %.cpp $(SRC_DIRS)
 
-HEADERS := Server.hpp Client.hpp Replies.hpp Channel.hpp
+HEADERS := Server.hpp Client.hpp Replies.hpp Channel.hpp Bot.hpp
 # If the line above is not enough, add the headers here
 #HEADERS +=
 
 SOURCES := main.cpp Client.cpp Server.cpp Channel.cpp Invite.cpp Join.cpp
 SOURCES += Kick.cpp Nick.cpp Part.cpp Privmsg.cpp Quit.cpp Topic.cpp User.cpp
-SOURCES += Mode.cpp Pass.cpp
+SOURCES += Mode.cpp Pass.cpp Bot.cpp
 
 
 OBJS := $(addprefix $(OBJ_DIR)/, $(SOURCES:.cpp=.o))
@@ -57,7 +57,7 @@ OBJS := $(addprefix $(OBJ_DIR)/, $(SOURCES:.cpp=.o))
 CC = g++
 CFLAGS  := -Wall -Werror -Wextra -std=c++98 $(addprefix -I,$(INC_DIRS))
 # Library flags, such as LIBFT_DIR and MLX_DIR
-LDFLAGS := #-L 
+LDFLAGS := #-L
 # Libraries to link, such as -lft and -lmlx
 LDLIBS  := #
 
