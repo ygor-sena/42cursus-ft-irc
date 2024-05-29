@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:23:47 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/26 19:06:21 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/27 22:55:12 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,14 @@ class Server
 		void _handler_client_username(const std::string &username, const int fd);
 		void _handler_client_password(const std::string &password, const int fd);
 
+		void _handler_invite_only_mode(Channel* channel, bool set);
+		void _handler_topic_restriction_mode(Channel* channel, bool set);
+		void _handle_operator_privileges_mode(Channel* channel, Client* client, bool set);
+		void _handle_password_mode(Channel* channel, const std::string &argument, bool set);
+		void _handle_limit_mode(Channel* channel, Client* client, const std::string &argument, bool set, const int fd);
+		bool _handler_mode_flags(Channel* channel, Client* client, char mode, bool set, const std::string &arg, const int fd);
+		bool _parse_mode_command(const std::string &modes, Channel* channel, Client* client, const std::string &arg, const int fd);
+
 		static bool _signal; //-> static boolean for signal
 		static void _signal_handler(const int signum);
 
@@ -105,18 +113,16 @@ class Server
 		static const command_handler _command_list[_command_list_size]; //-> command list
 		void _execute_command(const std::string buffer, const int fd); //-> execute command
 		
+		void _close_fds(); //-> close file descriptors
 		std::string _cleanse_buffer(const std::string &buffer, const std::string &chars_to_remove); //-> parse received buffer
+		
 		std::vector<std::string> _split_buffer(const std::string &buffer, const std::string &delimiter); //-> split string
 
 		Client* _get_client(const int fd); //-> get client
-		Client* _get_client(const std::string nickname); // -> get nickname
-		bool _client_is_ready_to_login(const int fd);
-
-		Channel* _get_channel(const std::string &channel_name); //-> get channel
-		
-		void _close_fds(); //-> close file descriptors
-
 		void _add_channel(Channel *channel); // -> add a new channel to server channels
+		bool _client_is_ready_to_login(const int fd);
+		Client* _get_client(const std::string nickname); // -> get nickname
+		Channel* _get_channel(const std::string &channel_name); //-> get channel
 
 		std::string toupper(const std::string& str);
 };

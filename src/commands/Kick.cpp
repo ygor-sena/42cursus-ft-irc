@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:30:47 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/26 20:29:27 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/28 21:50:09 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,8 @@ void Server::_handler_client_kick(const std::string &buffer, const int fd)
 		_send_response(fd, RPL_KICK(client->get_hostname(), channel_name, client->get_nickname(), target_client->get_nickname(), ""));
 	}
     
-	channel->kick(target_client);
+    // Precisar limpar os invites do cliente localizado em std::vector<std::string> _channels_invited
+	channel->kick(target_client); //PRECISA REMOVER DA LISTA DE ADMIN DO CANAL;
 	_reply_code = 200;
 
     // Registra o comando KICK recebido

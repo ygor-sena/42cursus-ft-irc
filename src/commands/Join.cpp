@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:33:05 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/27 21:41:16 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/28 21:50:05 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,101 +31,71 @@ void Server::_handler_client_join(const std::string &buffer, const int fd)
 {
     Client* client = _get_client(fd);
 
+    // Verificar se o cliente está logado (descomentado caso seja necessário)
     if (!client->get_is_logged()) {
         _send_response(fd, ERR_NOTREGISTERED(client->get_nickname()));
+        _reply_code = 451;
         return;
     }
 
+    // Separar os parâmetros do comando
     std::vector<std::string> params = _split_buffer(buffer, SPACE);
     if (params.size() < 1) {
         _send_response(fd, ERR_NEEDMOREPARAMS(client->get_nickname()));
+        _reply_code = 461;
         return;
     }
 
     std::string joining_channel = params[0];
+    std::string channel_key = (params.size() > 1) ? params[1] : "";
+
+    // Verificar se o nome do canal é válido
     if (joining_channel[0] != '#') {
         _send_response(fd, ERR_NOSUCHCHANNEL(joining_channel));
+        _reply_code = 403;
         return;
     }
 
-    Channel *channel = _get_channel(joining_channel);
-    if (!channel) { // Está funcionando.
-        // Channel does not exist, create it
-        // Se eu estou criando o canal eu devo me incluir e enviar a resposta para o cliente?
-        // Quem cria o canal já é moodn então ele é único a adicionar outrs mood e qlqr outra coisa.
+    Channel* channel = _get_channel(joining_channel);
+    if (!channel) {
         channel = new Channel(joining_channel);
         _add_channel(channel);
         channel->join(client);
         channel->set_channel_operator(client);
-        _send_response(fd, "canal criado\n\r");
         return;
-    } else {
-        bool teste = channel->has_client(client);
-        if (teste) { // Está funcionando
-            _send_response(fd, ERR_ALREADYREGISTERED(client->get_nickname()));
-            return;
-        }
     }
 
-    //Verifica se o canal está full e envia mensagem de erro
-    if (channel->is_channel_full()) { // Está funcionando
+    // Verificar se o cliente já está no canal
+    if (channel->has_client(client)) {
+        _send_response(fd, ERR_ALREADYREGISTERED(client->get_nickname()));
+        _reply_code = 462;
+        return;
+    }
+
+    // Verificar se o canal está cheio
+    if (channel->is_channel_full()) {
         _send_response(fd, ERR_CHANNELISFULL(client->get_nickname(), joining_channel));
+        _reply_code = 422;
         return;
     }
 
-    // Verifica se o canal é apenas para convidados/invitados
-    if (channel->is_channel_invite_only()) { // Está funcionando.
-        // Verifica se o cliente tem convite para entrar no canal
-        if (!client->is_channel_invited(joining_channel)) {
-            _send_response(fd, ERR_INVITEONLYCHAN(client->get_nickname(), joining_channel));
-            return;
-        } else {
-            // O cliente possui o convite, agr precisamos validar se precisa de senha para entrar canal.
-            if (channel->has_key()) { // Verifica se o cliente tem a senha correta
-                if (params.size() < 2) { // ESTÁ FUNCIONANDO
-                    _send_response(fd, ERR_BADCHANNELKEY(client->get_nickname(), joining_channel));
-                    return;
-                } else { 
-                    // ESTÁ FUNCIONANDO
-                    std::string channel_key = params[1];
-                    if (channel_key != channel->get_channel_key()) {
-                        _send_response(fd, ERR_BADCHANNELKEY(client->get_nickname(), joining_channel));
-                        return;
-                    } else {
-                        channel->join(client);
-                        return;
-                    }
-                }
-            } else {
-                channel->join(client);
-                return;
-            }
-        }
-    } else {
-        if (channel->has_key()) {
-            // Sempre vai cair nesta condição quando o canal não for apenas para convidados/invitados
-            if (params.size() < 2) { // ESTÁ FUNCIONANDO
-                _send_response(fd, ERR_BADCHANNELKEY(client->get_nickname(), joining_channel));
-                return;
-            } else { 
-                // ESTÁ FUNCIONANDO
-                std::string channel_key = params[1];
-                if (channel_key != channel->get_channel_key()) {
-                    _send_response(fd, ERR_BADCHANNELKEY(client->get_nickname(), joining_channel));
-                    return;
-                } else {
-                    channel->join(client);
-                    _reply_code = 200;
-                    return;
-                }
-            }
-        }
-        else {
-            channel->join(client);
-            _reply_code = 200;
-            return;
-        }
+    // Verificar se o canal é apenas para convidados
+    if (channel->is_channel_invite_only() && !client->is_channel_invited(joining_channel)) {
+        _send_response(fd, ERR_INVITEONLYCHAN(client->get_nickname(), joining_channel));
+        _reply_code = 473;
+        return;
     }
+
+    // Verificar se o canal tem uma chave (senha) e se a chave fornecida é válida
+    if (channel->has_key() && channel_key != channel->get_channel_key()) {
+        _send_response(fd, ERR_BADCHANNELKEY(client->get_nickname(), joining_channel));
+        _reply_code = 475;
+        return;
+    }
+
+    // Adicionar o cliente ao canal
+    channel->join(client);
+    _reply_code = 200;
 
     // Registra o comando JOIN recebido
     std::cout << "JOIN command received from client " << buffer << std::endl;

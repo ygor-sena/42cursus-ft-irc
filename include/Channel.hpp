@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:24:04 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/27 10:28:45 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/28 21:34:08 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ class Channel
 		std::vector<Client *> get_channel_clients(void);
 		std::vector<Client *> get_operator_clients(void);
 
-
 		void set_limit(int limit);
 		void set_invite_only(void);
 		void set_topic_restriction(void);
@@ -45,16 +44,17 @@ class Channel
 		void remove_topic_restriction(void);
 		void remove_channel_operator(Client *client);
 		
-		void invite(Client *client);
 		void join(Client *client);
 		void kick(Client *client);
 		void part(Client *client);
+		void invite(Client *client);
 		void broadcast(Client *sender, std::string target, std::string message);
 		
 		bool has_key(void) const;
 		bool has_client(Client *client);
 		
 		bool is_channel_full(void) const;
+		bool is_channel_operator(const int fd);
 		bool is_channel_invite_only(void) const;
 		bool is_channel_operator(std::string nickname);
 		bool is_client_in_channel(std::string nickname);

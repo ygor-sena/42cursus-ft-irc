@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Quit.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:29:45 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/26 22:44:04 by user42           ###   ########.fr       */
+/*   Updated: 2024/05/28 21:39:19 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 void Server::_handler_client_quit(const std::string &buffer, const int fd)
 {
     (void)buffer;
-     Client* client = _get_client(fd);
+    Client* client = _get_client(fd);
 
     // FOR CHANELLS
     for (std::vector<Channel *>::iterator it = _channels.begin(); it != _channels.end(); ++it) 
