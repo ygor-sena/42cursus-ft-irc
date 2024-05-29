@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:26:17 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/27 10:28:17 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/28 21:37:58 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,6 +182,16 @@ bool Channel::is_channel_operator(std::string nickname)
 	for (std::vector<Client *>::iterator it = _operator_clients.begin(); it != this->_operator_clients.end(); ++it)
 	{
 		if ((*it)->get_nickname() == nickname)
+			return true;
+	}
+	return false;
+}
+
+bool Channel::is_channel_operator(const int fd)
+{
+	for (std::vector<Client *>::iterator it = _operator_clients.begin(); it != this->_operator_clients.end(); ++it)
+	{
+		if ((*it)->get_fd() == fd)
 			return true;
 	}
 	return false;
