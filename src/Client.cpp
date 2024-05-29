@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:20:02 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/26 19:10:24 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/29 00:53:57 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,11 @@ void Client::set_fd(const int fd)
 void Client::set_ip_add(const std::string &ipadd)
 {
 	_ip_addr = ipadd;
+}
+
+std::string Client::get_ip_address() const
+{
+	return _ip_addr;
 }
 
 void Client::set_buffer(const std::string &buffer)
@@ -142,4 +147,5 @@ void Client::broadcast(Client *sender, std::string command, std::string target, 
 		std::cerr << "Response send() failed" << std::endl;
 
   //_send_response(fd, RPL_PRIVMSG(client->get_hostname(),
+
 }

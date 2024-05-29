@@ -6,7 +6,7 @@
 /*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 11:32:28 by caalbert          #+#    #+#             */
-/*   Updated: 2024/05/27 23:10:02 by caalbert         ###   ########.fr       */
+/*   Updated: 2024/05/29 00:32:09 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,7 @@ void Bot::_handle_time(Server &server, int fd) {
 }
 
 void Bot::_handle_whois(Server &server, int fd) {
-	std::istringstream iss(buffer);
 	std::string nickname;
-	iss >> nickname;
 	// Client* client = server.get_client(nickname);
 	Client* client = server.get_client(fd);
 	if (client) {

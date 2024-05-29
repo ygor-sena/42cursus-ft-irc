@@ -6,7 +6,7 @@
 /*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:19:06 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/27 19:12:32 by caalbert         ###   ########.fr       */
+/*   Updated: 2024/05/29 00:43:01 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,9 +77,5 @@ class Client //-> class for client
 		std::string _password; //-> client password
 		std::vector<std::string> _channels_invited; //-> vector of channels invited
 };
-
-std::string Client::get_ip_address() const {
-	return _ip_addr;
-}
 
 #endif // CLIENT_HPP
