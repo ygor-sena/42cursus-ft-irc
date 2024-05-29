@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:23:47 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/29 16:22:34 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/29 18:10:52 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,6 @@ class Server
 		Server(std::string password, std::vector<Client> _clients, std::vector<Channel> _channels);
 
 		void init(const std::string &port, const std::string &password);
-		Client* get_client(int fd);
-		void send_response(int fd, const std::string& message);
 
 	private:
 		int _port; //-> server port
@@ -73,6 +71,7 @@ class Server
 		void _is_valid_port(const std::string &port);
 		bool _is_valid_nickname(const std::string &nickname);
 		bool _is_nickname_in_use(const int fd, const std::string &nickname);
+		bool _is_client_in_any_channel(const int fd);
 
 		void _handler_client_join(const std::string &buffer, const int fd);
 		void _handler_client_quit(const std::string &buffer, const int fd);
@@ -85,9 +84,10 @@ class Server
 		void _handler_client_nickname(const std::string &nickname, const int fd);
 		void _handler_client_username(const std::string &username, const int fd);
 		void _handler_client_password(const std::string &password, const int fd);
-		void _handle_marvin(const std::string &buffer, int fd);
-		void _handle_time(const std::string &buffer, int fd);
-		void _handle_whois(const std::string &buffer, int fd);
+		void _handler_bot_marvin(const std::string &buffer, int fd);
+		void _handler_bot_time(const std::string &buffer, int fd);
+		void _handler_bot_whois(const std::string &buffer, int fd);
+		void _handler_bot_quote(const std::string &buffer, int fd);
 
 		void _handler_invite_only_mode(Channel* channel, bool set);
 		void _handler_topic_restriction_mode(Channel* channel, bool set);
@@ -130,7 +130,6 @@ class Server
 		Channel* _get_channel(const std::string &channel_name); //-> get channel
 
 		std::string toupper(const std::string& str);
-		Client* get_client_by_nickname(const std::string& nickname); //-> get client by nickname
 };
 
 

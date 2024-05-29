@@ -6,14 +6,11 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:26:55 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/29 16:20:56 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/29 18:11:51 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
-#include "Bot.hpp"
-#include <sys/socket.h>
-#include <cstring>
 
 /*
 ** ------------------------------- CONSTRUCTOR --------------------------------
@@ -218,9 +215,10 @@ const Server::command_handler Server::_command_list[_command_list_size] = {
 	{"PASS", &Server::_handler_client_password},
 	{"INVITE", &Server::_handler_client_invite},
 	{"PRIVMSG", &Server::_handler_client_privmsg},
-    {"MARVIN", &Server::_handle_marvin},
-    {"TIME", &Server::_handle_time},
-    {"WHOIS", &Server::_handle_whois},
+    {"!MARVIN", &Server::_handler_bot_marvin},
+    {"!TIME", &Server::_handler_bot_time},
+    {"!WHOIS", &Server::_handler_bot_whois},
+	{"!QUOTE", &Server::_handler_bot_quote},
 };
 
 /**
@@ -576,69 +574,15 @@ int Server::get_reply_code(void)
 	return _reply_code;
 }
 
-Client* Server::get_client(int fd) {
-	for (size_t i = 0; i < _clients.size(); ++i) {
-		if (_clients[i].get_fd() == fd) {
-			return &_clients[i];
-		}
-	}
-	return nullptr;
-}
-
-void Server::send_response(int fd, const std::string& message)
+bool Server::_is_client_in_any_channel(const int fd)
 {
-	if (send(fd, message.c_str(), message.size(), 0) < 0) {
-		perror("send failed");
-	}
-}
-
-Client* Server::get_client_by_nickname(const std::string& nickname)
-{
-    for (std::vector<Client>::iterator it = _clients.begin(); it != _clients.end(); ++it)
-	{
-        if (it->get_nickname() == nickname)
-		{
-            return &(*it);
+	Client *client = this->_get_client(fd); 
+    for (std::vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
+    {
+        if ((*it)->has_client(client))
+        {
+            return true;
         }
     }
-    return nullptr;
-}
-
-/*
-** ------------------------------- COMMAND HANDLERS --------------------------------
-*/
-
-void Server::_handle_marvin(const std::string &/* buffer */, int fd)
-{
-	std::string response = ":Server 001 " + this->get_client(fd)->get_nickname() + " :Olá, sou Marvin, o robô paranóide.";
-	this->send_response(fd, response + "\r\n");
-}
-
-void Server::_handle_time(const std::string &/* buffer */, int fd)
-{
-	time_t now = time(NULL);
-	std::string time_str = ctime(&now);
-	std::string response = ":Server 001 " + this->get_client(fd)->get_nickname() + " :Server time: " + time_str;
-	this->send_response(fd, response + "\r\n");
-}
-
-void Server::_handle_whois(const std::string &buffer, int fd)
-{
-	std::istringstream iss(buffer);
-	std::string nickname;
-	iss >> nickname;
-
-	Client* client = this->get_client_by_nickname(nickname);
-	if (client)
-	{
-		std::string response = ":Server 311 " + client->get_nickname() + " " + client->get_username() + " " + client->get_ip_address() + " * :Real Name";
-		this->send_response(fd, response + "\r\n");
-		response = ":Server 318 " + client->get_nickname() + " :End of WHOIS list";
-		this->send_response(fd, response + "\r\n");
-	}
-	else
-	{
-		std::string error_message = ERR_NOSUCHNICK("Server", nickname);
-		this->send_response(fd, error_message + "\r\n");
-	}
+    return false;
 }
