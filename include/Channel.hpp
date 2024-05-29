@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:24:04 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/26 22:19:57 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/27 19:44:48 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include "Client.hpp"
 # include "Replies.hpp"
-		
+
 class Channel
 {
 	public:
@@ -44,16 +44,16 @@ class Channel
 		void remove_invite_only(void);
 		void remove_topic_restriction(void);
 		void remove_channel_operator(Client *client);
-		
+
 		void invite(Client *client);
 		void join(Client *client);
 		void kick(Client *client);
 		void part(Client *client);
 		void broadcast(Client *sender, std::string command, std::string target, std::string message);
-		
+
 		bool has_key(void) const;
 		bool has_client(Client *client);
-		
+
 		bool is_channel_full(void) const;
 		bool is_channel_invite_only(void) const;
 		bool is_channel_operator(std::string nickname);
@@ -67,8 +67,8 @@ class Channel
 		std::string _topic;
 		bool _topic_restriction;
 		std::string _created_at;
-		
-		bool _has_password;
+
+		// bool _has_password;
 		bool _has_key;
 		std::vector<Client *>_clients;  // -> list of clients that are channel members
 		std::vector<Client *>_operator_clients;  // -> list of channel operators

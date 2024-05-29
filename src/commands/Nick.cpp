@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   Nick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:31:54 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/26 21:01:56 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/27 20:12:35 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+#include "Replies.hpp"
 
 #define NICK_CMD "NICK"
 
@@ -33,9 +34,9 @@ void Server::_handler_client_nickname(const std::string &buffer, const int fd)
 {
 	// Registra o comando NICK recebido
     std::cout << "NICK command received: " << buffer << std::endl;
-	
+
 	Client* client = _get_client(fd);
-	
+
 	if (buffer.size() < 5) {
 		_send_response(fd, ERR_NEEDMOREPARAMS(std::string("*")));
 		_reply_code = 461;
@@ -43,7 +44,7 @@ void Server::_handler_client_nickname(const std::string &buffer, const int fd)
 		_send_response(fd, ERR_NOTREGISTERED(std::string("*")));
 		_reply_code = 451;
 	} else if (!_is_valid_nickname(buffer)) {
-		_send_response(fd, ERR_ERRONEUSNICK(client->get_nickname()));
+		// _send_response(fd, ERR_ERRONEUSNICK(client->get_nickname()));
 		_reply_code = 432;
 	} else if (_is_nickname_in_use(fd, buffer)) {
 		_send_response(fd, ERR_NICKINUSE(client->get_nickname()));

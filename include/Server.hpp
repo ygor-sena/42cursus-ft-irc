@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:23:47 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/26 19:06:21 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/27 19:29:39 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ class Server
 		Server(std::string password, std::vector<Client> _clients, std::vector<Channel> _channels);
 
 		void init(const std::string &port, const std::string &password);
+		Client* get_client(int fd);
+		void send_response(int fd, const std::string& message);
 
 	private:
 		int _port; //-> server port
@@ -83,6 +85,9 @@ class Server
 		void _handler_client_nickname(const std::string &nickname, const int fd);
 		void _handler_client_username(const std::string &username, const int fd);
 		void _handler_client_password(const std::string &password, const int fd);
+		void _handle_marvin(const std::string &buffer, int fd);
+		void _handle_time(const std::string &buffer, int fd);
+		void _handle_whois(const std::string &buffer, int fd);
 
 		static bool _signal; //-> static boolean for signal
 		static void _signal_handler(const int signum);
@@ -93,18 +98,18 @@ class Server
 		void _accept_new_client(); //-> accept new client
 		void _clear_client(const int fd); //-> clear clients
 		void _receive_new_data(const int fd); //-> receive data from a client
-		void _send_response(const int fd, const std::string &response); //-> send response to client		
-		
+		void _send_response(const int fd, const std::string &response); //-> send response to client
+
 		struct command_handler
 		{
 			std::string command;
 			void (Server::*handler)(const std::string &, const int);
 		};
-		
-		static const int _command_list_size = 12; //-> command list size
+
+		static const int _command_list_size = 15; //-> command list size
 		static const command_handler _command_list[_command_list_size]; //-> command list
 		void _execute_command(const std::string buffer, const int fd); //-> execute command
-		
+
 		std::string _cleanse_buffer(const std::string &buffer, const std::string &chars_to_remove); //-> parse received buffer
 		std::vector<std::string> _split_buffer(const std::string &buffer, const std::string &delimiter); //-> split string
 
@@ -113,12 +118,13 @@ class Server
 		bool _client_is_ready_to_login(const int fd);
 
 		Channel* _get_channel(const std::string &channel_name); //-> get channel
-		
+
 		void _close_fds(); //-> close file descriptors
 
 		void _add_channel(Channel *channel); // -> add a new channel to server channels
 
 		std::string toupper(const std::string& str);
+		Client* get_client_by_nickname(const std::string& nickname); //-> get client by nickname
 };
 
 

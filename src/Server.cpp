@@ -3,14 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:26:55 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/26 21:06:22 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/27 19:41:05 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+#include "Bot.hpp"
+#include <sys/socket.h>
+#include <cstring>
 
 /*
 ** ------------------------------- CONSTRUCTOR --------------------------------
@@ -44,7 +47,7 @@ Server::~Server()
  *
  * @param port The server port.
  * @param password The server password.
- * 
+ *
  * @throws std::invalid_argument if the port is invalid.
  * @throws std::runtime_error if an error occurs during server initialization.
  */
@@ -180,7 +183,7 @@ void Server::_receive_new_data(const int fd)
 {
 	char buffer[1024]; //-> buffer for the received data
 	std::memset(buffer, 0, sizeof(buffer)); //-> clear the buffer
-	
+
 	Client* cli = _get_client(fd); // -> get the client object associated with the file descriptor (fd)
 	ssize_t bytes = recv(fd, buffer, sizeof(buffer) -1 , 0); //-> receive the data
 	if(bytes <= 0) { //-> check if the client disconnected
@@ -194,6 +197,7 @@ void Server::_receive_new_data(const int fd)
 		_execute_command(cli->get_buffer(), fd); //-> execute the command
 	}
 }
+
 
 /**
  * @brief List of commands and their corresponding handlers.
@@ -213,7 +217,10 @@ const Server::command_handler Server::_command_list[_command_list_size] = {
 	{"USER", &Server::_handler_client_username},
 	{"PASS", &Server::_handler_client_password},
 	{"INVITE", &Server::_handler_client_invite},
-	{"PRIVMSG", &Server::_handler_client_privmsg}
+	{"PRIVMSG", &Server::_handler_client_privmsg},
+    {"MARVIN", &Server::_handle_marvin},
+    {"TIME", &Server::_handle_time},
+    {"WHOIS", &Server::_handle_whois},
 };
 
 /**
@@ -255,14 +262,14 @@ void Server::_execute_command(const std::string buffer, const int fd)
 
 /**
  * @brief Splits a buffer into tokens using a specified delimiter.
- * 
+ *
  * This method splits the original string into tokens using the specified delimiter.
  * It searches for the delimiter in the original string and splits the string into tokens
  * based on the delimiter. The tokens are stored in a vector and returned.
- * 
+ *
  * @param buffer The original string to be split.
  * @param delimiter The delimiter used to split the string.
- * 
+ *
  * @return A vector containing the tokens obtained by splitting the original string.
  */
 std::vector<std::string> Server::_split_buffer(const std::string &buffer, const std::string &delimiter)
@@ -288,14 +295,14 @@ std::vector<std::string> Server::_split_buffer(const std::string &buffer, const 
  *
  * This method removes specified characters from the original string and returns the cleaned string.
  * The characters to be removed are specified by the `chars_to_remove` parameter.
- * 
+ *
  * The function searches for the first occurrence of any character specified in `chars_to_remove`
  * in the original string `original_str`, and truncates the string up to that point, excluding the found character.
- * 
+ *
  * @param buffer The original string to be cleansed.
  * @param chars_to_remove A string containing the characters to be removed.
  * @return A string containing the original string with specified characters removed.
- * 
+ *
  * @note This function assumes that `original_str` is not empty and contains at least one character to be removed.
  *       If `chars_to_remove` is empty, the function returns the original string without any changes.
  */
@@ -357,7 +364,7 @@ void Server::_clear_client(const int fd)
 	}
 	for(size_t i = 0; i < _clients.size(); i++) { //-> Remove the client from the vector of clients
 		if (_clients[i].get_fd() == fd) {
-			_clients.erase(_clients.begin() + i); 
+			_clients.erase(_clients.begin() + i);
 			break;
 		}
 	}
@@ -481,7 +488,7 @@ Client* Server::_get_client(const int fd)
 {
 	for (size_t i = 0; i < _clients.size(); i++) {
 		if (_clients[i].get_fd() == fd) {
-			return &_clients[i]; 
+			return &_clients[i];
 		}
 	}
 	return NULL;
@@ -491,7 +498,7 @@ Client* Server::_get_client(const std::string nickname)
 {
 	for (size_t i = 0; i < _clients.size(); i++) {
 		if (_clients[i].get_nickname() == nickname) {
-			return &_clients[i]; 
+			return &_clients[i];
 		}
 	}
 	// return null and verify if client exists
@@ -502,7 +509,7 @@ Client* Server::_get_client(const std::string nickname)
 bool Server::_client_is_ready_to_login(const int fd)
 {
 	Client *client = _get_client(fd);
-	
+
 	if (!client->get_username().empty() && !client->get_nickname().empty() && !client->get_is_logged())
 		return true;
 	return false;
@@ -514,10 +521,10 @@ bool Server::_client_is_ready_to_login(const int fd)
 
 /**
  * @brief Sends a response to the client.
- * 
+ *
  * This method sends a response to the client associated with the specified file descriptor.
  * It sends the response message to the client socket using the send system call.
- * 
+ *
  * @param fd The file descriptor associated with the client to send the response.
  * @param response The response message to send to the client.
  */
@@ -567,4 +574,71 @@ void Server::_add_channel(Channel *channel)
 int Server::get_reply_code(void)
 {
 	return _reply_code;
+}
+
+Client* Server::get_client(int fd) {
+	for (size_t i = 0; i < _clients.size(); ++i) {
+		if (_clients[i].get_fd() == fd) {
+			return &_clients[i];
+		}
+	}
+	return nullptr;
+}
+
+void Server::send_response(int fd, const std::string& message)
+{
+	if (send(fd, message.c_str(), message.size(), 0) < 0) {
+		perror("send failed");
+	}
+}
+
+Client* Server::get_client_by_nickname(const std::string& nickname)
+{
+    for (std::vector<Client>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+	{
+        if (it->get_nickname() == nickname)
+		{
+            return &(*it);
+        }
+    }
+    return nullptr;
+}
+
+/*
+** ------------------------------- COMMAND HANDLERS --------------------------------
+*/
+
+void Server::_handle_marvin(const std::string &/* buffer */, int fd)
+{
+	std::string response = ":Server 001 " + this->get_client(fd)->get_nickname() + " :Olá, sou Marvin, o robô paranóide.";
+	this->send_response(fd, response + "\r\n");
+}
+
+void Server::_handle_time(const std::string &/* buffer */, int fd)
+{
+	time_t now = time(NULL);
+	std::string time_str = ctime(&now);
+	std::string response = ":Server 001 " + this->get_client(fd)->get_nickname() + " :Server time: " + time_str;
+	this->send_response(fd, response + "\r\n");
+}
+
+void Server::_handle_whois(const std::string &buffer, int fd)
+{
+	std::istringstream iss(buffer);
+	std::string nickname;
+	iss >> nickname;
+
+	Client* client = this->get_client_by_nickname(nickname);
+	if (client)
+	{
+		std::string response = ":Server 311 " + client->get_nickname() + " " + client->get_username() + " " + client->get_ip_address() + " * :Real Name";
+		this->send_response(fd, response + "\r\n");
+		response = ":Server 318 " + client->get_nickname() + " :End of WHOIS list";
+		this->send_response(fd, response + "\r\n");
+	}
+	else
+	{
+		std::string error_message = ERR_NOSUCHNICK("Server", nickname);
+		this->send_response(fd, error_message + "\r\n");
+	}
 }

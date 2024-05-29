@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:19:06 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/26 05:24:43 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/27 19:12:32 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ class Client //-> class for client
 {
 	public:
 		Client();
-		
+
 		int get_fd() const;
 		bool get_is_logged() const;
 		std::string get_buffer() const;
@@ -46,6 +46,7 @@ class Client //-> class for client
 		std::string get_username() const;
 		std::string get_password() const;
 		std::string get_hostname() const;
+		std::string get_ip_address() const;
 		bool get_is_authenticated() const;
 		bool get_is_operator() const;
 
@@ -76,5 +77,9 @@ class Client //-> class for client
 		std::string _password; //-> client password
 		std::vector<std::string> _channels_invited; //-> vector of channels invited
 };
+
+std::string Client::get_ip_address() const {
+	return _ip_addr;
+}
 
 #endif // CLIENT_HPP
