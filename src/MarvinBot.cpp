@@ -6,14 +6,21 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 11:32:28 by caalbert          #+#    #+#             */
-/*   Updated: 2024/05/29 19:19:32 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/29 21:20:35 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "MarvinBot.hpp"
-/*
-** ------------------------------- COMMAND HANDLERS --------------------------------
-*/
+
+// Constructor
+MarvinBot::MarvinBot()
+{
+}
+
+// Destructor
+MarvinBot::~MarvinBot()
+{
+}
 
 // Array of quote strings
 const char* marvin_bot_quotes[QUOTES_COUNT] = {
@@ -41,6 +48,9 @@ std::string _return_quote()
 		return std::string(marvin_bot_quotes[index]);
 }
 
+/*
+** ------------------------------- COMMAND HANDLERS --------------------------------
+*/
 void Server::_handler_bot_marvin(const std::string &/* buffer */, int fd)
 {
 	Client* client = _get_client(fd);

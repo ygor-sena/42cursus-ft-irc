@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 11:31:32 by caalbert          #+#    #+#             */
-/*   Updated: 2024/05/29 18:37:54 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/29 21:20:53 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,15 @@ enum EnumMarvinBotQuotes {
     QUOTES_COUNT // To keep track of the number of quotes
 };
 
-extern const char* marvin_bot_quotes[QUOTES_COUNT];
 
 class MarvinBot
 {
+    public:
+		MarvinBot();
+		~MarvinBot();
+
+		const char* marvin_bot_quotes[QUOTES_COUNT];
+
 	private:
 		std::string _return_quote();
 };
