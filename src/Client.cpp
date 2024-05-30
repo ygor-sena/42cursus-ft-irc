@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:20:02 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/29 16:21:21 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/30 11:29:19 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,6 +149,4 @@ void Client::broadcast(Client *sender, std::string target, std::string message)
 
 	if (send(this->get_fd(), response.c_str(), response.size(), 0) == -1)
 		std::cerr << "Response send() failed" << std::endl;
-
-	//_send_response(fd, RPL_PRIVMSG(client->get_hostname(),
 }
