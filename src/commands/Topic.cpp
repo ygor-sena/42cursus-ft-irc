@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:30:59 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/28 21:59:36 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/30 15:47:53 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,9 @@ void Server::_handler_client_topic(const std::string &buffer, const int fd)
 			_reply_code = 332;
 		}
     } else {
-		// PRECISAMOS VERIFICAR SE MUDAR O TOPIC É RESTRITO SE FOR APENAS ADMIN MUDAR OU SENÃO QLQR UM.
-		if (!channel->is_channel_operator(client->get_nickname())) {
-			_send_response(fd, ERR_NOTOPERATOR(channel->get_name()));
+		if (!channel->is_channel_operator(client->get_nickname())
+			|| channel->get_topic_restriction()) {
+			_send_response(fd, ERR_CHANOPRIVSNEEDED(channel->get_name()));
 			_reply_code = 482;
         } else {
 			channel->set_topic(topic);
