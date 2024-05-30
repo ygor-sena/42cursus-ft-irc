@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:33:05 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/28 21:50:05 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/30 14:53:41 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,21 @@
  * Command: JOIN
  * Parameters: <channel>{,<channel>} [<key>{,<key>}]
  * Link: https://datatracker.ietf.org/doc/html/rfc1459#section-4.2.1
+*/
+
+/*
+ * Cenários de Teste:
+ * 1. O comando JOIN é recebido sem parâmetros suficientes.
+ * 2. O comando JOIN é recebido e o cliente não está registrado.
+ * 3. O comando JOIN é recebido e o nome do canal é inválido.
+ * 4. O comando JOIN é recebido e o cliente já está no canal.
+ * 5. O comando JOIN é recebido e o canal está cheio.
+ * 6. O comando JOIN é recebido e o canal é apenas para convidados.
+ * 7. O comando JOIN é recebido e o canal tem uma chave inválida.
+ * 8. O comando JOIN é recebido e o cliente é adicionado ao canal.
+ * 9. O comando JOIN é recebido e o cliente não está logado.
+ * 10. O comando JOIN é recebido e o cliente está logado.
+ *
 */
 
 /**
