@@ -1,6 +1,6 @@
 # Insert the test rules here
 TESTS := user nick invite join kick part topic privmsg quit
-TESTS += marvinbot mode
+TESTS += marvinbot mode pass
 
 CYAN  := \33[1;36m
 RESET := \033[0m
@@ -77,6 +77,10 @@ marvinbot: $(OBJS) TestMarvinBot.cpp
 
 .PHONY: mode
 mode: $(OBJS) TestMode.cpp
+	@$(call run, "$^")
+
+.PHONY: pass
+pass: $(OBJS) TestPass.cpp
 	@$(call run, "$^")
 
 # Insert the test rules here, follwing the example above.
