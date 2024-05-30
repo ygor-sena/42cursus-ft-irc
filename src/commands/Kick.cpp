@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Kick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:30:47 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/30 13:06:19 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/30 16:15:26 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,19 @@
  * Command: Kick 
  * Parameters: <channel> <user> [<comment>]
  * Reference: https://datatracker.ietf.org/doc/html/rfc1459#section-4.2.8
+*/
+
+/*
+ * Cenários de Teste:
+ * 1. O comando KICK é recebido sem parâmetros suficientes.
+ * 2. O comando KICK é recebido e o canal não existe.
+ * 3. O comando KICK é recebido e o cliente não está no canal.
+ * 4. O comando KICK é recebido e o cliente não é um operador do canal.
+ * 5. O comando KICK é recebido e o cliente alvo não existe.
+ * 6. O comando KICK é recebido e o cliente alvo não está no canal.
+ * 7. O comando KICK é recebido e o cliente é expulso do canal com sucesso.
+ * 8. O comando KICK é recebido e o cliente é expulso do canal com sucesso e um comentário é enviado.
+ * 
 */
 
 /**

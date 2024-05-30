@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 18:03:34 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/30 16:06:39 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/30 16:48:25 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,7 +183,6 @@ Test(NickCommand, success_readytologin)
 	Server server;
 
 	server._clients.push_back(*client);
-	server._handler_client_username("Username", 4);
 	server._handler_client_nickname("Nickname", 4);
 	cr_assert(eq(int, server._reply_code, 001));
 }

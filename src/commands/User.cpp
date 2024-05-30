@@ -6,20 +6,17 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:32:16 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/30 15:19:14 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/30 16:47:25 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
-
-#define USER_CMD "USER"
 
 /*
  * Command: USER
  * Parameters: <username>
  * Link: https://datatracker.ietf.org/doc/html/rfc1459#section-4.1.3
 */
-
 
 /*
  * Cenários de Teste:

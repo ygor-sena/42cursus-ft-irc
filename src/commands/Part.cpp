@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:30:20 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/26 11:52:13 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/30 17:00:05 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,14 @@
  * Command: PART
  * Parameters: <channel>{,<channel>}
  * Link: https://datatracker.ietf.org/doc/html/rfc1459#section-4.2.2
+*/
+
+/*
+ * Test Cases:
+ * 1. The PART command is received without enough parameters.
+ * 2. The PART command is received and the channel does not exist.
+ * 3. The PART command is received and the client is not in the channel.
+ * 4. The PART command is received and the client leaves the channel successfully.
 */
 
 /**

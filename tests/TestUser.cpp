@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   TestUser.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 18:03:11 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/30 14:55:00 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/30 16:53:44 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,19 +17,32 @@
 #define private public
 #include "Server.hpp"
 
+/*
+ * Cenários de Teste:
+ * 1. O comando USER é recebido sem parâmetros suficientes.
+ * 2. O comando USER é recebido e o cliente não está registrado.
+ * 3. O comando USER é recebido e o cliente já está registrado.
+ * 4. O comando USER é recebido e o cliente está pronto para fazer login.
+ * 5. O comando USER é recebido e o cliente não está pronto para fazer login.
+ * 
+*/
+
 Client *mockClient()
 {
 	Client *client = new Client();
 	client->set_fd(4);
-	client->set_username("username");
-	client->set_nickname("oldNickname");
-	client->set_password("password");
-	client->set_buffer("USER new_username");
+	client->set_username("Username");
+	client->set_nickname("Nickname");
+	client->set_password("Password");
+	client->set_buffer("USER Username");
 	client->set_is_logged(true);
 	client->set_is_authenticated(true);
 	return client;
 }
 
+/*
+ * 1. O comando USER é recebido sem parâmetros suficientes.
+*/
 Test(UserCommand, err_needmoreparams)
 {
 	Client* client = mockClient();
@@ -38,9 +51,12 @@ Test(UserCommand, err_needmoreparams)
 
 	server._clients.push_back(*client);
 	server._handler_client_username("", 4);
-	cr_assert(eq(int, server._reply_code, 461)); // Assuming 461 is the reply code for ERR_NEEDMOREPARAMS
+	cr_assert(eq(int, server._reply_code, 461));
 }
 
+/*
+ * 2. O comando USER é recebido e o cliente não está registrado.
+*/
 Test(UserCommand, err_notregistered)
 {
 	Client* client = mockClient();
@@ -50,34 +66,13 @@ Test(UserCommand, err_notregistered)
 	Server server;
 
 	server._clients.push_back(*client);
-	server._handler_client_username("new_username", 4);
-	cr_assert(eq(int, server._reply_code, 451)); // Assuming 451 is the reply code for ERR_NOTREGISTERED
+	server._handler_client_username(client->get_username(), 4);
+	cr_assert(eq(int, server._reply_code, 451));
 }
 
-Test(UserCommand, success_setusername_1)
-{
-	Client* client = mockClient();
-	client->set_username("");
-
-	Server server;
-
-	server._clients.push_back(*client);
-	server._handler_client_username("new_username", 4);
-	cr_assert(eq(int, server._reply_code, 200)); // Assuming 200 is the reply code for a successful username change
-}
-
-Test(UserCommand, success_setusername_2)
-{
-	Client* client = mockClient();
-	client->set_username("withUsername");
-
-	Server server;
-
-	server._clients.push_back(*client);
-	server._handler_client_username("newUsername", 4);
-	cr_assert(eq(int, server._reply_code, 462)); // Assuming 200 is the reply code for a successful username change
-}
-
+/*
+ * 3. O comando USER é recebido e o cliente já está registrado.
+*/
 Test(UserCommand, err_alreadyregistered)
 {
 	Client* client = mockClient();
@@ -85,23 +80,41 @@ Test(UserCommand, err_alreadyregistered)
 	Server server;
 
 	server._clients.push_back(*client);
-	server._handler_client_username("username", 4);
-	cr_assert(eq(int, server._reply_code, 462)); // Assuming 462 is the reply code for ERR_ALREADYREGISTERED
+	server._handler_client_username(client->get_username(), 4);
+	cr_assert(eq(int, server._reply_code, 462));
 }
 
+/*
+ * 4. O comando USER é recebido e o cliente está pronto para fazer login.
+*/
+Test(UserCommand, success_readytologin)
+{
+	Client* client = mockClient();
+	client->set_username("");
+	client->set_is_authenticated(true);
+	client->set_is_logged(false);
+
+	Server server;
+
+	server._clients.push_back(*client);
+	server._handler_client_username("Username", 4);
+	cr_assert(eq(int, server._reply_code, 001));
+}
 
 /*
-Using the opened tabs as context, write 8 unit tests using criterion framework, one for each of the following criteria:
-
-The USER command is received without sufficient parameters.
-The USER command is received and the client is not registered.
-The USER command is received and the client is already registered.
-The USER command is received and the client is ready to log in.
-The USER command is received and the client is not ready to log in.
-The USER command is received and the client is already logged in.
-The USER command is received and the client is not authenticated.
-The USER command is received and the client is authenticated.
+ * 5. O comando USER é recebido e o cliente não está pronto para fazer login.
 */
+Test(UserCommand, success_notreadytologin)
+{
+	Client* client = mockClient();
+	client->set_username("");
+	client->set_nickname("");
+	client->set_is_authenticated(true);
+	client->set_is_logged(false);
 
+	Server server;
 
-
+	server._clients.push_back(*client);
+	server._handler_client_username("Username", 4);
+	cr_assert(eq(int, server._reply_code, 200));
+}
