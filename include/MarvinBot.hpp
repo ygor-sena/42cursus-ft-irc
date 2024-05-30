@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 11:31:32 by caalbert          #+#    #+#             */
-/*   Updated: 2024/05/29 21:20:53 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/29 21:24:39 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,27 +27,26 @@
 # define HEIDEGGER_BEING "Being is time, and time is finite. - Martin Heidegger"
 # define ROUSSEAU_FREEDOM "Man is born free, and everywhere he is in chains. - Jean-Jacques Rousseau"
 
-// Enum for quotes
-enum EnumMarvinBotQuotes {
-    QUOTE_SOCRATES_KNOWLEDGE,
-    QUOTE_DESCARTES_EXISTENCE,
-    QUOTE_KANT_CATEGORICAL_IMPERATIVE,
-    QUOTE_NIETZSCHE_GOD,
-    QUOTE_PLATO_FORMS,
-    QUOTE_MARX_RELIGION,
-    QUOTE_CONFUCIUS_WISDOM,
-    QUOTE_HUME_SCIENCE,
-    QUOTE_HEIDEGGER_BEING,
-    QUOTE_ROUSSEAU_FREEDOM,
-    QUOTES_COUNT // To keep track of the number of quotes
-};
-
-
 class MarvinBot
 {
     public:
 		MarvinBot();
 		~MarvinBot();
+
+		// Enum for quotes
+		enum EnumMarvinBotQuotes {
+			QUOTE_SOCRATES_KNOWLEDGE,
+			QUOTE_DESCARTES_EXISTENCE,
+			QUOTE_KANT_CATEGORICAL_IMPERATIVE,
+			QUOTE_NIETZSCHE_GOD,
+			QUOTE_PLATO_FORMS,
+			QUOTE_MARX_RELIGION,
+			QUOTE_CONFUCIUS_WISDOM,
+			QUOTE_HUME_SCIENCE,
+			QUOTE_HEIDEGGER_BEING,
+			QUOTE_ROUSSEAU_FREEDOM,
+			QUOTES_COUNT // To keep track of the number of quotes
+		};
 
 		const char* marvin_bot_quotes[QUOTES_COUNT];
 
