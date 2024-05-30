@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:20:02 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/30 13:11:43 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/30 20:43:56 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,11 @@ Client::Client()
 ** --------------------------------- ACCESSOR ---------------------------------
 */
 
+/**
+ * @brief Sets the file descriptor for the client.
+ *
+ * @param fd The file descriptor to set.
+ */
 void Client::set_fd(const int fd)
 {
 	_fd = fd;
