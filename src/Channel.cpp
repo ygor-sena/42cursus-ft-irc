@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:26:17 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/30 13:13:05 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/30 15:36:08 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,11 @@ Channel::~Channel()
 std::string Channel::get_name(void) const
 {
 	return _name;
+}
+
+bool Channel::get_topic_restriction(void) const
+{
+	return _topic_restriction;
 }
 
 std::vector<Client *> Channel::get_operator_clients(void)

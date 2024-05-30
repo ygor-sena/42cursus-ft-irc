@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:24:04 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/30 13:11:15 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/30 15:35:19 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ class Channel
 		std::string get_client_names(void) const;
 		std::vector<Client *> get_channel_clients(void);
 		std::vector<Client *> get_operator_clients(void);
+		bool get_topic_restriction(void) const;
 
 		void set_limit(int limit);
 		void set_invite_only(void);
