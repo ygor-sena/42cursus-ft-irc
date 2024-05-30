@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Invite.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:31:16 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/28 21:50:01 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/30 11:29:04 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,11 +92,6 @@ void Server::_handler_client_invite(const std::string &buffer, const int fd)
 
     // Envia o convite ao cliente convidado
     invited_client->add_channel_invited(target_channel);
-	
-	std::vector<std::string> channels = invited_client->get_channels_invited();
-	for (std::vector<std::string>::iterator it = channels.begin(); it != channels.end(); ++it) {
-		std::cout << *it << std::endl;
-	}
 
     // Envia a resposta de convite ao cliente que enviou o convite
     _send_response(fd, RPL_INVITING(client->get_hostname(), target_channel, client->get_nickname(), target_nickname));

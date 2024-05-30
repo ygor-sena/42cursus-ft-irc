@@ -1,6 +1,6 @@
 # Insert the test rules here
-TESTS := user nick invite join kick part topic privmsg
-#TESTS += 
+TESTS := user nick invite join kick part topic privmsg quit
+TESTS += marvinbot
 
 CYAN  := \33[1;36m
 RESET := \033[0m
@@ -65,6 +65,14 @@ topic: $(OBJS) TestTopic.cpp
 
 .PHONY: privmsg
 privmsg: $(OBJS) TestPrivmsg.cpp
+	@$(call run, "$^")
+
+.PHONY: quit
+quit: $(OBJS) TestQuit.cpp
+	@$(call run, "$^")
+
+.PHONY: marvinbot
+marvinbot: $(OBJS) TestMarvinBot.cpp
 	@$(call run, "$^")
 
 # Insert the test rules here, follwing the example above.

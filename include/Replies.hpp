@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 18:18:57 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/29 16:22:57 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/29 19:19:18 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,13 @@
 # define RPL_INVITING(hostname, channelname, invitername, invitedname) (":" + hostname + " INVITE " + invitedname + " " + channelname + CRLF)
 # define RPL_PRIVMSG(hostname, receiver, text) (":" + hostname + " PRIVMSG " + receiver + " " + text + CRLF)
 
+# define BOT_CMDMARVIN(nickname) (": 4242 marvin_bot " + nickname + " :Hello, I am Marvin, the paranoid robot." + CRLF)
+# define BOT_CMDTIME(nickname, time) (": 4242 marvin_bot " + nickname + " :Server time: " + time_str)
+# define BOT_CMDWHOIS(nickname, username, ipaddr) (": 4242 marvin_bot " + nickname + " :Whois " + username + " " + ipaddr + " :End of WHOIS list" + CRLF)
+# define BOT_CMDQUOTE(nickname, quote) (": 4242 marvin_bot " + nickname + " :" + quote + CRLF)
+# define BOT_CLIENTNOTINCHANNEL(nickname) (": 2424 marvin_bot " + nickname + ": Must be part of at least one channel to use marvin commands" + CRLF)
+# define BOT_WHOISDOESNTEXIST(nickname) (": 4242 marvin_bot " + nickname + " :No such user" + CRLF)
+
 ///////// ERRORS /////////
 # define ERR_NEEDMODEPARM(channelname, mode) (": 696 " + channelname + " * You must specify a parameter for the key mode. " + mode + CRLF)
 # define ERR_INVALIDMODEPARM(channelname, mode) (": 696 " + channelname + " Invalid mode parameter. " + mode + CRLF)
@@ -64,9 +71,9 @@
 
 # define ERR_CMDNOTFOUND(nickname, command) (": 421 " + nickname + " " + command + " :Unknown command" + CRLF)
 
-# define ERR_BADCHANNELKEY(clientnickname, channelname) (": 475 " + clientnickname + " " + channelname + " :Cannot join channel (incorrect key)" + CRLF)
-# define ERR_INVITEONLYCHAN(clientnickname, channelname) (": 473 " + clientnickname + " " + channelname + " :Cannot join channel (+i)" + CRLF)
-# define ERR_CHANNELISFULL(clientnickname, channelname) (": 422 " + clientnickname + " " + channelname + " :Cannot join channel (+l)" + CRLF)
+# define ERR_BADCHANNELKEY(nickname, channelname) (": 475 " + nickname + " " + channelname + " :Cannot join channel (incorrect key)" + CRLF)
+# define ERR_INVITEONLYCHAN(nickname, channelname) (": 473 " + nickname + " " + channelname + " :Cannot join channel (+i)" + CRLF)
+# define ERR_CHANNELISFULL(nickname, channelname) (": 422 " + nickname + " " + channelname + " :Cannot join channel (+l)" + CRLF)
 # define ERR_NOSUCHCHANNEL(channelname) (": 403 " + channelname + " :No such channel" + CRLF)
 # define ERR_USERNOTINCHANNEL(nickname, channelname) ("441 " + nickname + " " + channelname + " :They aren't on that channel" + CRLF)
 # define ERR_NOTONCHANNEL(channelname) (": 442 " + channelname + " :You're not on that channel" + CRLF)

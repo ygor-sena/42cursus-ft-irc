@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   Quit.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:29:45 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/28 21:39:19 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/30 13:06:28 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+#include <csignal>
 
 /*
  * Command: QUIT
@@ -27,12 +28,10 @@
  * @param buffer The buffer containing the QUIT command parameters.
  * @param fd The file descriptor associated with the client that sent the command.
  */
-void Server::_handler_client_quit(const std::string &buffer, const int fd)
+void Server::_handler_client_quit(const std::string &/* buffer */, const int fd)
 {
-    (void)buffer;
     Client* client = _get_client(fd);
 
-    // FOR CHANELLS
     for (std::vector<Channel *>::iterator it = _channels.begin(); it != _channels.end(); ++it) 
     {
         Channel *channel = *it;
@@ -41,6 +40,7 @@ void Server::_handler_client_quit(const std::string &buffer, const int fd)
             channel->part(client);
         }
     }
-    
+
     _send_response(fd, RPL_QUITMESSAGE(client->get_nickname()));
+	_reply_code = 301;
 }

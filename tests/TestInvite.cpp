@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 18:15:32 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/27 10:25:34 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/30 11:28:00 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,15 +66,11 @@ Test(InviteCommand, succesfully_invite_client_to_channel)
 
 	// Invite client to channel
 	server._handler_client_invite("outsideUser #world", 4);
-	
-	//Print channels invited client using it
-	std::vector<std::string> channels = outsideClient->get_channels_invited();
-	for (std::vector<std::string>::iterator it = channels.begin(); it != channels.end(); ++it) {
-		std::cout << "CHANNELS: " << *it << std::endl;
-	}
-	
+
 	cr_assert(eq(int, server._reply_code, 200));
-	cr_assert(eq(int, outsideClient->get_channels_invited().size(), 1));
+	cr_assert(eq(int, server._get_client(
+		outsideClient->get_fd())->is_channel_invited(
+			channel->get_name()), 1));
 }
 
 Test(InviteCommand, err_nosuchchannel)
