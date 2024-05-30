@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 18:03:11 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/30 16:53:44 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/30 17:43:27 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,9 @@ Test(UserCommand, err_needmoreparams)
 	Client* client = mockClient();
 
 	Server server;
-
 	server._clients.push_back(*client);
-	server._handler_client_username("", 4);
+	server._handler_client_username("", client->get_fd());
+	
 	cr_assert(eq(int, server._reply_code, 461));
 }
 
@@ -64,9 +64,9 @@ Test(UserCommand, err_notregistered)
 	client->set_is_logged(false);
 
 	Server server;
-
 	server._clients.push_back(*client);
-	server._handler_client_username(client->get_username(), 4);
+	server._handler_client_username(client->get_username(), client->get_fd());
+	
 	cr_assert(eq(int, server._reply_code, 451));
 }
 
@@ -78,9 +78,9 @@ Test(UserCommand, err_alreadyregistered)
 	Client* client = mockClient();
 
 	Server server;
-
 	server._clients.push_back(*client);
-	server._handler_client_username(client->get_username(), 4);
+	server._handler_client_username(client->get_username(), client->get_fd());
+	
 	cr_assert(eq(int, server._reply_code, 462));
 }
 
@@ -95,9 +95,9 @@ Test(UserCommand, success_readytologin)
 	client->set_is_logged(false);
 
 	Server server;
-
 	server._clients.push_back(*client);
-	server._handler_client_username("Username", 4);
+	server._handler_client_username("Username", client->get_fd());
+	
 	cr_assert(eq(int, server._reply_code, 001));
 }
 
@@ -113,8 +113,8 @@ Test(UserCommand, success_notreadytologin)
 	client->set_is_logged(false);
 
 	Server server;
-
 	server._clients.push_back(*client);
-	server._handler_client_username("Username", 4);
+	server._handler_client_username("Username", client->get_fd());
+	
 	cr_assert(eq(int, server._reply_code, 200));
 }
