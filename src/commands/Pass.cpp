@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:32:39 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/26 19:48:54 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/30 14:49:57 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,19 @@
  * Command: PASS
  * Parameters: <password>
  * Reference: https://datatracker.ietf.org/doc/html/rfc1459#section-4.1.1
+*/
+
+/*
+ * Cenários de Teste:
+ * 1. O comando PASS é recebido sem parâmetros suficientes.
+ * 2. O comando PASS é recebido e o cliente já está autenticado.
+ * 3. O comando PASS é recebido e a senha do cliente está incorreta.
+ * 4. O comando PASS é recebido e a senha do cliente está correta.
+ * 5. O comando PASS é recebido e o cliente não está logado.
+ * 6. O comando PASS é recebido e o cliente está logado.
+ * 7. O comando PASS é recebido e o cliente não está autenticado.
+ * 8. O comando PASS é recebido e o cliente está autenticado.
+ * 
 */
 
 /**

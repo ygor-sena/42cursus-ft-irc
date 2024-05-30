@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Nick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:31:54 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/27 20:12:35 by caalbert         ###   ########.fr       */
+/*   Updated: 2024/05/30 16:02:09 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,14 +37,14 @@ void Server::_handler_client_nickname(const std::string &buffer, const int fd)
 
 	Client* client = _get_client(fd);
 
-	if (buffer.size() < 5) {
+	if (buffer.empty()) {
 		_send_response(fd, ERR_NEEDMOREPARAMS(std::string("*")));
 		_reply_code = 461;
 	} else if (!client->get_is_authenticated()) {
 		_send_response(fd, ERR_NOTREGISTERED(std::string("*")));
 		_reply_code = 451;
 	} else if (!_is_valid_nickname(buffer)) {
-		// _send_response(fd, ERR_ERRONEUSNICK(client->get_nickname()));
+		//_send_response(fd, ERR_ERRONEUSNICK(client->get_nickname()));
 		_reply_code = 432;
 	} else if (_is_nickname_in_use(fd, buffer)) {
 		_send_response(fd, ERR_NICKINUSE(client->get_nickname()));
@@ -55,6 +55,7 @@ void Server::_handler_client_nickname(const std::string &buffer, const int fd)
 			client->set_is_logged(fd);
 			_send_response(fd, RPL_CONNECTED(client->get_nickname()));
             _reply_code = 001;
+			return;
 		}
 		_reply_code = 200;
 	}

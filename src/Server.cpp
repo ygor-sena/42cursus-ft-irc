@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:26:55 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/29 19:13:14 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/30 15:59:59 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -440,7 +440,7 @@ void Server::_is_valid_port(const std::string &port)
  */
 bool Server::_is_valid_nickname(const std::string &nickname)
 {
-	if (nickname.size() <= 5)
+	if (nickname.size() <= 3)
 		return false;
 	for (std::string::const_iterator it = nickname.begin(); it != nickname.end(); ++it) {
 		if (!std::isalnum(*it))

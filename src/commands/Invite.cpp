@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Invite.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:31:16 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/30 11:29:04 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/30 14:39:36 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,21 @@
  * Link: https://datatracker.ietf.org/doc/html/rfc1459#section-4.2.7
  * Example: INVITE Wiz #Twilight_Zone
 */
+
+/*
+ * Cenários de Teste:
+ * 1. O comando INVITE é recebido sem parâmetros suficientes.
+ * 2. O comando INVITE é recebido e o cliente não está registrado.
+ * 3. O comando INVITE é recebido e o canal não existe.
+ * 4. O comando INVITE é recebido e o cliente não está no canal.
+ * 5. O comando INVITE é recebido e o cliente não é operador do canal para convidar um cliente.
+ * 6. O comando INVITE é recebido e o cliente convidado não existe.
+ * 7. O comando INVITE é recebido e o cliente convidado já está no canal.
+ * 8. O comando INVITE é recebido e o cliente convidado é convidado para o canal.
+ * 9. O comando INVITE é recebido e o cliente não está logado.
+ * 10. O comando INVITE é recebido e o cliente está logado.
+ * 
+*/ 
 
 /**
  * @brief Handles the INVITE command received from the client.
