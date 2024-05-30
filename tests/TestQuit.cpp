@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 20:46:13 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/28 21:32:43 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/30 13:12:19 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ Client *toPartClient()
 	return client;
 }
 
-/* Test(QuitCommand, non_client_operator_quits_successfully)
+Test(QuitCommand, non_client_operator_quits_successfully)
 {
 	Client *toPart = toPartClient();
 	Client *channelMember = genericClient();
@@ -72,7 +72,7 @@ Client *toPartClient()
 		cr_assert(eq(int, (*it)->get_clients_size(), 1));
 	}
 }
- */
+
 Test(QuitCommand, client_operator_quits_successfully)
 {
 	Client *toPart = toPartClient();
@@ -84,7 +84,7 @@ Test(QuitCommand, client_operator_quits_successfully)
 		new Channel("#one"), new Channel("#two"), new Channel("#three")
 	};
 
-	toPart->set_is_operator(false);
+	//toPart->set_is_operator(true);
 
 	server._clients.push_back(*toPart);
 	server._clients.push_back(*channelMember);
@@ -92,7 +92,7 @@ Test(QuitCommand, client_operator_quits_successfully)
 	for (std::vector<Channel*>::iterator it = channels.begin(); it != channels.end(); ++it) {
 		(*it)->join(toPart);
 		(*it)->join(channelMember);
-		//(*it)->set_channel_operator(toPart);
+		(*it)->set_channel_operator(toPart);
 		server._channels.push_back(*it);
 	}
 
@@ -103,5 +103,8 @@ Test(QuitCommand, client_operator_quits_successfully)
 	cr_assert(eq(int, server._reply_code, 301));
 	for (std::vector<Channel*>::iterator it = server._channels.begin(); it != server._channels.end(); ++it) {
 		cr_assert(eq(int, (*it)->get_clients_size(), 1));
+	}
+	for (std::vector<Channel*>::iterator it = server._channels.begin(); it != server._channels.end(); ++it) {
+		cr_assert(eq(int, (*it)->get_operator_clients().size(), 0));
 	}
 }

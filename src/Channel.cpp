@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:26:17 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/28 21:37:58 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/30 13:13:05 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,6 +157,22 @@ void Channel::remove_channel_operator(Client *client)
 	}
 }
 
+void Channel::remove_channel_client(Client *client)
+{
+	for (std::vector<Client *>::iterator it = this->_clients.begin(); it != this->_clients.end();)
+    {
+        if ((*it)->get_nickname() == client->get_nickname())
+        {
+            std::cout << (*it)->get_nickname() << std::endl;
+            it = this->_clients.erase(it);
+            break ;
+        }
+        else
+            ++it;
+    }
+	return ;
+}
+
 /*
 ** --------------------------------- OTHERS ---------------------------------
 */
@@ -212,38 +228,15 @@ void Channel::join(Client *client)
 
 void Channel::kick(Client *client)
 {
-	for (std::vector<Client *>::iterator it = this->_clients.begin(); it != this->_clients.end(); ++it)
-	{
-		if((*it)->get_nickname() == client->get_nickname())
-		{
-			this->_clients.erase(it);
-			return ;
-		}
-	}
-	return ;
+	client->remove_channel_invited(this->get_name());
+	remove_channel_operator(client);
+	remove_channel_client(client);
 }
 
 void Channel::part(Client *client)
 {
-	// Remove client from channel operators
-	for (std::vector<Client *>::iterator it_op = this->_operator_clients.begin(); it_op != this->_operator_clients.end(); ++it_op)
-	{
-		if((*it_op)->get_nickname() == client->get_nickname())
-		{
-			this->_operator_clients.erase(it_op);
-			return ;
-		}
-	}
-
-	for (std::vector<Client *>::iterator it = this->_clients.begin(); it != this->_clients.end(); ++it)
-	{
-		if((*it)->get_nickname() == client->get_nickname())
-		{
-			std::cout << (*it)->get_nickname() << std::endl;
-			this->_clients.erase(it);
-			return ;
-		}
-	}
+	remove_channel_operator(client);
+	remove_channel_client(client);
 }
 
 void Channel::broadcast(Client *sender, std::string target, std::string message)
@@ -251,13 +244,11 @@ void Channel::broadcast(Client *sender, std::string target, std::string message)
 	for (std::vector<Client *>::iterator it = this->_clients.begin(); it != this->_clients.end(); it++) {
 		if (*it == sender)
 			continue ;
-		std::cout << "2) " << this->get_name() << " : " << (*it)->get_nickname() << std::endl;
 		(*it)->broadcast(sender, target, message);
 	}
 	for (std::vector<Client *>::iterator it = this->_operator_clients.begin(); it != this->_operator_clients.end(); it++) {
 		if (*it == sender)
 			continue ;
-		std::cout << "2) " << this->get_name() << " : " << (*it)->get_nickname() << std::endl;
 		(*it)->broadcast(sender, target, message);
 	}
 	return ;

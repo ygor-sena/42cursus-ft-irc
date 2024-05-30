@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:19:06 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/29 16:23:31 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/30 13:11:52 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ class Client //-> class for client
 
 		bool is_channel_invited(const std::string &channel);
 		void add_channel_invited(const std::string &channel);
+		void remove_channel_invited(const std::string &channel);
 
 		void broadcast(Client *sender, std::string target, std::string message);
 

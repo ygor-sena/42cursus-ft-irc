@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:20:02 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/30 11:29:19 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/30 13:11:43 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,17 @@ std::string Client::get_hostname() const
 std::vector<std::string> Client::get_channels_invited() const
 {
 	return _channels_invited;
+}
+
+void Client::remove_channel_invited(const std::string &channel)
+{
+	std::vector<std::string>::iterator it;
+    for (it = _channels_invited.begin(); it != _channels_invited.end(); ++it) {
+        if (*it == channel) {
+            _channels_invited.erase(it);
+            break;
+        }
+    }
 }
 
 void Client::add_channel_invited(const std::string &channel)

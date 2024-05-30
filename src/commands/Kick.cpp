@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Kick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:30:47 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/28 21:50:09 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/30 13:06:19 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,15 +30,6 @@
 void Server::_handler_client_kick(const std::string &buffer, const int fd)
 {
 	Client* client = _get_client(fd);
-
-	/*
-	std::cout << client->get_nickname() << " is trying to kick a user" << std::endl;
-	std::cout << client->get_fd() << std::endl;
-	std::cout << client->get_password() << std::endl;
-	std::cout << client->get_is_authenticated() << std::endl;
-	std::cout << client->get_is_registered() << std::endl;
-	std::cout << client->get_is_operator() << std::endl;
-	*/
 
 	if (!client->get_is_logged()) {
         _send_response(fd, ERR_NOTREGISTERED(client->get_nickname()));
@@ -102,9 +93,8 @@ void Server::_handler_client_kick(const std::string &buffer, const int fd)
 	} else {
 		_send_response(fd, RPL_KICK(client->get_hostname(), channel_name, client->get_nickname(), target_client->get_nickname(), ""));
 	}
-    
-    // Precisar limpar os invites do cliente localizado em std::vector<std::string> _channels_invited
-	channel->kick(target_client); //PRECISA REMOVER DA LISTA DE ADMIN DO CANAL;
+
+	channel->kick(target_client);
 	_reply_code = 200;
 
     // Registra o comando KICK recebido
