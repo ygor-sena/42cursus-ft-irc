@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 11:32:28 by caalbert          #+#    #+#             */
-/*   Updated: 2024/05/29 21:20:35 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/29 21:27:32 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ MarvinBot::~MarvinBot()
 }
 
 // Array of quote strings
-const char* marvin_bot_quotes[QUOTES_COUNT] = {
+const char* marvin_bot_quotes[MarvinBot::QUOTES_COUNT] = {
     SOCRATES_KNOWLEDGE,
     DESCARTES_EXISTENCE,
     KANT_CATEGORICAL_IMPERATIVE,
@@ -42,7 +42,7 @@ std::string _return_quote()
 		srand(time(0));
 
 		// Generate a random index
-		int index = rand() % QUOTES_COUNT;
+		int index = rand() % MarvinBot::QUOTES_COUNT;
 
 		// Return the quote at the random index
 		return std::string(marvin_bot_quotes[index]);
