@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:19:06 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/30 22:45:05 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 09:50:59 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,9 @@ class Client  //-> class for client
 {
   public:
 	Client();
+	~Client();
+
+	Client(const Client& other);
 
 	int get_fd() const;
 	bool get_is_logged() const;

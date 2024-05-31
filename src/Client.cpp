@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:20:02 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/30 23:17:50 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 09:51:18 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,23 @@ Client::Client()
 	_username = "";
 	_password = "";
 	_channels_invited = std::vector<std::string>();
+}
+
+Client::~Client() {}
+
+// Create client copy constructor
+Client::Client(const Client& other)
+{
+	_fd = other._fd;
+	_is_logged = other._is_logged;
+	_is_authenticated = other._is_authenticated;
+	_is_operator = other._is_operator;
+	_buffer = other._buffer;
+	_ip_addr = other._ip_addr;
+	_nickname = other._nickname;
+	_username = other._username;
+	_password = other._password;
+	_channels_invited = other._channels_invited;
 }
 
 /*

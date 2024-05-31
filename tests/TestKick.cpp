@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 18:15:38 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/30 15:14:01 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 11:23:01 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,8 @@ Test(KickCommand, kick_successfully_no_comments)
 	Channel* channel = new Channel("#world");
 
 	// Add clients to the server clients list
-	server._clients.push_back(*troll);
-	server._clients.push_back(*channelOperator);
+	server._clients.push_back(troll);
+	server._clients.push_back(channelOperator);
 
 	// Add clients as channel member
 	channel->invite(troll);
@@ -98,8 +98,8 @@ Test(KickCommand, kick_successfully_with_comments)
 	Channel* channel = new Channel("#world");
 
 	// Add clients to the server clients list
-	server._clients.push_back(*troll);
-	server._clients.push_back(*channelOperator);
+	server._clients.push_back(troll);
+	server._clients.push_back(channelOperator);
 
 	// Add clients as channel member
 	channel->invite(troll);
@@ -141,8 +141,8 @@ Test(KickCommand, kick_successfully_with_comments)
 	Channel *channel = new Channel("#world");
 
 	// Add clients to the server clients list
-	server._clients.push_back(*troll);
-	server._clients.push_back(*channelOperator);
+	server._clients.push_back(troll);
+	server._clients.push_back(channelOperator);
 
 	// Add clients as channel member
 	channel->invite(troll);
@@ -168,8 +168,8 @@ Test(KickCommand, err_nosuchchannel)
 	Channel* channel = new Channel("#world");
 
 	// Add clients to the server clients list
-	server._clients.push_back(*troll);
-	server._clients.push_back(*channelOperator);
+	server._clients.push_back(troll);
+	server._clients.push_back(channelOperator);
 
 	// Add clients as channel member
 	channel->invite(troll);
@@ -196,9 +196,9 @@ Test(KickCommand, err_notonchannel)
 	Channel* channel = new Channel("#world");
 
 	// Add clients to the server clients list
-	server._clients.push_back(*troll);
-	server._clients.push_back(*channelOperator);
-	server._clients.push_back(*outsideUser);
+	server._clients.push_back(troll);
+	server._clients.push_back(channelOperator);
+	server._clients.push_back(outsideUser);
 
 	// Add clients as channel member
 	channel->invite(troll);
@@ -226,8 +226,8 @@ Test(KickCommand, err_chanoprivsneeded)
 	channelOperator->set_is_operator(false);
 
 	// Add clients to the server clients list
-	server._clients.push_back(*troll);
-	server._clients.push_back(*channelOperator);
+	server._clients.push_back(troll);
+	server._clients.push_back(channelOperator);
 
 	// Add clients as channel member
 	channel->invite(troll);
@@ -252,8 +252,8 @@ Test(KickCommand, err_nosuchnick)
 	channelOperator->set_is_operator(false);
 
 	// Add clients to the server clients list
-	server._clients.push_back(*troll);
-	server._clients.push_back(*channelOperator);
+	server._clients.push_back(troll);
+	server._clients.push_back(channelOperator);
 
 	// Add clients as channel member
 	channel->invite(troll);
@@ -285,9 +285,9 @@ Test(KickCommand, err_usernotinchannel)
 	channelOperator->set_is_operator(false);
 
 	// Add clients to the server clients list
-	server._clients.push_back(*troll);
-	server._clients.push_back(*channelOperator);
-	server._clients.push_back(*outsideUser);
+	server._clients.push_back(troll);
+	server._clients.push_back(channelOperator);
+	server._clients.push_back(outsideUser);
 
 	// Add clients as channel member
 	channel->invite(troll);

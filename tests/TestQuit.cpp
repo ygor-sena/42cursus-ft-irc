@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 20:46:13 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/30 13:12:19 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 11:25:19 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,8 @@ Test(QuitCommand, non_client_operator_quits_successfully)
 
 	toPart->set_is_operator(false);
 
-	server._clients.push_back(*toPart);
-	server._clients.push_back(*channelMember);
+	server._clients.push_back(toPart);
+	server._clients.push_back(channelMember);
 
 	for (std::vector<Channel*>::iterator it = channels.begin();
 		 it != channels.end();
@@ -90,8 +90,8 @@ Test(QuitCommand, client_operator_quits_successfully)
 
 	// toPart->set_is_operator(true);
 
-	server._clients.push_back(*toPart);
-	server._clients.push_back(*channelMember);
+	server._clients.push_back(toPart);
+	server._clients.push_back(channelMember);
 
 	for (std::vector<Channel*>::iterator it = channels.begin();
 		 it != channels.end();

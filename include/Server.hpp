@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:23:47 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/30 23:45:41 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 11:04:18 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ class Server
 	int _port;						  //-> server port
 	int _server_fdsocket;			  //-> server socket file descriptor
 	std::string _password;			  //-> server password
-	std::vector<Client> _clients;	  //-> vector of clients
+	std::vector<Client*> _clients;	  //-> vector of clients
 	std::vector<struct pollfd> _fds;  //-> vector of pollfd
 	struct sockaddr_in _server_addr;  //-> server address
 	std::vector<Channel*> _channels;  //-> vector of channels

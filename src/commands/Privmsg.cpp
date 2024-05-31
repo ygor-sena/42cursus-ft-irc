@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:31:33 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/27 10:28:22 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 10:14:41 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,9 +68,6 @@ void Server::_handler_client_privmsg(const std::string& buffer, const int fd)
 
 	std::vector<std::string> params = _split_buffer(buffer, " ");
 
-	std::cout << params[0] << std::endl;
-	std::cout << params[1] << std::endl;
-
 	if (client->get_is_logged())
 	{
 		// Check if the command has the minimum number of parameters
@@ -82,8 +79,6 @@ void Server::_handler_client_privmsg(const std::string& buffer, const int fd)
 		}
 
 		std::vector<std::string> receivers = split_parameters(params[0], ",");
-
-		std::cout << receivers[0] << std::endl;
 
 		// Validate channel and client inputs. Otherwise, return an error
 		for (std::vector<std::string>::iterator it = receivers.begin();
@@ -136,14 +131,8 @@ void Server::_handler_client_privmsg(const std::string& buffer, const int fd)
 			{
 				Channel* target_channel = this->_get_channel(*it);
 
-				std::cout << "1) THIS IS CHANNEL TARGET:"
-						  << target_channel->get_name() << std::endl;
-
 				target_channel->broadcast(
 					client, target_channel->get_name(), params[1]);
-
-				//_send_response(fd, RPL_PRIVMSG(client->get_hostname(),
-				//target_channel->get_name(), params[1]));
 			}
 			else
 			{
@@ -163,6 +152,4 @@ void Server::_handler_client_privmsg(const std::string& buffer, const int fd)
 		_send_response(fd, ERR_NOTREGISTERED(client->get_nickname()));
 		_reply_code = 451;
 	}
-	//_send_response(fd, RPL_PRIVMSG(client->get_hostname(), "ft_transcendence",
-	//"Hello, Carlos!"));
 }

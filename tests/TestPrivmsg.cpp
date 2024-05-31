@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 09:03:10 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/30 23:00:22 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 11:24:59 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,9 @@ Test(PrivmsgCommand, privmsg_successfully_single_client)
 
 	Server server;
 
-	server._clients.push_back(*sender);
-	server._clients.push_back(*first);
-	server._clients.push_back(*second);
+	server._clients.push_back(sender);
+	server._clients.push_back(first);
+	server._clients.push_back(second);
 
 	server._handler_client_privmsg("firstUser :Hello, firstUser!", 4);
 	cr_assert(eq(int, server._reply_code, 0));
@@ -81,9 +81,9 @@ Test(PrivmsgCommand, privmsg_successfully_two_clients)
 
 	Server server;
 
-	server._clients.push_back(*sender);
-	server._clients.push_back(*first);
-	server._clients.push_back(*second);
+	server._clients.push_back(sender);
+	server._clients.push_back(first);
+	server._clients.push_back(second);
 
 	server._handler_client_privmsg("firstUser,secondUser :Hello, my Users!", 4);
 	cr_assert(eq(int, server._reply_code, 0));
@@ -97,9 +97,9 @@ Test(PrivmsgCommand, privmsg_successfully_single_channel)
 
 	Server server;
 
-	server._clients.push_back(*sender);
-	server._clients.push_back(*first);
-	server._clients.push_back(*second);
+	server._clients.push_back(sender);
+	server._clients.push_back(first);
+	server._clients.push_back(second);
 
 	Channel* channel = new Channel("#brazil");
 
@@ -118,9 +118,9 @@ Test(PrivmsgCommand, privmsg_successfully_three_channels)
 
 	Server server;
 
-	server._clients.push_back(*sender);
-	server._clients.push_back(*first);
-	server._clients.push_back(*second);
+	server._clients.push_back(sender);
+	server._clients.push_back(first);
+	server._clients.push_back(second);
 
 	Channel* ch_brazil = new Channel("#brazil");
 	Channel* ch_france = new Channel("#france");
@@ -148,9 +148,9 @@ Test(PrivmsgCommand, privmsg_successfully_mixed_channel_user)
 
 	Server server;
 
-	server._clients.push_back(*sender);
-	server._clients.push_back(*first);
-	server._clients.push_back(*second);
+	server._clients.push_back(sender);
+	server._clients.push_back(first);
+	server._clients.push_back(second);
 
 	Channel* ch_brazil = new Channel("#brazil");
 	Channel* ch_france = new Channel("#france");
@@ -178,9 +178,9 @@ Test(PrivmsgCommand, err_notregistered)
 
 	sender->set_is_logged(false);
 
-	server._clients.push_back(*sender);
-	server._clients.push_back(*first);
-	server._clients.push_back(*second);
+	server._clients.push_back(sender);
+	server._clients.push_back(first);
+	server._clients.push_back(second);
 
 	server._handler_client_privmsg("firstUser :Hello, firstUser!", 4);
 	cr_assert(eq(int, server._reply_code, 451));
@@ -194,9 +194,9 @@ Test(PrivmsgCommand, err_nosuchchannel)
 
 	Server server;
 
-	server._clients.push_back(*sender);
-	server._clients.push_back(*first);
-	server._clients.push_back(*second);
+	server._clients.push_back(sender);
+	server._clients.push_back(first);
+	server._clients.push_back(second);
 
 	Channel* ch_brazil = new Channel("#brazil");
 	Channel* ch_france = new Channel("#france");
@@ -222,9 +222,9 @@ Test(PrivmsgCommand, err_notonchannel)
 
 	Server server;
 
-	server._clients.push_back(*sender);
-	server._clients.push_back(*first);
-	server._clients.push_back(*second);
+	server._clients.push_back(sender);
+	server._clients.push_back(first);
+	server._clients.push_back(second);
 
 	Channel* ch_brazil = new Channel("#brazil");
 	Channel* ch_france = new Channel("#france");
@@ -249,9 +249,9 @@ Test(PrivmsgCommand, err_nosuchnick)
 
 	Server server;
 
-	server._clients.push_back(*sender);
-	server._clients.push_back(*first);
-	server._clients.push_back(*second);
+	server._clients.push_back(sender);
+	server._clients.push_back(first);
+	server._clients.push_back(second);
 
 	Channel* ch_brazil = new Channel("#brazil");
 	Channel* ch_france = new Channel("#france");

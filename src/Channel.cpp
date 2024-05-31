@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:26:17 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/30 23:17:45 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 10:10:47 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,8 @@ Channel::Channel(std::string name)
 
 Channel::~Channel()
 {
-	this->_clients.clear();
-	this->_operator_clients.clear();
-	return;
+	_clients.clear();
+	_operator_clients.clear();
 }
 
 /*
@@ -421,6 +420,15 @@ void Channel::part(Client* client)
  */
 void Channel::broadcast(Client* sender, std::string target, std::string message)
 {
+	for (std::vector<Client*>::iterator it = this->_operator_clients.begin();
+		 it != this->_operator_clients.end();
+		 it++)
+	{
+		if (*it == sender)
+			continue;
+		(*it)->broadcast(sender, target, message);
+		return;
+	}
 	for (std::vector<Client*>::iterator it = this->_clients.begin();
 		 it != this->_clients.end();
 		 it++)
@@ -429,15 +437,6 @@ void Channel::broadcast(Client* sender, std::string target, std::string message)
 			continue;
 		(*it)->broadcast(sender, target, message);
 	}
-	for (std::vector<Client*>::iterator it = this->_operator_clients.begin();
-		 it != this->_operator_clients.end();
-		 it++)
-	{
-		if (*it == sender)
-			continue;
-		(*it)->broadcast(sender, target, message);
-	}
-	return;
 }
 
 /**

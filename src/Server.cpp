@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:26:55 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/30 23:18:53 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 11:14:52 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,14 @@
 
 Server::Server()
 {
-	_server_fdsocket = -1;
 	_reply_code = 0;
+	_port = 0;
+	_server_fdsocket = -1;
+	_password = "";
+	memset(&_server_addr, 0, sizeof(_server_addr));
+	_fds = std::vector<struct pollfd>();
+	_clients = std::vector<Client*>();
+	_channels = std::vector<Channel*>();
 }
 
 /*
@@ -28,8 +34,21 @@ Server::Server()
 
 Server::~Server()
 {
-	this->_channels.clear();
-	return;
+	for (std::vector<Client*>::iterator it = _clients.begin();
+		 it != _clients.end();
+		 ++it)
+	{
+		delete *it;
+	}
+	_clients.clear();
+
+	for (std::vector<Channel*>::iterator it = _channels.begin();
+		 it != _channels.end();
+		 ++it)
+	{
+		delete *it;
+	}
+	_channels.clear();
 }
 
 /*
@@ -51,9 +70,9 @@ Client* Server::_get_client(const int fd)
 {
 	for (size_t i = 0; i < _clients.size(); i++)
 	{
-		if (_clients[i].get_fd() == fd)
+		if (_clients[i]->get_fd() == fd)
 		{
-			return &_clients[i];
+			return _clients[i];
 		}
 	}
 	return NULL;
@@ -74,9 +93,9 @@ Client* Server::_get_client(const std::string nickname)
 {
 	for (size_t i = 0; i < _clients.size(); i++)
 	{
-		if (_clients[i].get_nickname() == nickname)
+		if (_clients[i]->get_nickname() == nickname)
 		{
-			return &_clients[i];
+			return _clients[i];
 		}
 	}
 	return NULL;
@@ -284,6 +303,7 @@ void Server::_accept_new_client()
 	if (fcntl(incofd, F_SETFL, O_NONBLOCK) == -1)
 	{
 		std::cout << "fcntl() failed" << std::endl;
+		close(incofd);
 		return;
 	}
 	new_poll.fd = incofd;
@@ -291,7 +311,7 @@ void Server::_accept_new_client()
 	new_poll.revents = 0;
 	cli.set_fd(incofd);
 	cli.set_ip_add(inet_ntoa((cli_addr.sin_addr)));
-	_clients.push_back(cli);
+	_clients.push_back(new Client(cli));
 	_fds.push_back(new_poll);
 	std::cout << GRE << "Client <" << incofd << "> Connected" << WHI
 			  << std::endl;
@@ -506,9 +526,9 @@ void Server::_close_fds()
 {
 	for (size_t i = 0; i < _clients.size(); i++)
 	{
-		std::cout << RED << "Client <" << _clients[i].get_fd()
+		std::cout << RED << "Client <" << _clients[i]->get_fd()
 				  << "> Disconnected" << WHI << std::endl;
-		close(_clients[i].get_fd());
+		close(_clients[i]->get_fd());
 	}
 	if (_server_fdsocket != -1)
 	{
@@ -530,19 +550,19 @@ void Server::_close_fds()
  */
 void Server::_clear_client(const int fd)
 {
+	for (size_t i = 0; i < _clients.size(); i++)
+	{
+		if (_clients[i]->get_fd() == fd)
+		{
+			_clients.erase(_clients.begin() + i);
+			break;
+		}
+	}
 	for (size_t i = 0; i < _fds.size(); i++)
 	{
 		if (_fds[i].fd == fd)
 		{
 			_fds.erase(_fds.begin() + i);
-			break;
-		}
-	}
-	for (size_t i = 0; i < _clients.size(); i++)
-	{
-		if (_clients[i].get_fd() == fd)
-		{
-			_clients.erase(_clients.begin() + i);
 			break;
 		}
 	}
@@ -654,11 +674,11 @@ bool Server::_is_valid_nickname(const std::string& nickname)
  */
 bool Server::_is_nickname_in_use(const int fd, const std::string& username)
 {
-	for (std::vector<Client>::iterator it = _clients.begin();
+	for (std::vector<Client*>::iterator it = _clients.begin();
 		 it != _clients.end();
 		 ++it)
 	{
-		if (it->get_nickname() == username && it->get_fd() != fd)
+		if ((*it)->get_nickname() == username && (*it)->get_fd() != fd)
 			return true;
 	}
 	return false;

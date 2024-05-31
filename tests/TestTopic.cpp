@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 08:57:00 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/30 15:58:11 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 11:25:34 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ Test(TopicCommand, err_needmoreparams)
 	Client* client = mockChannelMemberClient();
 	Server server;
 
-	server._clients.push_back(*client);
+	server._clients.push_back(client);
 	server._handler_client_topic("", client->get_fd());
 	cr_assert(eq(int, server._reply_code, 403));
 }
@@ -58,7 +58,7 @@ Test(TopicCommand, err_notregistered)
 
 	client->set_is_logged(false);
 
-	server._clients.push_back(*client);
+	server._clients.push_back(client);
 	server._handler_client_topic("", client->get_fd());
 	cr_assert(eq(int, server._reply_code, 451));
 }
@@ -68,7 +68,7 @@ Test(TopicCommand, err_nosuchchannel)
 	Client* client = mockChannelMemberClient();
 	Server server;
 
-	server._clients.push_back(*client);
+	server._clients.push_back(client);
 	server._handler_client_topic("#channel", client->get_fd());
 	cr_assert(eq(int, server._reply_code, 403));
 }
@@ -80,7 +80,7 @@ Test(TopicCommand, rpl_notopic)
 
 	Channel* channel = new Channel("#channel");
 
-	server._clients.push_back(*client);
+	server._clients.push_back(client);
 
 	// Add clients as channel member
 	channel->join(client);
@@ -102,7 +102,7 @@ Test(TopicCommand, err_notoperator)
 
 	Channel* channel = new Channel("#channel");
 
-	server._clients.push_back(*client);
+	server._clients.push_back(client);
 
 	// Add clients as channel member
 	channel->join(client);
@@ -122,7 +122,7 @@ Test(TopicCommand, rpl_topic_set_first_topic)
 
 	Channel* channel = new Channel("#channel");
 
-	server._clients.push_back(*client);
+	server._clients.push_back(client);
 
 	// Add clients as channel member
 	channel->join(client);
@@ -142,7 +142,7 @@ Test(TopicCommand, rpl_topic_set_second_topic)
 
 	Channel* channel = new Channel("#channel");
 
-	server._clients.push_back(*client);
+	server._clients.push_back(client);
 
 	// Add clients as channel member
 	channel->join(client);
@@ -164,7 +164,7 @@ Test(TopicCommand, cannot_set_topic_with_topic_restriction)
 
 	Channel* channel = new Channel("#channel");
 
-	server._clients.push_back(*client);
+	server._clients.push_back(client);
 
 	// Add clients as channel member
 	channel->join(client);
@@ -185,7 +185,7 @@ Test(TopicCommand, err_notonchannel)
 
 	Channel* channel = new Channel("#channel");
 
-	server._clients.push_back(*client);
+	server._clients.push_back(client);
 
 	// Add channel to the server channels list
 	server._channels.push_back(channel);

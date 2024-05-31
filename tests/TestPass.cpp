@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   TestPass.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 17:27:49 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/30 17:42:55 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/31 11:24:21 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ Test(ServerHandlerClientPassword, TestPassWithoutEnoughParameters)
 	Client* client = mockClient();
 
 	Server server;
-	server._clients.push_back(*client);
+	server._clients.push_back(client);
 	server._handler_client_password("", client->get_fd());
 
 	cr_assert_eq(server._reply_code, 461);
@@ -68,7 +68,7 @@ Test(ServerHandlerClientPassword, TestPassClientIsAuthenticated)
 
 	Server server;
 	server._password = "Password";
-	server._clients.push_back(*client);
+	server._clients.push_back(client);
 	server._handler_client_password("Password", client->get_fd());
 
 	cr_assert_eq(server._reply_code, 462);
@@ -84,7 +84,7 @@ Test(ServerHandlerClientPassword, TestPassIncorrectPassword)
 
 	Server server;
 	server._password = "Password";
-	server._clients.push_back(*client);
+	server._clients.push_back(client);
 	server._handler_client_password("IncorrectPassword", client->get_fd());
 
 	cr_assert_eq(server._reply_code, 464);
@@ -100,7 +100,7 @@ Test(ServerHandlerClientPassword, TestPassCorrectPassword)
 
 	Server server;
 	server._password = "Password";
-	server._clients.push_back(*client);
+	server._clients.push_back(client);
 	server._handler_client_password("Password", client->get_fd());
 
 	cr_assert_eq(server._reply_code, 200);
