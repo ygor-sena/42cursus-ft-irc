@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   TestNick.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 18:03:34 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/30 17:51:14 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/31 11:21:36 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ Test(NickCommand, err_needmoreparams)
 	Client* client = mockClient();
 
 	Server server;
-	server._clients.push_back(*client);
+	server._clients.push_back(client);
 	server._handler_client_nickname("", client->get_fd());
 
 	cr_assert(eq(int, server._reply_code, 461));
@@ -64,7 +64,7 @@ Test(NickCommand, err_notregistered)
 	client->set_is_authenticated(false);
 
 	Server server;
-	server._clients.push_back(*client);
+	server._clients.push_back(client);
 	server._handler_client_nickname(client->get_nickname(), client->get_fd());
 
 	cr_assert(eq(int, server._reply_code, 451));
@@ -79,7 +79,7 @@ Test(NickCommand, err_erroneusnick_1)
 	client->set_is_authenticated(true);
 
 	Server server;
-	server._clients.push_back(*client);
+	server._clients.push_back(client);
 	server._handler_client_nickname("new_nickname", client->get_fd());
 
 	cr_assert(eq(int, server._reply_code, 432));
@@ -91,7 +91,7 @@ Test(NickCommand, err_erroneusnick_2)
 	client->set_is_authenticated(true);
 
 	Server server;
-	server._clients.push_back(*client);
+	server._clients.push_back(client);
 	server._handler_client_nickname("$Gilmar", client->get_fd());
 
 	cr_assert(eq(int, server._reply_code, 432));
@@ -103,7 +103,7 @@ Test(NickCommand, err_erroneusnick_3)
 	client->set_is_authenticated(true);
 
 	Server server;
-	server._clients.push_back(*client);
+	server._clients.push_back(client);
 	server._handler_client_nickname("Ygor%", client->get_fd());
 
 	cr_assert(eq(int, server._reply_code, 432));
@@ -115,7 +115,7 @@ Test(NickCommand, err_erroneusnick_4)
 	client->set_is_authenticated(true);
 
 	Server server;
-	server._clients.push_back(*client);
+	server._clients.push_back(client);
 	server._handler_client_nickname("Car#los", client->get_fd());
 
 	cr_assert(eq(int, server._reply_code, 432));
@@ -130,7 +130,7 @@ Test(NickCommand, success_setnickname)
 	client->set_is_authenticated(true);
 
 	Server server;
-	server._clients.push_back(*client);
+	server._clients.push_back(client);
 	server._handler_client_nickname("newNickname", client->get_fd());
 
 	cr_assert(eq(int, server._reply_code, 200));
@@ -149,8 +149,8 @@ Test(NickCommand, err_nickinuse)
 	client1->set_is_authenticated(true);
 
 	Server server;
-	server._clients.push_back(*client);
-	server._clients.push_back(*client1);
+	server._clients.push_back(client);
+	server._clients.push_back(client1);
 	server._handler_client_nickname(client1->get_nickname(), client1->get_fd());
 
 	cr_assert(eq(int, server._reply_code, 433));
@@ -165,7 +165,7 @@ Test(NickCommand, success_changenickname)
 	client->set_is_authenticated(true);
 
 	Server server;
-	server._clients.push_back(*client);
+	server._clients.push_back(client);
 	server._handler_client_nickname(client->get_nickname(), client->get_fd());
 
 	cr_assert(eq(int, server._reply_code, 200));
@@ -181,7 +181,7 @@ Test(NickCommand, success_readytologin)
 	client->set_is_logged(false);
 
 	Server server;
-	server._clients.push_back(*client);
+	server._clients.push_back(client);
 	server._handler_client_nickname(client->get_nickname(), client->get_fd());
 
 	cr_assert(eq(int, server._reply_code, 001));

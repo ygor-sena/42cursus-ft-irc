@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 18:23:35 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/30 14:56:27 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 11:24:08 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ Test(MarvinBotCommand, user_is_not_in_any_channel)
 
 	Server server;
 
-	server._clients.push_back(*client);
+	server._clients.push_back(client);
 
 	server._handler_bot_marvin("!marvin", client->get_fd());
 
@@ -48,7 +48,7 @@ Test(MarvinBotCommand, user_is_in_any_channel)
 	Server server;
 	Channel* channel = new Channel("#world");
 
-	server._clients.push_back(*client);
+	server._clients.push_back(client);
 
 	channel->join(client);
 

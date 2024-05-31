@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 18:15:32 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/30 11:28:00 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 11:22:04 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,8 @@ Test(InviteCommand, succesfully_invite_client_to_channel)
 	channel->set_channel_operator(insideClient);
 
 	// Add clients to the server clients list
-	server._clients.push_back(*outsideClient);
-	server._clients.push_back(*insideClient);
+	server._clients.push_back(outsideClient);
+	server._clients.push_back(insideClient);
 
 	// Add clients as channel member
 	channel->join(insideClient);
@@ -83,8 +83,8 @@ Test(InviteCommand, err_nosuchchannel)
 	Channel* channel = new Channel("#world");
 
 	// Add clients to the server clients list
-	server._clients.push_back(*outsideClient);
-	server._clients.push_back(*insideClient);
+	server._clients.push_back(outsideClient);
+	server._clients.push_back(insideClient);
 
 	// Add channel to the server channels list
 	server._channels.push_back(channel);
@@ -103,8 +103,8 @@ Test(InviteCommand, err_notonchannel)
 	Channel* channel = new Channel("#world");
 
 	// Add clients to the server clients list
-	server._clients.push_back(*outsideClient);
-	server._clients.push_back(*insideClient);
+	server._clients.push_back(outsideClient);
+	server._clients.push_back(insideClient);
 
 	channel->invite(outsideClient);
 
@@ -126,7 +126,7 @@ Test(InviteCommand, err_nosuchnick)
 	channel->set_channel_operator(insideClient);
 
 	// Add clients to the server clients list
-	server._clients.push_back(*insideClient);
+	server._clients.push_back(insideClient);
 
 	channel->invite(insideClient);
 
@@ -146,7 +146,7 @@ Test(InviteCommand, err_noprivileges)
 	Channel* channel = new Channel("#world");
 
 	// Add clients to the server clients list
-	server._clients.push_back(*insideClient);
+	server._clients.push_back(insideClient);
 
 	// Add clients as channel member
 	channel->invite(insideClient);
@@ -169,7 +169,7 @@ Test(InviteCommand, err_useronchannel)
 	channel->set_channel_operator(insideClient);
 
 	// Add clients to the server clients list
-	server._clients.push_back(*insideClient);
+	server._clients.push_back(insideClient);
 
 	channel->invite(insideClient);
 
@@ -191,7 +191,7 @@ Test(InviteCommand, err_notregistered)
 	insideClient->set_is_logged(false);
 
 	// Add clients to the server clients list
-	server._clients.push_back(*insideClient);
+	server._clients.push_back(insideClient);
 
 	channel->invite(insideClient);
 

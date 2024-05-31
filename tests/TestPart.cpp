@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 08:56:56 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/25 21:14:47 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 11:23:33 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,8 @@ Test(PartCommand, part_successfully)
 
 	Channel* channel = new Channel("#channel");
 
-	server._clients.push_back(*toPart);
-	server._clients.push_back(*channelMember);
+	server._clients.push_back(toPart);
+	server._clients.push_back(channelMember);
 
 	std::cout << channel->get_clients_size() << std::endl;
 
@@ -79,8 +79,8 @@ Test(PartCommand, err_nosuchchannel)
 
 	Channel* channel = new Channel("#channel");
 
-	server._clients.push_back(*toPart);
-	server._clients.push_back(*channelMember);
+	server._clients.push_back(toPart);
+	server._clients.push_back(channelMember);
 
 	std::cout << channel->get_clients_size() << std::endl;
 
@@ -103,8 +103,8 @@ Test(PartCommand, err_notonchannel)
 
 	Channel* channel = new Channel("#channel");
 
-	server._clients.push_back(*toPart);
-	server._clients.push_back(*channelMember);
+	server._clients.push_back(toPart);
+	server._clients.push_back(channelMember);
 
 	std::cout << channel->get_clients_size() << std::endl;
 
@@ -128,8 +128,8 @@ Test(PartCommand, err_notregistered)
 
 	toPart->set_is_logged(false);
 
-	server._clients.push_back(*toPart);
-	server._clients.push_back(*channelMember);
+	server._clients.push_back(toPart);
+	server._clients.push_back(channelMember);
 
 	std::cout << channel->get_clients_size() << std::endl;
 

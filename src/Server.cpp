@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:26:55 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/30 23:18:53 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 14:01:43 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,30 @@
 
 Server::Server()
 {
-	_server_fdsocket = -1;
 	_reply_code = 0;
+	_port = 0;
+	_server_fdsocket = -1;
+	_password = "";
+	memset(&_server_addr, 0, sizeof(_server_addr));
+	_fds = std::vector<struct pollfd>();
+	_clients = std::vector<Client*>();
+	_channels = std::vector<Channel*>();
+}
+
+/*
+** -------------------------- PARAMETER CONSTRUCTOR ---------------------------
+*/
+Server::Server(std::string password, std::vector<Client*> clients,
+			   std::vector<Channel*> channels)
+{
+	_reply_code = 0;
+	_port = 0;
+	_server_fdsocket = -1;
+	_password = password;
+	memset(&_server_addr, 0, sizeof(_server_addr));
+	_fds = std::vector<struct pollfd>();
+	this->_clients = clients;
+	this->_channels = channels;
 }
 
 /*
@@ -28,8 +50,21 @@ Server::Server()
 
 Server::~Server()
 {
-	this->_channels.clear();
-	return;
+	for (std::vector<Client*>::iterator it = _clients.begin();
+		 it != _clients.end();
+		 ++it)
+	{
+		delete *it;
+	}
+	_clients.clear();
+
+	for (std::vector<Channel*>::iterator it = _channels.begin();
+		 it != _channels.end();
+		 ++it)
+	{
+		delete *it;
+	}
+	_channels.clear();
 }
 
 /*
@@ -51,9 +86,9 @@ Client* Server::_get_client(const int fd)
 {
 	for (size_t i = 0; i < _clients.size(); i++)
 	{
-		if (_clients[i].get_fd() == fd)
+		if (_clients[i]->get_fd() == fd)
 		{
-			return &_clients[i];
+			return _clients[i];
 		}
 	}
 	return NULL;
@@ -74,9 +109,9 @@ Client* Server::_get_client(const std::string nickname)
 {
 	for (size_t i = 0; i < _clients.size(); i++)
 	{
-		if (_clients[i].get_nickname() == nickname)
+		if (_clients[i]->get_nickname() == nickname)
 		{
-			return &_clients[i];
+			return _clients[i];
 		}
 	}
 	return NULL;
@@ -104,17 +139,6 @@ Channel* Server::_get_channel(const std::string& channel_name)
 	}
 	return NULL;
 }
-
-/**
- * @brief Adds a new channel to the server.
- *
- * This function adds a new channel to the list of channels maintained by the
- * server. The channel object is created with the specified name and added to
- * the list of channels.
- *
- * @param channel The name of the channel to be added.
- */
-void Server::_add_channel(Channel* channel) { _channels.push_back(channel); }
 
 /**
  * @brief Checks if the client is in any channel.
@@ -284,6 +308,7 @@ void Server::_accept_new_client()
 	if (fcntl(incofd, F_SETFL, O_NONBLOCK) == -1)
 	{
 		std::cout << "fcntl() failed" << std::endl;
+		close(incofd);
 		return;
 	}
 	new_poll.fd = incofd;
@@ -291,7 +316,7 @@ void Server::_accept_new_client()
 	new_poll.revents = 0;
 	cli.set_fd(incofd);
 	cli.set_ip_add(inet_ntoa((cli_addr.sin_addr)));
-	_clients.push_back(cli);
+	_clients.push_back(new Client(cli));
 	_fds.push_back(new_poll);
 	std::cout << GRE << "Client <" << incofd << "> Connected" << WHI
 			  << std::endl;
@@ -418,8 +443,7 @@ void Server::_execute_command(const std::string buffer, const int fd)
 }
 
 /*
-** ------------------------------- PARSER COMMAND
-*--------------------------------
+** --------------------------- PARSER COMMANDS --------------------------------
 */
 
 /**
@@ -481,8 +505,7 @@ std::string Server::_cleanse_buffer(const std::string& buffer,
 }
 
 /*
-** ------------------------------- CLEAR FUCTIONS
-*--------------------------------
+** ----------------------------- CLEAR FUCTIONS -------------------------------
 */
 
 /**
@@ -506,15 +529,84 @@ void Server::_close_fds()
 {
 	for (size_t i = 0; i < _clients.size(); i++)
 	{
-		std::cout << RED << "Client <" << _clients[i].get_fd()
+		std::cout << RED << "Client <" << _clients[i]->get_fd()
 				  << "> Disconnected" << WHI << std::endl;
-		close(_clients[i].get_fd());
+		close(_clients[i]->get_fd());
 	}
 	if (_server_fdsocket != -1)
 	{
 		std::cout << RED << "Server <" << _server_fdsocket << "> Disconnected"
 				  << WHI << std::endl;
 		close(_server_fdsocket);
+	}
+}
+
+/**
+ * @brief Removes a client from the server.
+ *
+ * This function removes a client from the server by searching for the client
+ * with the given file descriptor (fd) in the vector of clients (_clients). If a
+ * matching client is found, it is deleted, and the corresponding element in the
+ * vector is set to NULL. Finally, the element is erased from the vector.
+ *
+ * @param fd The file descriptor of the client to be removed.
+ */
+void Server::_remove_client_from_server(const int fd)
+{
+	for (std::vector<Client*>::iterator it = _clients.begin();
+		 it != _clients.end();
+		 ++it)
+	{
+		if ((*it)->get_fd() == fd)
+		{
+			delete *it;
+			*it = NULL;
+			it = _clients.erase(it);
+			break;
+		}
+	}
+}
+
+/**
+ * @brief Removes a client file descriptor from the server's list of file
+ * descriptors.
+ *
+ * This function removes the specified client file descriptor from the server's
+ * internal list of file descriptors. It searches for the file descriptor in the
+ * list and removes it if found. After removing the file descriptor, the
+ * function also closes the file descriptor.
+ *
+ * @param fd The file descriptor to be removed.
+ */
+void Server::_remove_client_fd(const int fd)
+{
+	for (size_t i = 0; i < _fds.size(); i++)
+	{
+		if (_fds[i].fd == fd)
+		{
+			_fds.erase(_fds.begin() + i);
+			break;
+		}
+	}
+	close(fd);
+}
+
+/**
+ * @brief Removes a client from all channels.
+ *
+ * This function removes the specified client from all channels in the server.
+ *
+ * @param fd The file descriptor of the client to be removed.
+ */
+void Server::_remove_client_from_channels(const int fd)
+{
+	Client* client = _get_client(fd);
+
+	for (std::vector<Channel*>::iterator it = _channels.begin();
+		 it != _channels.end();
+		 ++it)
+	{
+		(*it)->remove_channel_client(client);
 	}
 }
 
@@ -530,28 +622,13 @@ void Server::_close_fds()
  */
 void Server::_clear_client(const int fd)
 {
-	for (size_t i = 0; i < _fds.size(); i++)
-	{
-		if (_fds[i].fd == fd)
-		{
-			_fds.erase(_fds.begin() + i);
-			break;
-		}
-	}
-	for (size_t i = 0; i < _clients.size(); i++)
-	{
-		if (_clients[i].get_fd() == fd)
-		{
-			_clients.erase(_clients.begin() + i);
-			break;
-		}
-	}
-	close(fd);
+	_remove_client_from_channels(fd);
+	_remove_client_from_server(fd);
+	_remove_client_fd(fd);
 }
 
 /*
-** ------------------------------- SIGNAL FUCTIONS
-*--------------------------------
+** ----------------------------- SIGNAL FUCTIONS ------------------------------
 */
 
 bool Server::_signal = false;
@@ -587,8 +664,7 @@ void Server::_add_server_signal()
 }
 
 /*
-** ------------------------------- VALIDATIONS FUCTIONS
-*--------------------------------
+** --------------------------- VALIDATIONS FUCTIONS ---------------------------
 */
 
 /**
@@ -654,19 +730,18 @@ bool Server::_is_valid_nickname(const std::string& nickname)
  */
 bool Server::_is_nickname_in_use(const int fd, const std::string& username)
 {
-	for (std::vector<Client>::iterator it = _clients.begin();
+	for (std::vector<Client*>::iterator it = _clients.begin();
 		 it != _clients.end();
 		 ++it)
 	{
-		if (it->get_nickname() == username && it->get_fd() != fd)
+		if ((*it)->get_nickname() == username && (*it)->get_fd() != fd)
 			return true;
 	}
 	return false;
 }
 
 /*
-** ------------------------------- CLIENT FUCTIONS
-*--------------------------------
+** ----------------------------- CLIENT FUCTIONS ------------------------------
 */
 
 /**
@@ -691,9 +766,19 @@ bool Server::_client_is_ready_to_login(const int fd)
 }
 
 /*
-** ------------------------------- UTILS FUCTIONS
-*--------------------------------
+** ------------------------------ UTILS FUCTIONS ------------------------------
 */
+
+/**
+ * @brief Adds a new channel to the server.
+ *
+ * This function adds a new channel to the list of channels maintained by the
+ * server. The channel object is created with the specified name and added to
+ * the list of channels.
+ *
+ * @param channel The name of the channel to be added.
+ */
+void Server::_add_channel(Channel* channel) { _channels.push_back(channel); }
 
 /**
  * @brief Sends a response to the client.
@@ -734,8 +819,7 @@ std::string Server::toupper(const std::string& str)
 }
 
 /*
-** ------------------------------- CHANNEL FUCTIONS
-*--------------------------------
+** ---------------------------- CHANNEL FUCTIONS ------------------------------
 */
 
 /**

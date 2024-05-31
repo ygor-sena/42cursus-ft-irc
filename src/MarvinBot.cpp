@@ -3,19 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   MarvinBot.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 11:32:28 by caalbert          #+#    #+#             */
-/*   Updated: 2024/05/30 22:37:35 by caalbert         ###   ########.fr       */
+/*   Updated: 2024/05/31 12:44:35 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "MarvinBot.hpp"
 
-// Constructor
+/*
+** ------------------------------- CONSTRUCTOR --------------------------------
+*/
 MarvinBot::MarvinBot() {}
 
-// Destructor
+/*
+** ------------------------------- DESTRUCTOR ---------------------------------
+*/
 MarvinBot::~MarvinBot() {}
 
 /**
@@ -51,8 +55,7 @@ std::string _return_quote()
 }
 
 /*
-** ------------------------------- COMMAND HANDLERS
-*--------------------------------
+** ----------------------------- COMMAND HANDLERS -----------------------------
 */
 
 /**
