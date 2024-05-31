@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:26:17 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 10:10:47 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 13:53:16 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,9 @@ Channel::Channel()
 	_operator_clients = std::vector<Client*>();
 }
 
+/*
+** ---------------------------- COPY CONSTRUCTOR ------------------------------
+*/
 Channel::Channel(std::string name)
 {
 	_limit = -1;
@@ -45,9 +48,8 @@ Channel::Channel(std::string name)
 }
 
 /*
-** -------------------------------- DESTRUCTOR --------------------------------
+** ------------------------------- DESTRUCTOR ---------------------------------
 */
-
 Channel::~Channel()
 {
 	_clients.clear();
@@ -55,7 +57,7 @@ Channel::~Channel()
 }
 
 /*
-** --------------------------------- ACCESSOR ---------------------------------
+** ------------------------------- ACCESSORS ----------------------------------
 */
 
 /**
@@ -263,19 +265,19 @@ void Channel::remove_channel_operator(Client* client)
  */
 void Channel::remove_channel_client(Client* client)
 {
-	for (std::vector<Client*>::iterator it = this->_clients.begin();
-		 it != this->_clients.end();)
-	{
-		if ((*it)->get_nickname() == client->get_nickname())
+	/* 	for (std::vector<Client*>::iterator it = this->_clients.begin();
+			 it != this->_clients.end();
+			 ++it)
 		{
-			std::cout << (*it)->get_nickname() << std::endl;
-			it = this->_clients.erase(it);
-			break;
-		}
-		else
-			++it;
-	}
-	return;
+			if ((*it)->get_nickname() == client->get_nickname())
+			{
+				this->_clients.erase(it);
+				return;
+			}
+		} */
+	std::vector<Client*>::iterator it =
+		std::remove(_clients.begin(), _clients.end(), client);
+	_clients.erase(it, _clients.end());
 }
 
 /*
@@ -404,6 +406,20 @@ void Channel::part(Client* client)
 	remove_channel_operator(client);
 	remove_channel_client(client);
 }
+
+/**
+ * @brief Removes a client operator, if so, from the channel.
+ *
+ * This function removes the specified client from the channel by removing them
+ * as a channel operator. Since the command is QUIT, later the client will be
+ * removed from server by the end of function _handler_client_quit(). As per
+ * client object from server is the same client object from channel, there is no
+ * need to call remove_channel_client() here.
+ *
+ * @param client A pointer to the client operator , if so, to be removed from
+ * the channel.
+ */
+void Channel::quit(Client* client) { remove_channel_operator(client); }
 
 /**
  * @brief Broadcasts a message to all clients in the channel, excluding the

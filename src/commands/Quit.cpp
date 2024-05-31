@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:29:45 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/30 14:17:20 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 13:45:50 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void Server::_handler_client_quit(const std::string& /* buffer */, const int fd)
 		Channel* channel = *it;
 		if (channel->has_client(client))
 		{
-			channel->part(client);
+			channel->quit(client);
 			if (channel->get_channel_clients().size() == 0)
 				delete channel;
 		}
@@ -55,5 +55,4 @@ void Server::_handler_client_quit(const std::string& /* buffer */, const int fd)
 	std::cout << RED << "Client <" << fd << "> Disconnected" << WHI
 			  << std::endl;
 	_clear_client(fd);
-	close(fd);
 }

@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:19:06 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 09:50:59 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 12:49:07 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,25 +44,25 @@ class Client  //-> class for client
 
 	int get_fd() const;
 	bool get_is_logged() const;
+	bool get_is_operator() const;
+	bool get_is_authenticated() const;
 	std::string get_buffer() const;
 	std::string get_nickname() const;
 	std::string get_username() const;
 	std::string get_password() const;
 	std::string get_hostname() const;
-	std::vector<std::string> get_channels_invited() const;
 	std::string get_ip_address() const;
-	bool get_is_authenticated() const;
-	bool get_is_operator() const;
+	std::vector<std::string> get_channels_invited() const;
 
 	void set_fd(const int fd);
 	void set_is_logged(bool is_logged);
-	void set_ip_add(const std::string& ipadd);
+	void set_is_operator(bool is_operator);
+	void set_is_authenticated(bool is_authenticated);
 	void set_buffer(const std::string& buffer);
 	void set_nickname(const std::string& nickname);
 	void set_username(const std::string& username);
 	void set_password(const std::string& password);
-	void set_is_authenticated(bool is_authenticated);
-	void set_is_operator(bool is_operator);
+	void set_ip_add(const std::string& ipadd);
 
 	bool is_channel_invited(const std::string& channel);
 	void add_channel_invited(const std::string& channel);

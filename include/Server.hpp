@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:23:47 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 11:04:18 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 13:40:50 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,8 @@ class Server
 	Server();
 	~Server();
 	// This contructor is to be used as a workaround for mockup tests
-	Server(std::string password, std::vector<Client> _clients,
-		   std::vector<Channel> _channels);
+	Server(std::string password, std::vector<Client*> _clients,
+		   std::vector<Channel*> _channels);
 
 	void init(const std::string& port, const std::string& password);
 
@@ -87,6 +87,7 @@ class Server
 	void _handler_client_nickname(const std::string& nickname, const int fd);
 	void _handler_client_username(const std::string& username, const int fd);
 	void _handler_client_password(const std::string& password, const int fd);
+
 	void _handler_bot_marvin(const std::string& buffer, int fd);
 	void _handler_bot_time(const std::string& buffer, int fd);
 	void _handler_bot_whois(const std::string& buffer, int fd);
@@ -130,26 +131,30 @@ class Server
 	static const int _command_list_size = 16;  //-> command list size
 	static const command_handler
 		_command_list[_command_list_size];	//-> command list
+
 	void _execute_command(const std::string buffer,
 						  const int fd);  //-> execute command
+	void _close_fds();					  //-> close file descriptors
 
-	void _close_fds();	//-> close file descriptors
 	std::string _cleanse_buffer(
 		const std::string& buffer,
 		const std::string& chars_to_remove);  //-> parse received buffer
-
 	std::vector<std::string> _split_buffer(
 		const std::string& buffer,
 		const std::string& delimiter);	//-> split string
 
-	Client* _get_client(const int fd);	//-> get client
+	Client* _get_client(const int fd);						 //-> get client
+	Client* _get_client(const std::string nickname);		 // -> get nickname
+	Channel* _get_channel(const std::string& channel_name);	 //-> get channel
 	void _add_channel(
 		Channel* channel);	// -> add a new channel to server channels
 	bool _client_is_ready_to_login(const int fd);
-	Client* _get_client(const std::string nickname);		 // -> get nickname
-	Channel* _get_channel(const std::string& channel_name);	 //-> get channel
 
 	std::string toupper(const std::string& str);
+
+	void _remove_client_from_channels(const int fd);
+	void _remove_client_from_server(const int fd);
+	void _remove_client_fd(const int fd);
 };
 
 #endif	// SERVER_HPP

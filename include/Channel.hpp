@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:24:04 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/30 22:54:51 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 12:09:15 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ class Channel
 	void join(Client* client);
 	void kick(Client* client);
 	void part(Client* client);
+	void quit(Client* client);
 	void invite(Client* client);
 	void broadcast(Client* sender, std::string target, std::string message);
 
