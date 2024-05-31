@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:26:55 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/30 22:36:33 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/30 23:18:53 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,148 @@ Server::~Server()
 {
 	this->_channels.clear();
 	return ;
+}
+
+
+
+/*
+** ------------------------------- GETTERS --------------------------------
+*/
+
+/**
+ * @brief Retrieves the client associated with the given file descriptor.
+ *
+ * This method retrieves the client object associated with the specified file descriptor from the
+ * vector of active clients. It iterates through the list of clients and returns the client object
+ * that matches the provided file descriptor.
+ *
+ * @param fd The file descriptor associated with the client to retrieve.
+ * @return The client object associated with the specified file descriptor.
+ */
+Client* Server::_get_client(const int fd)
+{
+	for (size_t i = 0; i < _clients.size(); i++) {
+		if (_clients[i].get_fd() == fd) {
+			return &_clients[i];
+		}
+	}
+	return NULL;
+}
+
+/**
+ * @brief Retrieves a client object based on the given nickname.
+ *
+ * This function searches for a client object in the list of clients
+ * based on the provided nickname. If a client with the given nickname
+ * is found, a pointer to that client is returned. If no client is found,
+ * a null pointer is returned.
+ *
+ * @param nickname The nickname of the client to retrieve.
+ * @return A pointer to the client object if found, otherwise a null pointer.
+ */
+Client* Server::_get_client(const std::string nickname)
+{
+	for (size_t i = 0; i < _clients.size(); i++) {
+		if (_clients[i].get_nickname() == nickname) {
+			return &_clients[i];
+		}
+	}
+	return NULL;
+}
+
+/**
+ * @brief Retrieves a channel object based on the given channel name.
+ *
+ * This function searches for a channel object in the list of channels
+ * based on the provided channel name. If a channel with the given name
+ * is found, a pointer to that channel is returned. If no channel is found,
+ * a null pointer is returned.
+ *
+ * @param channel_name The name of the channel to retrieve.
+ * @return A pointer to the channel object if found, otherwise a null pointer.
+ */
+Channel* Server::_get_channel(const std::string &channel_name)
+{
+	for (size_t i = 0; i < _channels.size(); i++) {
+		if (_channels[i]->get_name() == channel_name) {
+			return _channels[i];
+		}
+	}
+	return NULL;
+}
+
+/**
+ * @brief Adds a new channel to the server.
+ *
+ * This function adds a new channel to the list of channels maintained by the server.
+ * The channel object is created with the specified name and added to the list of channels.
+ *
+ * @param channel The name of the channel to be added.
+ */
+void Server::_add_channel(Channel *channel)
+{
+	_channels.push_back(channel);
+}
+
+/**
+ * @brief Checks if the client is in any channel.
+ *
+ * This function checks if the client is in any channel.
+ *
+ * @param fd The file descriptor associated with the client.
+ * @return True if the client is in any channel, false otherwise.
+ */
+int Server::get_reply_code(void)
+{
+	return _reply_code;
+}
+
+/*
+** ------------------------------- SETTERS --------------------------------
+*/
+
+/**
+ * @brief Sets up the server socket for the server.
+ *
+ * This function creates a socket, sets the socket options, sets the socket to non-blocking mode,
+ * binds the socket to the specified address and port, and starts listening for incoming connections.
+ * The server socket is added to the list of file descriptors for polling.
+ *
+ * * This method initializes the server by performing the following steps:
+ * 1. Creates a server socket.
+ * 2. Sets the server address and port.
+ * 3. Sets socket options such as SO_REUSEADDR and O_NONBLOCK.
+ * 4. Binds the server socket to the specified address and port.
+ * 5. Starts listening for incoming connections.
+ * 6. Adds the server socket to the pollfd vector for polling.
+ * 7. Waits for incoming connections and processes data received from clients.
+ *
+ * @throws std::runtime_error if any of the socket operations fail.
+ */
+void Server::_set_server_socket()
+{
+	struct pollfd new_poll;
+	struct sockaddr_in server_addr;
+
+	int enable = 1;
+	server_addr.sin_family = AF_INET;
+	server_addr.sin_addr.s_addr = INADDR_ANY;
+	server_addr.sin_port = htons(_port);
+	_server_fdsocket = socket(AF_INET, SOCK_STREAM, 0);
+	if(_server_fdsocket == -1)
+		throw(std::runtime_error("failed to create socket"));
+	if(setsockopt(_server_fdsocket, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(enable)) == -1)
+		throw(std::runtime_error("failed to set option (SO_REUSEADDR) on socket"));
+	if (fcntl(_server_fdsocket, F_SETFL, O_NONBLOCK) == -1)
+		throw(std::runtime_error("failed to set option (O_NONBLOCK) on socket"));
+	if (bind(_server_fdsocket, (struct sockaddr *)&server_addr, sizeof(server_addr)) == -1)
+		throw(std::runtime_error("failed to bind socket"));
+	if (listen(_server_fdsocket, SOMAXCONN) == -1)
+		throw(std::runtime_error("listen() failed"));
+	new_poll.fd = _server_fdsocket;
+	new_poll.events = POLLIN;
+	new_poll.revents = 0;
+	_fds.push_back(new_poll);
 }
 
 /*
@@ -73,46 +215,6 @@ void Server::init(const std::string &port, const std::string &password)
 }
 
 /**
- * @brief Initializes the server.
- *
- * This method initializes the server by performing the following steps:
- * 1. Creates a server socket.
- * 2. Sets the server address and port.
- * 3. Sets socket options such as SO_REUSEADDR and O_NONBLOCK.
- * 4. Binds the server socket to the specified address and port.
- * 5. Starts listening for incoming connections.
- * 6. Adds the server socket to the pollfd vector for polling.
- * 7. Waits for incoming connections and processes data received from clients.
- *
- * @throws std::runtime_error if any of the initialization steps fail.
- */
-void Server::_set_server_socket()
-{
-	struct pollfd new_poll;
-	struct sockaddr_in server_addr;
-
-	int enable = 1; //-> enable the socket option
-	server_addr.sin_family = AF_INET;
-	server_addr.sin_addr.s_addr = INADDR_ANY;
-	server_addr.sin_port = htons(_port); //-> set the port
-	_server_fdsocket = socket(AF_INET, SOCK_STREAM, 0); //-> create the socket
-	if(_server_fdsocket == -1)
-		throw(std::runtime_error("failed to create socket"));
-	if(setsockopt(_server_fdsocket, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(enable)) == -1) //-> set the socket options | Enable is used to reuse the address
-		throw(std::runtime_error("failed to set option (SO_REUSEADDR) on socket"));
-	if (fcntl(_server_fdsocket, F_SETFL, O_NONBLOCK) == -1) //-> set the socket to non-blocking mode
-		throw(std::runtime_error("failed to set option (O_NONBLOCK) on socket"));
-	if (bind(_server_fdsocket, (struct sockaddr *)&server_addr, sizeof(server_addr)) == -1) //-> bind the socket
-		throw(std::runtime_error("failed to bind socket"));
-	if (listen(_server_fdsocket, SOMAXCONN) == -1) //-> listen for incoming connections
-		throw(std::runtime_error("listen() failed"));
-	new_poll.fd = _server_fdsocket;
-	new_poll.events = POLLIN;
-	new_poll.revents = 0;
-	_fds.push_back(new_poll);
-}
-
-/**
  * @brief Starts the server loop.
  *
  * This method initiates the server loop, continuously waiting for incoming connections
@@ -127,11 +229,9 @@ void Server::_server_loop()
 {
 	while (Server::_signal == false)
 	{
-		// Poll for events on file descriptors
 		if((poll(&_fds[0], _fds.size(), -1) == -1) && Server::_signal == false)
 			throw(std::runtime_error("poll() faild"));
 		for (size_t i = 0; i < _fds.size(); i++) {
-			// Check if the file descriptor has an event
 			if (_fds[i].revents & POLLIN) {
 				if (_fds[i].fd == _server_fdsocket)
 					_accept_new_client();
@@ -150,58 +250,88 @@ void Server::_server_loop()
  * list of active clients for polling. Additionally, it retrieves the IP address of the client
  * and associates it with the client object.
  *
- * If the acceptance of the new client connection fails or setting the socket to non-blocking mode
+ * @note If the acceptance of the new client connection fails or setting the socket to non-blocking mode
  * fails, appropriate error messages are printed to the standard output, and the function returns.
  */
 void Server::_accept_new_client()
 {
-	Client cli; //-> create a new client
-	struct pollfd new_poll; //-> create a new pollfd
-	struct sockaddr_in cli_addr;  //-> create a new sockaddr_in
+	Client cli;
+	struct pollfd new_poll;
+	struct sockaddr_in cli_addr;
 
 	memset(&cli_addr, 0, sizeof(cli_addr));
 	socklen_t len = sizeof(cli_addr);
-	int incofd = accept(_server_fdsocket, (sockaddr *)&(cli_addr), &len); // -> accept the incoming connection
+	int incofd = accept(_server_fdsocket, (sockaddr *)&(cli_addr), &len);
 	if (incofd == -1)
 		{std::cout << "accept() failed" << std::endl; return;}
-	if (fcntl(incofd, F_SETFL, O_NONBLOCK) == -1) //-> set the socket to non-blocking mode
+	if (fcntl(incofd, F_SETFL, O_NONBLOCK) == -1)
 		{std::cout << "fcntl() failed" << std::endl; return;}
-	new_poll.fd = incofd; //-> set the file descriptor
-	new_poll.events = POLLIN; //-> set the events
+	new_poll.fd = incofd;
+	new_poll.events = POLLIN;
 	new_poll.revents = 0;
-	cli.set_fd(incofd); //-> set the file descriptor
-	cli.set_ip_add(inet_ntoa((cli_addr.sin_addr))); //-> set the ip address
+	cli.set_fd(incofd);
+	cli.set_ip_add(inet_ntoa((cli_addr.sin_addr)));
 	_clients.push_back(cli);
 	_fds.push_back(new_poll);
 	std::cout << GRE << "Client <" << incofd << "> Connected" << WHI << std::endl;
 }
 
+/**
+ * @brief Receives new data from the client.
+ *
+ * This method is called when new data is received from the client. It reads the data from the client
+ * socket, processes the command, and executes the corresponding action. If the client disconnects
+ * during the data transfer, the client is removed from the list of active clients.
+ *
+ * @param fd The file descriptor associated with the client that sent the data.
+ */
 void Server::_receive_new_data(const int fd)
 {
-	char buffer[1024]; //-> buffer for the received data
-	std::memset(buffer, 0, sizeof(buffer)); //-> clear the buffer
+	char buffer[1024];
+	std::memset(buffer, 0, sizeof(buffer));
 
-	Client* cli = _get_client(fd); // -> get the client object associated with the file descriptor (fd)
-	ssize_t bytes = recv(fd, buffer, sizeof(buffer) -1 , 0); //-> receive the data
-	if(bytes <= 0) { //-> check if the client disconnected
+	Client* cli = _get_client(fd);
+	ssize_t bytes = recv(fd, buffer, sizeof(buffer) -1 , 0);
+	if(bytes <= 0) {
 		std::cout << RED << "Client <" << fd << "> Disconnected" << WHI << std::endl;
-		_clear_client(fd); //-> clear the client
+		_clear_client(fd);
 	}
 	else {
-		cli->set_buffer(buffer); //-> set the buffer with the received data
-		if (cli->get_buffer().find_first_of(LINE_FEED) == std::string::npos) //-> check if the data is complete
+		cli->set_buffer(buffer);
+		if (cli->get_buffer().find_first_of(LINE_FEED) == std::string::npos)
 			return;
-		_execute_command(cli->get_buffer(), fd); //-> execute the command
+		_execute_command(cli->get_buffer(), fd);
 	}
 }
 
-
 /**
- * @brief List of commands and their corresponding handlers.
+ * @brief Array of command handlers for the Server class.
  *
- * This list contains the commands supported by the server and their corresponding handler functions.
- * Each entry in the list consists of a command string and a pointer to the handler function for that command.
- * The handler functions are responsible for processing the command and executing the corresponding action.
+ * This array maps command names to their corresponding handler functions.
+ * Each element of the array is a struct containing the command name and a pointer to the handler function.
+ *
+ * The command handlers are used to process incoming commands from clients.
+ * When a command is received, the server looks up the corresponding handler function in this array and calls it.
+ *
+ * The command list is defined as a static member of the Server class.
+ *
+ * @see Server::_command_list_size
+ * @see Server::_handler_client_join
+ * @see Server::_handler_client_quit
+ * @see Server::_handler_client_part
+ * @see Server::_handler_client_mode
+ * @see Server::_handler_client_kick
+ * @see Server::_handler_client_topic
+ * @see Server::_handler_client_nickname
+ * @see Server::_handler_client_username
+ * @see Server::_handler_client_password
+ * @see Server::_handler_client_invite
+ * @see Server::_handler_client_privmsg
+ * @see Server::_handler_bot_marvin
+ * @see Server::_handler_bot_time
+ * @see Server::_handler_bot_whois
+ * @see Server::_handler_bot_whoami
+ * @see Server::_handler_bot_quote
  */
 const Server::command_handler Server::_command_list[_command_list_size] = {
 	{"JOIN", &Server::_handler_client_join},
@@ -223,15 +353,18 @@ const Server::command_handler Server::_command_list[_command_list_size] = {
 };
 
 /**
- * @brief Executes the command received from the client.
+ * @brief Executes a command received from a client.
  *
- * This method processes the command received from the client and executes the corresponding action.
- * It parses the received buffer into individual commands and iterates through each command to execute
- * the corresponding action. The method is responsible for handling various commands such as authentication,
- * message sending, and other server operations.
+ * This function takes a buffer containing a command received from a client and executes it.
+ * The buffer is first cleansed by removing any carriage return and line feed characters.
+ * Then, the buffer is split into a vector of strings using a delimiter.
+ * The first element of the vector is considered the command, which is converted to uppercase.
+ * The second element of the vector is considered the parameters for the command.
+ * The function then iterates through a command list and checks if the command matches any of the commands in the list.
+ * If a match is found, the corresponding command handler is called with the parameters and the file descriptor of the client.
  *
- * @param command The received buffer containing the command to be executed.
- * @param fd The file descriptor associated with the client that sent the command.
+ * @param buffer The buffer containing the command received from the client.
+ * @param fd The file descriptor of the client.
  */
 void Server::_execute_command(const std::string buffer, const int fd)
 {
@@ -244,7 +377,6 @@ void Server::_execute_command(const std::string buffer, const int fd)
 	std::string command = toupper(splitted_buffer[0]);
 	std::string parameters = splitted_buffer[1];
 
-	//TODO: Add a default handler for unknown commands
 	for (size_t i = 0; i < _command_list_size; i++) {
 		if (command == _command_list[i].command) {
 			(this->*_command_list[i].handler)(parameters, fd);
@@ -253,23 +385,20 @@ void Server::_execute_command(const std::string buffer, const int fd)
 	}
 }
 
-
-
 /*
 ** ------------------------------- PARSER COMMAND --------------------------------
 */
 
 /**
- * @brief Splits a buffer into tokens using a specified delimiter.
+ * @brief Splits a string into tokens using a delimiter.
  *
- * This method splits the original string into tokens using the specified delimiter.
- * It searches for the delimiter in the original string and splits the string into tokens
- * based on the delimiter. The tokens are stored in a vector and returned.
+ * This function takes a string and a delimiter as input and splits the string into tokens based on the delimiter.
+ * The first token is stored as the command, and the remaining part of the string is stored as the parameters.
+ * The tokens are then returned as a vector of strings.
  *
- * @param buffer The original string to be split.
+ * @param buffer The string to be split.
  * @param delimiter The delimiter used to split the string.
- *
- * @return A vector containing the tokens obtained by splitting the original string.
+ * @return std::vector<std::string> The vector of tokens obtained after splitting the string.
  */
 std::vector<std::string> Server::_split_buffer(const std::string &buffer, const std::string &delimiter)
 {
@@ -290,20 +419,16 @@ std::vector<std::string> Server::_split_buffer(const std::string &buffer, const 
 }
 
 /**
- * @brief Cleanses a buffer by removing specified characters.
+ * @brief Cleanses the given buffer by removing specified characters.
  *
- * This method removes specified characters from the original string and returns the cleaned string.
- * The characters to be removed are specified by the `chars_to_remove` parameter.
+ * This function takes a buffer string and removes all the characters specified in the 'chars_to_remove' string.
+ * It returns the cleansed buffer string.
  *
- * The function searches for the first occurrence of any character specified in `chars_to_remove`
- * in the original string `original_str`, and truncates the string up to that point, excluding the found character.
- *
- * @param buffer The original string to be cleansed.
- * @param chars_to_remove A string containing the characters to be removed.
- * @return A string containing the original string with specified characters removed.
- *
- * @note This function assumes that `original_str` is not empty and contains at least one character to be removed.
- *       If `chars_to_remove` is empty, the function returns the original string without any changes.
+ * @param buffer The buffer string to be cleansed.
+ * @param chars_to_remove The string containing characters to be removed from the buffer.
+ * @return The cleansed buffer string.
+*  @note This function assumes that `original_str` is not empty and contains at least one character to be removed.
+*        If `chars_to_remove` is empty, the function returns the original string without any changes.
  */
 std::string Server::_cleanse_buffer(const std::string &buffer, const std::string &chars_to_remove)
 {
@@ -322,18 +447,22 @@ std::string Server::_cleanse_buffer(const std::string &buffer, const std::string
 */
 
 /**
- * @brief Closes all file descriptors associated with the server.
+ * @brief Closes all file descriptors associated with the server and its clients.
  *
- * This method closes all file descriptors associated with the server, including client connections
- * and the server socket itself. It iterates through the list of client connections, closing each
- * client socket individually. After that, it closes the server socket if it is valid.
+ * This function closes all the file descriptors associated with the server and its clients.
+ * It iterates through the clients vector and closes each client's file descriptor.
+ * It also closes the server's file descriptor if it is valid.
  *
- * Upon closing each client connection and the server socket, it prints a message indicating the
- * disconnection to the standard output.
+ * @note This function does not handle any exceptions that may occur during the closing of file descriptors.
+ *
+ * @param None
+ * @return None
+ *
+ * @see Server::_clients
+ * @see Server::_server_fdsocket
  */
 void Server::_close_fds()
 {
-	//-> close all the clients
 	for(size_t i = 0; i < _clients.size(); i++) {
 		std::cout << RED << "Client <" << _clients[i].get_fd() << "> Disconnected" << WHI << std::endl;
 		close(_clients[i].get_fd());
@@ -344,24 +473,25 @@ void Server::_close_fds()
 	}
 }
 
+
 /**
- * @brief Clears the client associated with the given file descriptor.
+ * @brief Clears a client from the server.
  *
- * This method removes the client with the specified file descriptor from the list of file descriptors
- * being polled (_fds) and from the vector of active clients (_clients). Additionally, it closes the
- * client socket.
+ * This function removes the client with the specified file descriptor (fd) from the server's internal data structures.
+ * It removes the file descriptor from the _fds vector and the corresponding client object from the _clients vector.
+ * Finally, it closes the file descriptor.
  *
- * @param fd The file descriptor associated with the client to be cleared.
+ * @param fd The file descriptor of the client to be cleared.
  */
 void Server::_clear_client(const int fd)
 {
-	for(size_t i = 0; i < _fds.size(); i++) { //-> Remove the client from the pollfd
+	for(size_t i = 0; i < _fds.size(); i++) {
 		if (_fds[i].fd == fd){
 			_fds.erase(_fds.begin() + i);
 			break;
 		}
 	}
-	for(size_t i = 0; i < _clients.size(); i++) { //-> Remove the client from the vector of clients
+	for(size_t i = 0; i < _clients.size(); i++) {
 		if (_clients[i].get_fd() == fd) {
 			_clients.erase(_clients.begin() + i);
 			break;
@@ -374,22 +504,20 @@ void Server::_clear_client(const int fd)
 ** ------------------------------- SIGNAL FUCTIONS --------------------------------
 */
 
+bool Server::_signal = false;
 /**
- * @brief Signal handler function for the server.
+ * @brief Signal handler function for the Server class.
  *
- * This function is called when a signal is received by the server process. It handles the signal
- * specified by the `signum` parameter. In this implementation, the function simply prints a message
- * indicating that a signal has been received and sets the static boolean variable `_signal` to true.
- * This variable is used to control the server loop and stop the server gracefully.
+ * This function is called when a signal is received by the server. It sets the static boolean
+ * `_signal` to true, indicating that the server should stop.
  *
- * @param signum The signal number that triggered the signal handler.
+ * @param signum The signal number.
  */
-bool Server::_signal = false; //-> initialize the static boolean
 void Server::_signal_handler(const int signum)
 {
 	(void)signum;
 	std::cout << std::endl << "Signal Received!" << std::endl;
-	Server::_signal = true; //-> set the static boolean to true to stop the server
+	Server::_signal = true;
 }
 
 /**
@@ -399,10 +527,11 @@ void Server::_signal_handler(const int signum)
  * (generated by pressing Ctrl+C) and SIGQUIT (generated by pressing Ctrl+\). When any of these
  * signals are received, the corresponding signal handler function Server::_signal_handler is invoked.
  */
+
 void Server::_add_server_signal()
 {
-	signal(SIGINT, Server::_signal_handler); //-> catch the signal (ctrl + c)
-	signal(SIGQUIT, Server::_signal_handler); //-> catch the signal (ctrl + \)
+	signal(SIGINT, Server::_signal_handler);
+	signal(SIGQUIT, Server::_signal_handler);
 }
 
 /*
@@ -474,37 +603,16 @@ bool Server::_is_nickname_in_use(const int fd, const std::string &username)
 */
 
 /**
- * @brief Retrieves the client associated with the given file descriptor.
+ * @brief Retrieves a client object based on the given username.
  *
- * This method retrieves the client object associated with the specified file descriptor from the
- * vector of active clients. It iterates through the list of clients and returns the client object
- * that matches the provided file descriptor.
+ * This function searches for a client object in the list of clients
+ * based on the provided username. If a client with the given username
+ * is found, a pointer to that client is returned. If no client is found,
+ * a null pointer is returned.
  *
- * @param fd The file descriptor associated with the client to retrieve.
- * @return The client object associated with the specified file descriptor.
+ * @param username The username of the client to retrieve.
+ * @return A pointer to the client object if found, otherwise a null pointer.
  */
-Client* Server::_get_client(const int fd)
-{
-	for (size_t i = 0; i < _clients.size(); i++) {
-		if (_clients[i].get_fd() == fd) {
-			return &_clients[i];
-		}
-	}
-	return NULL;
-}
-
-Client* Server::_get_client(const std::string nickname)
-{
-	for (size_t i = 0; i < _clients.size(); i++) {
-		if (_clients[i].get_nickname() == nickname) {
-			return &_clients[i];
-		}
-	}
-	// return null and verify if client exists
-	return NULL;
-	//throw std::invalid_argument("Client not found");
-}
-
 bool Server::_client_is_ready_to_login(const int fd)
 {
 	Client *client = _get_client(fd);
@@ -555,29 +663,18 @@ std::string Server::toupper(const std::string& str)
 /*
 ** ------------------------------- CHANNEL FUCTIONS --------------------------------
 */
-Channel* Server::_get_channel(const std::string &channel_name)
-{
-	for (size_t i = 0; i < _channels.size(); i++) {
-		if (_channels[i]->get_name() == channel_name) {
-			return _channels[i];
-		}
-	}
-	return NULL;
-}
 
-void Server::_add_channel(Channel *channel)
-{
-	_channels.push_back(channel);
-}
-
-int Server::get_reply_code(void)
-{
-	return _reply_code;
-}
-
+/**
+ * @brief Checks if the client is in any channel.
+ *
+ * This function checks if the client is in any channel.
+ *
+ * @param fd The file descriptor associated with the client.
+ * @return True if the client is in any channel, false otherwise.
+ */
 bool Server::_is_client_in_any_channel(const int fd)
 {
-	Client *client = this->_get_client(fd); 
+	Client *client = this->_get_client(fd);
     for (std::vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
     {
         if ((*it)->has_client(client))

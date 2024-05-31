@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:30:34 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/28 22:01:53 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/30 17:00:18 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,16 @@
  * Command: MODE
  * Parameters: <channel> {[+|-]|o|p|s|i|t|n|b|v} [<limit>] [<user>]
  * Reference: https://datatracker.ietf.org/doc/html/rfc1459#section-4.2.3
+*/
+
+/*
+ * Cenários de Teste:
+ * 1. O comando MODE é recebido sem parâmetros suficientes.
+ * 2. O comando MODE é recebido e o canal não existe.
+ * 3. O comando MODE é recebido e o cliente não tem privilégios de operador no canal.
+ * 4. O comando MODE é recebido e o cliente tem privilégios de operador no canal.
+ * 5. O comando MODE é recebido e o modo do canal é alterado com sucesso.
+ *
 */
 
 /**
