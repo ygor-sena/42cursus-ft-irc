@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:26:17 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/30 15:36:08 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/30 22:51:03 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,22 +18,30 @@
 
 Channel::Channel()
 {
+	_limit = -1;
+	_has_key = false;
+	_invite_only = false;
+	_topic_restriction = false;
 	_key = "";
 	_name = "";
 	_topic = "";
-	_limit = -1;
 	_created_at = "";
-	_has_key = false;
+	_clients = std::vector<Client *>();
+	_operator_clients = std::vector<Client *>();
 }
 
 Channel::Channel(std::string name)
 {
-	_key = "";
-	_topic = "";
 	_limit = -1;
-	_name = name;
-	_created_at = "";
 	_has_key = false;
+	_invite_only = false;
+	_topic_restriction = false;
+	_key = "";
+	_name = name;
+	_topic = "";
+	_created_at = "";
+	_clients = std::vector<Client *>();
+	_operator_clients = std::vector<Client *>();
 }
 
 /*

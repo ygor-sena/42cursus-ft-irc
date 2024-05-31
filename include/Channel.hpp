@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:24:04 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/30 15:35:19 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/30 22:54:51 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,14 +63,13 @@ class Channel
 
 	private:
 		int _limit;
+		bool _has_key;
+		bool _invite_only;
+		bool _topic_restriction;
 		std::string _key;
 		std::string _name;
-		bool _invite_only;
 		std::string _topic;
-		bool _topic_restriction;
 		std::string _created_at;
-
-		bool _has_key;
 		std::vector<Client *>_clients;  // -> list of clients that are channel members
 		std::vector<Client *>_operator_clients;  // -> list of channel operators
 };

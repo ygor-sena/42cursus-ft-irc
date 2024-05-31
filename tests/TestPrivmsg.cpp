@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 09:03:10 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/25 21:15:42 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/30 23:00:22 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ Client *senderClient()
 	return client;
 }
 
-/* Test(PrivmsgCommand, privmsg_successfully_single_client)
+Test(PrivmsgCommand, privmsg_successfully_single_client)
 {
 	Client *sender = senderClient();
 	Client *first = firstReceiver();
@@ -108,7 +108,7 @@ Test(PrivmsgCommand, privmsg_successfully_single_channel)
 
 	server._handler_client_privmsg("#brazil :Hello, BRAZIL!", 4);
 	cr_assert(eq(int, server._reply_code, 0));
-} */
+}
 
 Test(PrivmsgCommand, privmsg_successfully_three_channels)
 {
@@ -140,7 +140,7 @@ Test(PrivmsgCommand, privmsg_successfully_three_channels)
 	cr_assert(eq(int, server._reply_code, 0));
 }
 
-/* Test(PrivmsgCommand, privmsg_successfully_mixed_channel_user)
+Test(PrivmsgCommand, privmsg_successfully_mixed_channel_user)
 {
 	Client *sender = senderClient();
 	Client *first = firstReceiver();
@@ -264,4 +264,3 @@ Test(PrivmsgCommand, err_nosuchnick)
 	server._handler_client_privmsg("#brazil,thirdUser,#france,secondUser,#spain :Hello, WORLD!", 4);
 	cr_assert(eq(int, server._reply_code, 401));
 }
- */

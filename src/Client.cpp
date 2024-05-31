@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:20:02 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/30 13:11:43 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/30 22:48:46 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,15 @@
 Client::Client()
 {
 	_fd = -1;
+	_is_logged = false;
+	_is_authenticated = false;
+	_is_operator = false;
+	_buffer = "";
 	_ip_addr = "";
 	_nickname = "";
 	_username = "";
 	_password = "";
-	_buffer = "";
-	_is_logged = false;
-	_is_authenticated = false;
-	_is_operator = false;
+	_channels_invited = std::vector<std::string>();
 }
 
 /*
