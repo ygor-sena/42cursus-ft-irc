@@ -15,9 +15,9 @@
 #define private public
 #include "MarvinBot.hpp"
 
-Client *mockClient()
+Client* mockClient()
 {
-	Client *client = new Client();
+	Client* client = new Client();
 	client->set_fd(5);
 	client->set_username("trollUser");
 	client->set_nickname("trollUser");
@@ -30,7 +30,7 @@ Client *mockClient()
 
 Test(MarvinBotCommand, user_is_not_in_any_channel)
 {
-	Client *client = mockClient();
+	Client* client = mockClient();
 
 	Server server;
 
@@ -43,10 +43,10 @@ Test(MarvinBotCommand, user_is_not_in_any_channel)
 
 Test(MarvinBotCommand, user_is_in_any_channel)
 {
-	Client *client = mockClient();
+	Client* client = mockClient();
 
 	Server server;
-	Channel *channel = new Channel("#world");
+	Channel* channel = new Channel("#world");
 
 	server._clients.push_back(*client);
 

@@ -12,14 +12,14 @@
 
 #include <criterion/criterion.h>
 #include <criterion/new/assert.h>
-#include "Client.hpp"
 #include "Channel.hpp"
+#include "Client.hpp"
 #define private public
 #include "Server.hpp"
 
-Client *genericClient()
+Client* genericClient()
 {
-	Client *client = new Client();
+	Client* client = new Client();
 	client->set_fd(6);
 	client->set_username("soAndSoUser");
 	client->set_nickname("soAndSoUser");
@@ -30,9 +30,9 @@ Client *genericClient()
 	return client;
 }
 
-Client *toPartClient()
+Client* toPartClient()
 {
-	Client *client = new Client();
+	Client* client = new Client();
 	client->set_fd(4);
 	client->set_username("toPartUser");
 	client->set_nickname("toPartUser");
@@ -46,12 +46,12 @@ Client *toPartClient()
 
 Test(PartCommand, part_successfully)
 {
-	Client *toPart = toPartClient();
-	Client *channelMember = genericClient();
+	Client* toPart = toPartClient();
+	Client* channelMember = genericClient();
 
 	Server server;
 
-	Channel *channel = new Channel("#channel");
+	Channel* channel = new Channel("#channel");
 
 	server._clients.push_back(*toPart);
 	server._clients.push_back(*channelMember);
@@ -66,18 +66,18 @@ Test(PartCommand, part_successfully)
 	server._handler_client_part("#channel", toPart->get_fd());
 
 	cr_assert(eq(int, server._reply_code, 200));
-	cr_assert(eq(int, server._get_channel(channel->get_name())->get_clients_size(), 1));
+	cr_assert(eq(
+		int, server._get_channel(channel->get_name())->get_clients_size(), 1));
 }
-
 
 Test(PartCommand, err_nosuchchannel)
 {
-	Client *toPart = toPartClient();
-	Client *channelMember = genericClient();
+	Client* toPart = toPartClient();
+	Client* channelMember = genericClient();
 
 	Server server;
 
-	Channel *channel = new Channel("#channel");
+	Channel* channel = new Channel("#channel");
 
 	server._clients.push_back(*toPart);
 	server._clients.push_back(*channelMember);
@@ -96,12 +96,12 @@ Test(PartCommand, err_nosuchchannel)
 
 Test(PartCommand, err_notonchannel)
 {
-	Client *toPart = toPartClient();
-	Client *channelMember = genericClient();
+	Client* toPart = toPartClient();
+	Client* channelMember = genericClient();
 
 	Server server;
 
-	Channel *channel = new Channel("#channel");
+	Channel* channel = new Channel("#channel");
 
 	server._clients.push_back(*toPart);
 	server._clients.push_back(*channelMember);
@@ -119,12 +119,12 @@ Test(PartCommand, err_notonchannel)
 
 Test(PartCommand, err_notregistered)
 {
-	Client *toPart = toPartClient();
-	Client *channelMember = genericClient();
+	Client* toPart = toPartClient();
+	Client* channelMember = genericClient();
 
 	Server server;
 
-	Channel *channel = new Channel("#channel");
+	Channel* channel = new Channel("#channel");
 
 	toPart->set_is_logged(false);
 
