@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:30:34 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/30 17:00:18 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/31 15:30:23 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,11 @@ bool Server::_parse_mode_command(const std::string& modes, Channel* channel,
 {
 	bool set = false;
 	char mode = 0;
+
+	if (!client) // Se o cliente não for encontrado
+	{
+		return false;
+	}
 
 	for (size_t i = 0; i < modes.size(); ++i)
 	{
