@@ -6,7 +6,7 @@
 /*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:26:17 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/30 20:41:21 by caalbert         ###   ########.fr       */
+/*   Updated: 2024/05/30 22:18:33 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,20 +52,9 @@ Channel::~Channel()
 */
 
 /**
- * @brief Getter for the name of the channel
+ * @brief Get the name of the channel.
  *
- * @param void
- *
- * @return std::string
- *
- * @note This function returns the name of the channel
- *
- *	Example:
- *		Channel channel("channel");
- *		std::cout << channel.get_name() << std::endl;
- *		// Output: channel
-*
- * @return std::string
+ * @return std::string The name of the channel.
  */
 std::string Channel::get_name(void) const
 {
@@ -73,10 +62,9 @@ std::string Channel::get_name(void) const
 }
 
 /**
- * @brief Getter for the topic restriction of the channel
+ * @brief Get the topic restriction flag of the channel.
  *
- * @return true
- * @return false
+ * @return bool The topic restriction flag.
  */
 bool Channel::get_topic_restriction(void) const
 {
@@ -84,9 +72,9 @@ bool Channel::get_topic_restriction(void) const
 }
 
 /**
- * @brief Getter for the clients that are channel members
+ * @brief Get the operator clients of the channel.
  *
- * @return std::vector<Client *>
+ * @return std::vector<Client*> The operator clients of the channel.
  */
 std::vector<Client *> Channel::get_operator_clients(void)
 {
@@ -94,9 +82,9 @@ std::vector<Client *> Channel::get_operator_clients(void)
 }
 
 /**
- * @brief Getter for the clients that are channel members
+ * @brief Get the clients in the channel.
  *
- * @return std::vector<Client *>
+ * @return std::vector<Client*> The vector of clients in the channel.
  */
 std::vector<Client *> Channel::get_channel_clients(void)
 {
@@ -104,9 +92,12 @@ std::vector<Client *> Channel::get_channel_clients(void)
 }
 
 /**
- * @brief Getter for the clients that are channel members
+ * @brief Get the names of all clients in the channel.
  *
- * @return std::string
+ * This function returns a string containing the names of all clients in the channel,
+ * separated by a space.
+ *
+ * @return std::string The names of all clients in the channel.
  */
 std::string Channel::get_client_names(void) const
 {
@@ -120,9 +111,9 @@ std::string Channel::get_client_names(void) const
 }
 
 /**
- * @brief Getter for the number of clients in the channel
+ * @brief Get the number of clients in the channel.
  *
- * @return int
+ * @return The number of clients in the channel.
  */
 int Channel::get_clients_size(void) const
 {
@@ -130,9 +121,9 @@ int Channel::get_clients_size(void) const
 }
 
 /**
- * @brief Getter for the topic of the channel
+ * @brief Get the topic of the channel.
  *
- * @return std::string
+ * @return std::string The topic of the channel.
  */
 std::string Channel::get_topic(void) const
 {
@@ -140,20 +131,24 @@ std::string Channel::get_topic(void) const
 }
 
 /**
- * @brief Getter for the key of the channel
+ * @brief Get the channel key.
  *
- * @return std::string
+ * This function returns the key of the channel.
+ *
+ * @return std::string The channel key.
  */
 std::string Channel::get_channel_key(void) const
 {
 	return _key;
 }
 
-
 /**
- * @brief  Getter for the limit of the channel
+ * @brief Sets a client as a channel operator.
  *
- * @param client
+ * This function sets the given client as a channel operator by setting its "is_operator" flag to true
+ * and adding it to the list of operator clients.
+ *
+ * @param client A pointer to the client to be set as a channel operator.
  */
 void Channel::set_channel_operator(Client *client)
 {
@@ -162,14 +157,12 @@ void Channel::set_channel_operator(Client *client)
 	return ;
 }
 
-/*
- * ------------------------------- SETTERS --------------------------------
-*/
-
 /**
- * @brief Setter for the topic of the channel
+ * @brief Set the topic of the channel.
  *
- * @param topic
+ * This function sets the topic of the channel to the specified topic.
+ *
+ * @param topic The new topic of the channel.
  */
 void Channel::set_topic(std::string topic)
 {
@@ -177,9 +170,11 @@ void Channel::set_topic(std::string topic)
 }
 
 /**
- * @brief  Setter for the limit of the channel
+ * @brief Set the limit of the channel.
  *
- * @param limit
+ * This function sets the limit of the channel, which determines the maximum number of users that can join the channel.
+ *
+ * @param limit The limit of the channel.
  */
 void Channel::set_limit(int limit)
 {
@@ -187,8 +182,10 @@ void Channel::set_limit(int limit)
 }
 
 /**
- * @brief  Setter for the invite only of the channel
+ * @brief Sets the invite-only flag for the channel.
  *
+ * This function sets the invite-only flag for the channel. When the invite-only flag is set to true,
+ * only users who have been invited can join the channel.
  */
 void Channel::set_invite_only()
 {
@@ -196,8 +193,10 @@ void Channel::set_invite_only()
 }
 
 /**
- * @brief  Setter for the topic restriction of the channel
+ * @brief Sets the topic restriction flag for the channel.
  *
+ * This function sets the topic restriction flag for the channel. When the flag is set to true,
+ * only channel operators will be able to change the channel's topic.
  */
 void Channel::set_topic_restriction()
 {
@@ -205,21 +204,21 @@ void Channel::set_topic_restriction()
 }
 
 /**
- * @brief  Setter for the key of the channel
+ * @brief Sets the key for the channel.
  *
- * @param key
+ * This function sets the key for the channel. The key is used to restrict access to the channel.
+ *
+ * @param key The key to set for the channel.
  */
 void Channel::set_key(std::string key)
 {
 	_key = key;
 }
 
-/*
-** ------------------------------- REMOVERS --------------------------------
-*/
 /**
- * @brief  Remove the limit of the channel
+ * @brief Removes the limit of the channel.
  *
+ * This function sets the limit of the channel to -1, indicating that there is no limit.
  */
 void Channel::remove_limit(void)
 {
@@ -227,20 +226,19 @@ void Channel::remove_limit(void)
 }
 
 /**
- * @brief  Remove the key of the channel
+ * @brief Removes the key of the channel.
  *
- *
- * */
+ * This function sets the key of the channel to an empty string, effectively removing the key.
+ */
 void Channel::remove_key(void)
 {
 	_key = "";
 }
 
 /**
- * @brief  Remove the topic restriction of the channel
+ * @brief Removes the topic restriction for the channel.
  *
- *  @_topic_restriction are the topic restrictions of a channel.
- *  If true, only channel operators can change the topic.
+ * This function sets the topic restriction flag to false, allowing any user to change the channel's topic.
  */
 void Channel::remove_topic_restriction(void)
 {
@@ -248,8 +246,10 @@ void Channel::remove_topic_restriction(void)
 }
 
 /**
- * @brief  Remove the invite only of the channel
+ * @brief Removes the invite-only flag from the channel.
  *
+ * This function sets the `_invite_only` member variable of the Channel class to false,
+ * indicating that the channel is no longer invite-only.
  */
 void Channel::remove_invite_only(void)
 {
@@ -257,9 +257,12 @@ void Channel::remove_invite_only(void)
 }
 
 /**
- * @brief  Remove the channel operator
+ * @brief Removes a channel operator from the channel.
  *
- * @param client
+ * This function removes the specified client from the list of channel operators.
+ * It sets the client's "is_operator" flag to false and removes it from the "_operator_clients" vector.
+ *
+ * @param client A pointer to the client to be removed as a channel operator.
  */
 void Channel::remove_channel_operator(Client *client)
 {
@@ -275,9 +278,11 @@ void Channel::remove_channel_operator(Client *client)
 }
 
 /**
- * @brief  Remove the channel client
+ * @brief Removes a client from the channel.
  *
- * @param client
+ * This function removes the specified client from the channel's list of clients.
+ *
+ * @param client A pointer to the client to be removed.
  */
 void Channel::remove_channel_client(Client *client)
 {
@@ -299,13 +304,12 @@ void Channel::remove_channel_client(Client *client)
 ** --------------------------------- OTHERS ---------------------------------
 */
 
+// Channel STATUS and checker functions
 /**
- * @brief  Check if the client is in the channel. STATUS and checker functions
+ * @brief Checks if a given client is present in the channel.
  *
- * @param client
- *
- * @return true
- * @return false
+ * @param client A pointer to the client to be checked.
+ * @return true if the client is present in the channel, false otherwise.
  */
 bool Channel::has_client(Client *client)
 {
@@ -317,12 +321,12 @@ bool Channel::has_client(Client *client)
 	return false;
 }
 
-
 /**
- * @brief  Check if the channel has a key
+ * @brief Checks if the channel has a key.
  *
- * @return true
- * @return false
+ * This function checks if the channel has a key assigned to it.
+ *
+ * @return true if the channel has a key, false otherwise.
  */
 bool Channel::has_key(void) const
 {
@@ -330,12 +334,26 @@ bool Channel::has_key(void) const
 }
 
 /**
- * @brief  Check if the client is a channel  by `fd`
+ * @brief Checks if a given nickname belongs to a channel operator.
  *
- * @param fd
+ * @param nickname The nickname to check.
+ * @return True if the nickname belongs to a channel operator, false otherwise.
+ */
+bool Channel::is_channel_operator(std::string nickname)
+{
+	for (std::vector<Client *>::iterator it = _operator_clients.begin(); it != this->_operator_clients.end(); ++it)
+	{
+		if ((*it)->get_nickname() == nickname)
+			return true;
+	}
+	return false;
+}
+
+/**
+ * @brief Checks if a client with the given file descriptor is a channel operator.
  *
- * @return true
- * @return false
+ * @param fd The file descriptor of the client.
+ * @return true if the client is a channel operator, false otherwise.
  */
 bool Channel::is_channel_operator(const int fd)
 {
@@ -347,15 +365,11 @@ bool Channel::is_channel_operator(const int fd)
 	return false;
 }
 
-/*
- * Member methods for CHANNEL MANAGEMENT
-*/
-
-
+// Member functions for CHANNEL MANAGEMENT
 /**
- * @brief Invites a client to join the channel.
+ * @brief Invites a client to the channel.
  *
- * This method adds the specified client to the list of clients in the channel.
+ * This function adds the specified client to the list of clients in the channel.
  *
  * @param client A pointer to the client to be invited.
  */
@@ -365,11 +379,10 @@ void Channel::invite(Client *client)
 	return ;
 }
 
-
 /**
  * @brief Adds a client to the channel.
  *
- * This method adds the specified client to the channel's list of clients.
+ * This function adds the specified client to the channel's list of clients.
  *
  * @param client A pointer to the client to be added.
  */
@@ -382,9 +395,9 @@ void Channel::join(Client *client)
 /**
  * @brief Kicks a client from the channel.
  *
- * This method removes the client from the list of invited clients,
- * removes the client as a channel operator, and removes the client
- * from the list of clients in the channel.
+ * This function removes the specified client from the list of invited clients,
+ * removes the client from the list of channel operators, and removes the client
+ * from the list of channel clients.
  *
  * @param client A pointer to the client to be kicked.
  */
@@ -398,7 +411,8 @@ void Channel::kick(Client *client)
 /**
  * @brief Removes a client from the channel.
  *
- * This method removes the specified client from the channel by removing them as a channel operator and as a channel client.
+ * This function removes the specified client from the channel by removing them as a channel operator
+ * and removing them from the list of channel clients.
  *
  * @param client A pointer to the client to be removed from the channel.
  */
@@ -411,8 +425,8 @@ void Channel::part(Client *client)
 /**
  * @brief Broadcasts a message to all clients in the channel, excluding the sender.
  *
- * This method iterates over the list of clients in the channel and calls the `broadcast` method
- * on each client, passing the sender, target, and message as arguments. The `broadcast` method
+ * This function iterates over the list of clients in the channel and calls the `broadcast` function
+ * for each client, passing the sender, target, and message as arguments. The `broadcast` function
  * is called for both regular clients and operator clients.
  *
  * @param sender A pointer to the client who sent the message.
@@ -453,7 +467,7 @@ bool Channel::is_client_in_channel(std::string nickname)
 /**
  * @brief Checks if the channel is full.
  *
- * This method checks if the channel has reached its maximum capacity.
+ * This function checks if the channel has reached its maximum capacity.
  * If the channel has no limit (-1), it is considered not full.
  *
  * @return true if the channel is full, false otherwise.
@@ -469,6 +483,8 @@ bool Channel::is_channel_full(void) const
 
 /**
  * @brief Check if the channel is invite-only.
+ *
+ * This function returns a boolean value indicating whether the channel is invite-only or not.
  *
  * @return true if the channel is invite-only, false otherwise.
  */
