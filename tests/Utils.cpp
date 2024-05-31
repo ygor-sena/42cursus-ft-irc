@@ -12,12 +12,14 @@
 
 #include "Utils.hpp"
 
-#include <vector>
-#include <string>
 #include <sstream>
+#include <string>
 #include <utility>
+#include <vector>
 
-std::pair<std::vector<std::string>, std::string> split_message(const std::string& message) {
+std::pair<std::vector<std::string>, std::string> split_message(
+	const std::string& message)
+{
 	std::istringstream iss(message);
 	std::string receiversStr, text;
 
@@ -29,7 +31,8 @@ std::pair<std::vector<std::string>, std::string> split_message(const std::string
 	std::vector<std::string> receivers;
 	std::istringstream receiversStream(receiversStr);
 	std::string receiver;
-	while (std::getline(receiversStream, receiver, ',')) {
+	while (std::getline(receiversStream, receiver, ','))
+	{
 		receivers.push_back(receiver);
 	}
 

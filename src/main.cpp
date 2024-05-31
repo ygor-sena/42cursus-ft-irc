@@ -12,13 +12,14 @@
 
 #include "Server.hpp"
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
 	(void)argc;
 	(void)argv;
 	Server server;
 	// if (argc != 3)
-	// 	{std::cout << "Usage: " << argv[0] << " <port number> <password>" << std::endl; return 1;}
+	// 	{std::cout << "Usage: " << argv[0] << " <port number> <password>" <<
+	// std::endl; return 1;}
 	std::cout << GRE << "---- SERVER ----" << WHI << std::endl;
 	server.init("4444", "12345");
 	std::cout << RED << "The Server Closed!" << WHI << std::endl;

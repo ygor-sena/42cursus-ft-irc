@@ -12,14 +12,14 @@
 
 #include <criterion/criterion.h>
 #include <criterion/new/assert.h>
-#include "Client.hpp"
 #include "Channel.hpp"
+#include "Client.hpp"
 #define private public
 #include "Server.hpp"
 
-Client *mockOutsideClient()
+Client* mockOutsideClient()
 {
-	Client *client = new Client();
+	Client* client = new Client();
 	client->set_fd(6);
 	client->set_username("outsideUser");
 	client->set_nickname("outsideUser");
@@ -30,9 +30,9 @@ Client *mockOutsideClient()
 	return client;
 }
 
-Client *mockCommonClient()
+Client* mockCommonClient()
 {
-	Client *client = new Client();
+	Client* client = new Client();
 	client->set_fd(5);
 	client->set_username("trollUser");
 	client->set_nickname("trollUser");
@@ -43,9 +43,9 @@ Client *mockCommonClient()
 	return client;
 }
 
-Client *mockOperatorClient()
+Client* mockOperatorClient()
 {
-	Client *client = new Client();
+	Client* client = new Client();
 	client->set_fd(4);
 	client->set_username("channelOperator");
 	client->set_nickname("channelOperator");
@@ -63,7 +63,7 @@ Test(KickCommand, kick_successfully_no_comments)
 	Client* channelOperator = mockOperatorClient();
 
 	Server server;
-	Channel *channel = new Channel("#world");
+	Channel* channel = new Channel("#world");
 
 	// Add clients to the server clients list
 	server._clients.push_back(*troll);
@@ -78,14 +78,15 @@ Test(KickCommand, kick_successfully_no_comments)
 	// to the server channels list AFTER setting the operator
 	channelOperator->set_is_operator(true);
 	channel->set_channel_operator(channelOperator);
-	
+
 	// Add channel to the server channels list
 	server._channels.push_back(channel);
 
 	// Kick troll from the channel
 	server._handler_client_kick("#world trollUser", 4);
 	cr_assert(eq(int, server._reply_code, 200));
-	cr_assert(eq(int, server._get_channel(channel->get_name())->get_clients_size(), 1));
+	cr_assert(eq(
+		int, server._get_channel(channel->get_name())->get_clients_size(), 1));
 }
 
 Test(KickCommand, kick_successfully_with_comments)
@@ -94,7 +95,7 @@ Test(KickCommand, kick_successfully_with_comments)
 	Client* channelOperator = mockOperatorClient();
 
 	Server server;
-	Channel *channel = new Channel("#world");
+	Channel* channel = new Channel("#world");
 
 	// Add clients to the server clients list
 	server._clients.push_back(*troll);
@@ -109,14 +110,15 @@ Test(KickCommand, kick_successfully_with_comments)
 	// to the server channels list AFTER setting the operator
 	channelOperator->set_is_operator(true);
 	channel->set_channel_operator(channelOperator);
-	
+
 	// Add channel to the server channels list
 	server._channels.push_back(channel);
 
 	// Print get_operator_clients
 	/*std::vector<Client *> operator_clients = channel->get_operator_clients();
 
-	for (std::vector<Client *>::const_iterator it = operator_clients.begin(); it != operator_clients.end(); ++it)
+	for (std::vector<Client *>::const_iterator it = operator_clients.begin(); it
+	!= operator_clients.end(); ++it)
 	{
 		std::cout << (*it)->get_nickname() << std::endl;
 		std::cout << (*it)->get_fd() << std::endl;
@@ -126,7 +128,8 @@ Test(KickCommand, kick_successfully_with_comments)
 	// Kick troll from the channel
 	server._handler_client_kick("#world trollUser trolou", 4);
 	cr_assert(eq(int, server._reply_code, 200));
-	cr_assert(eq(int, server._get_channel(channel->get_name())->get_clients_size(), 1));
+	cr_assert(eq(
+		int, server._get_channel(channel->get_name())->get_clients_size(), 1));
 }
 
 /* Test(KickCommand, err_needmoreparams)
@@ -145,9 +148,9 @@ Test(KickCommand, kick_successfully_with_comments)
 	channel->invite(troll);
 	channel->invite(channelOperator);
 
-	// Set client channelOperator as channel operator	
+	// Set client channelOperator as channel operator
 	channel->set_channel_operator(channelOperator);
-	
+
 	// Add channel to the server channels list
 	server._channels.push_back(channel);
 
@@ -162,7 +165,7 @@ Test(KickCommand, err_nosuchchannel)
 	Client* channelOperator = mockOperatorClient();
 
 	Server server;
-	Channel *channel = new Channel("#world");
+	Channel* channel = new Channel("#world");
 
 	// Add clients to the server clients list
 	server._clients.push_back(*troll);
@@ -172,9 +175,9 @@ Test(KickCommand, err_nosuchchannel)
 	channel->invite(troll);
 	channel->invite(channelOperator);
 
-	// Set client channelOperator as channel operator	
+	// Set client channelOperator as channel operator
 	channel->set_channel_operator(channelOperator);
-	
+
 	// Add channel to the server channels list
 	server._channels.push_back(channel);
 
@@ -190,7 +193,7 @@ Test(KickCommand, err_notonchannel)
 	Client* outsideUser = mockOutsideClient();
 
 	Server server;
-	Channel *channel = new Channel("#world");
+	Channel* channel = new Channel("#world");
 
 	// Add clients to the server clients list
 	server._clients.push_back(*troll);
@@ -201,9 +204,9 @@ Test(KickCommand, err_notonchannel)
 	channel->invite(troll);
 	channel->invite(channelOperator);
 
-	// Set client channelOperator as channel operator	
+	// Set client channelOperator as channel operator
 	channel->set_channel_operator(channelOperator);
-	
+
 	// Add channel to the server channels list
 	server._channels.push_back(channel);
 
@@ -218,7 +221,7 @@ Test(KickCommand, err_chanoprivsneeded)
 	Client* channelOperator = mockOperatorClient();
 
 	Server server;
-	Channel *channel = new Channel("#world");
+	Channel* channel = new Channel("#world");
 
 	channelOperator->set_is_operator(false);
 
@@ -229,7 +232,7 @@ Test(KickCommand, err_chanoprivsneeded)
 	// Add clients as channel member
 	channel->invite(troll);
 	channel->invite(channelOperator);
-	
+
 	// Add channel to the server channels list
 	server._channels.push_back(channel);
 
@@ -244,7 +247,7 @@ Test(KickCommand, err_nosuchnick)
 	Client* channelOperator = mockOperatorClient();
 
 	Server server;
-	Channel *channel = new Channel("#world");
+	Channel* channel = new Channel("#world");
 
 	channelOperator->set_is_operator(false);
 
@@ -261,7 +264,7 @@ Test(KickCommand, err_nosuchnick)
 	// to the server channels list AFTER setting the operator
 	channelOperator->set_is_operator(true);
 	channel->set_channel_operator(channelOperator);
-	
+
 	// Add channel to the server channels list
 	server._channels.push_back(channel);
 
@@ -277,7 +280,7 @@ Test(KickCommand, err_usernotinchannel)
 	Client* outsideUser = mockOutsideClient();
 
 	Server server;
-	Channel *channel = new Channel("#world");
+	Channel* channel = new Channel("#world");
 
 	channelOperator->set_is_operator(false);
 
@@ -295,7 +298,7 @@ Test(KickCommand, err_usernotinchannel)
 	// to the server channels list AFTER setting the operator
 	channelOperator->set_is_operator(true);
 	channel->set_channel_operator(channelOperator);
-	
+
 	// Add channel to the server channels list
 	server._channels.push_back(channel);
 

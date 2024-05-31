@@ -12,15 +12,14 @@
 
 #include <criterion/criterion.h>
 #include <criterion/new/assert.h>
-#include "Client.hpp"
 #include "Channel.hpp"
+#include "Client.hpp"
 #define private public
 #include "Server.hpp"
 
-
-Client *mockOutsideClient()
+Client* mockOutsideClient()
 {
-	Client *client = new Client();
+	Client* client = new Client();
 	client->set_fd(6);
 	client->set_username("outsideUser");
 	client->set_nickname("outsideUser");
@@ -31,9 +30,9 @@ Client *mockOutsideClient()
 	return client;
 }
 
-Client *mockCommonClient()
+Client* mockCommonClient()
 {
-	Client *client = new Client();
+	Client* client = new Client();
 	client->set_fd(5);
 	client->set_username("trollUser");
 	client->set_nickname("trollUser");
@@ -44,9 +43,9 @@ Client *mockCommonClient()
 	return client;
 }
 
-Client *mockOperatorClient()
+Client* mockOperatorClient()
 {
-	Client *client = new Client();
+	Client* client = new Client();
 	client->set_fd(4);
 	client->set_username("channelOperator");
 	client->set_nickname("channelOperator");
@@ -58,7 +57,4 @@ Client *mockOperatorClient()
 	return client;
 }
 
-
-Test(JoinCommand, join_successfully)
-{
-}
+Test(JoinCommand, join_successfully) {}

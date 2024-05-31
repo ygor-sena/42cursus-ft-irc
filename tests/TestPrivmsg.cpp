@@ -6,20 +6,20 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 09:03:10 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/25 21:15:42 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/30 23:00:22 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <criterion/criterion.h>
 #include <criterion/new/assert.h>
-#include "Client.hpp"
 #include "Channel.hpp"
+#include "Client.hpp"
 #define private public
 #include "Server.hpp"
 
-Client *secondReceiver()
+Client* secondReceiver()
 {
-	Client *client = new Client();
+	Client* client = new Client();
 	client->set_fd(6);
 	client->set_username("secondUser");
 	client->set_nickname("secondUser");
@@ -30,9 +30,9 @@ Client *secondReceiver()
 	return client;
 }
 
-Client *firstReceiver()
+Client* firstReceiver()
 {
-	Client *client = new Client();
+	Client* client = new Client();
 	client->set_fd(5);
 	client->set_username("firstUser");
 	client->set_nickname("firstUser");
@@ -43,9 +43,9 @@ Client *firstReceiver()
 	return client;
 }
 
-Client *senderClient()
+Client* senderClient()
 {
-	Client *client = new Client();
+	Client* client = new Client();
 	client->set_fd(4);
 	client->set_username("senderUser");
 	client->set_nickname("senderUser");
@@ -57,11 +57,11 @@ Client *senderClient()
 	return client;
 }
 
-/* Test(PrivmsgCommand, privmsg_successfully_single_client)
+Test(PrivmsgCommand, privmsg_successfully_single_client)
 {
-	Client *sender = senderClient();
-	Client *first = firstReceiver();
-	Client *second = secondReceiver();
+	Client* sender = senderClient();
+	Client* first = firstReceiver();
+	Client* second = secondReceiver();
 
 	Server server;
 
@@ -75,9 +75,9 @@ Client *senderClient()
 
 Test(PrivmsgCommand, privmsg_successfully_two_clients)
 {
-	Client *sender = senderClient();
-	Client *first = firstReceiver();
-	Client *second = secondReceiver();
+	Client* sender = senderClient();
+	Client* first = firstReceiver();
+	Client* second = secondReceiver();
 
 	Server server;
 
@@ -91,9 +91,9 @@ Test(PrivmsgCommand, privmsg_successfully_two_clients)
 
 Test(PrivmsgCommand, privmsg_successfully_single_channel)
 {
-	Client *sender = senderClient();
-	Client *first = firstReceiver();
-	Client *second = secondReceiver();
+	Client* sender = senderClient();
+	Client* first = firstReceiver();
+	Client* second = secondReceiver();
 
 	Server server;
 
@@ -101,20 +101,20 @@ Test(PrivmsgCommand, privmsg_successfully_single_channel)
 	server._clients.push_back(*first);
 	server._clients.push_back(*second);
 
-	Channel *channel = new Channel("#brazil");
-	
+	Channel* channel = new Channel("#brazil");
+
 	channel->invite(sender);
 	server._channels.push_back(channel);
 
 	server._handler_client_privmsg("#brazil :Hello, BRAZIL!", 4);
 	cr_assert(eq(int, server._reply_code, 0));
-} */
+}
 
 Test(PrivmsgCommand, privmsg_successfully_three_channels)
 {
-	Client *sender = senderClient();
-	Client *first = firstReceiver();
-	Client *second = secondReceiver();
+	Client* sender = senderClient();
+	Client* first = firstReceiver();
+	Client* second = secondReceiver();
 
 	Server server;
 
@@ -122,10 +122,10 @@ Test(PrivmsgCommand, privmsg_successfully_three_channels)
 	server._clients.push_back(*first);
 	server._clients.push_back(*second);
 
-	Channel *ch_brazil = new Channel("#brazil");
-	Channel *ch_france = new Channel("#france");
-	Channel *ch_spain = new Channel("#spain");
-	
+	Channel* ch_brazil = new Channel("#brazil");
+	Channel* ch_france = new Channel("#france");
+	Channel* ch_spain = new Channel("#spain");
+
 	ch_brazil->invite(sender);
 	ch_france->invite(sender);
 	ch_france->invite(first);
@@ -140,11 +140,11 @@ Test(PrivmsgCommand, privmsg_successfully_three_channels)
 	cr_assert(eq(int, server._reply_code, 0));
 }
 
-/* Test(PrivmsgCommand, privmsg_successfully_mixed_channel_user)
+Test(PrivmsgCommand, privmsg_successfully_mixed_channel_user)
 {
-	Client *sender = senderClient();
-	Client *first = firstReceiver();
-	Client *second = secondReceiver();
+	Client* sender = senderClient();
+	Client* first = firstReceiver();
+	Client* second = secondReceiver();
 
 	Server server;
 
@@ -152,10 +152,10 @@ Test(PrivmsgCommand, privmsg_successfully_three_channels)
 	server._clients.push_back(*first);
 	server._clients.push_back(*second);
 
-	Channel *ch_brazil = new Channel("#brazil");
-	Channel *ch_france = new Channel("#france");
-	Channel *ch_spain = new Channel("#spain");
-	
+	Channel* ch_brazil = new Channel("#brazil");
+	Channel* ch_france = new Channel("#france");
+	Channel* ch_spain = new Channel("#spain");
+
 	ch_brazil->invite(sender);
 	ch_france->invite(sender);
 	ch_spain->invite(sender);
@@ -163,15 +163,16 @@ Test(PrivmsgCommand, privmsg_successfully_three_channels)
 	server._channels.push_back(ch_france);
 	server._channels.push_back(ch_spain);
 
-	server._handler_client_privmsg("#brazil,firstUser,#france,secondUser,#spain :Hello, WORLD!", 4);
+	server._handler_client_privmsg(
+		"#brazil,firstUser,#france,secondUser,#spain :Hello, WORLD!", 4);
 	cr_assert(eq(int, server._reply_code, 0));
 }
 
 Test(PrivmsgCommand, err_notregistered)
 {
-	Client *sender = senderClient();
-	Client *first = firstReceiver();
-	Client *second = secondReceiver();
+	Client* sender = senderClient();
+	Client* first = firstReceiver();
+	Client* second = secondReceiver();
 
 	Server server;
 
@@ -187,9 +188,9 @@ Test(PrivmsgCommand, err_notregistered)
 
 Test(PrivmsgCommand, err_nosuchchannel)
 {
-	Client *sender = senderClient();
-	Client *first = firstReceiver();
-	Client *second = secondReceiver();
+	Client* sender = senderClient();
+	Client* first = firstReceiver();
+	Client* second = secondReceiver();
 
 	Server server;
 
@@ -197,10 +198,10 @@ Test(PrivmsgCommand, err_nosuchchannel)
 	server._clients.push_back(*first);
 	server._clients.push_back(*second);
 
-	Channel *ch_brazil = new Channel("#brazil");
-	Channel *ch_france = new Channel("#france");
-	Channel *ch_spain = new Channel("#spain");
-	
+	Channel* ch_brazil = new Channel("#brazil");
+	Channel* ch_france = new Channel("#france");
+	Channel* ch_spain = new Channel("#spain");
+
 	ch_brazil->invite(sender);
 	ch_france->invite(sender);
 	ch_spain->invite(sender);
@@ -208,15 +209,16 @@ Test(PrivmsgCommand, err_nosuchchannel)
 	server._channels.push_back(ch_france);
 	server._channels.push_back(ch_spain);
 
-	server._handler_client_privmsg("#brazil,firstUser,#neptune,secondUser,#spain :Hello, WORLD!", 4);
+	server._handler_client_privmsg(
+		"#brazil,firstUser,#neptune,secondUser,#spain :Hello, WORLD!", 4);
 	cr_assert(eq(int, server._reply_code, 403));
 }
 
 Test(PrivmsgCommand, err_notonchannel)
 {
-	Client *sender = senderClient();
-	Client *first = firstReceiver();
-	Client *second = secondReceiver();
+	Client* sender = senderClient();
+	Client* first = firstReceiver();
+	Client* second = secondReceiver();
 
 	Server server;
 
@@ -224,25 +226,26 @@ Test(PrivmsgCommand, err_notonchannel)
 	server._clients.push_back(*first);
 	server._clients.push_back(*second);
 
-	Channel *ch_brazil = new Channel("#brazil");
-	Channel *ch_france = new Channel("#france");
-	Channel *ch_spain = new Channel("#spain");
-	
+	Channel* ch_brazil = new Channel("#brazil");
+	Channel* ch_france = new Channel("#france");
+	Channel* ch_spain = new Channel("#spain");
+
 	ch_brazil->invite(sender);
 	ch_spain->invite(sender);
 	server._channels.push_back(ch_brazil);
 	server._channels.push_back(ch_france);
 	server._channels.push_back(ch_spain);
 
-	server._handler_client_privmsg("#brazil,firstUser,#france,secondUser,#spain :Hello, WORLD!", 4);
+	server._handler_client_privmsg(
+		"#brazil,firstUser,#france,secondUser,#spain :Hello, WORLD!", 4);
 	cr_assert(eq(int, server._reply_code, 442));
 }
 
 Test(PrivmsgCommand, err_nosuchnick)
 {
-	Client *sender = senderClient();
-	Client *first = firstReceiver();
-	Client *second = secondReceiver();
+	Client* sender = senderClient();
+	Client* first = firstReceiver();
+	Client* second = secondReceiver();
 
 	Server server;
 
@@ -250,10 +253,10 @@ Test(PrivmsgCommand, err_nosuchnick)
 	server._clients.push_back(*first);
 	server._clients.push_back(*second);
 
-	Channel *ch_brazil = new Channel("#brazil");
-	Channel *ch_france = new Channel("#france");
-	Channel *ch_spain = new Channel("#spain");
-	
+	Channel* ch_brazil = new Channel("#brazil");
+	Channel* ch_france = new Channel("#france");
+	Channel* ch_spain = new Channel("#spain");
+
 	ch_brazil->invite(sender);
 	ch_france->invite(sender);
 	ch_spain->invite(sender);
@@ -261,7 +264,7 @@ Test(PrivmsgCommand, err_nosuchnick)
 	server._channels.push_back(ch_france);
 	server._channels.push_back(ch_spain);
 
-	server._handler_client_privmsg("#brazil,thirdUser,#france,secondUser,#spain :Hello, WORLD!", 4);
+	server._handler_client_privmsg(
+		"#brazil,thirdUser,#france,secondUser,#spain :Hello, WORLD!", 4);
 	cr_assert(eq(int, server._reply_code, 401));
 }
- */

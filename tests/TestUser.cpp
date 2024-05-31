@@ -12,8 +12,8 @@
 
 #include <criterion/criterion.h>
 #include <criterion/new/assert.h>
-#include "Client.hpp"
 #include "Channel.hpp"
+#include "Client.hpp"
 #define private public
 #include "Server.hpp"
 
@@ -24,12 +24,12 @@
  * 3. O comando USER é recebido e o cliente já está registrado.
  * 4. O comando USER é recebido e o cliente está pronto para fazer login.
  * 5. O comando USER é recebido e o cliente não está pronto para fazer login.
- * 
-*/
+ *
+ */
 
-Client *mockClient()
+Client* mockClient()
 {
-	Client *client = new Client();
+	Client* client = new Client();
 	client->set_fd(4);
 	client->set_username("Username");
 	client->set_nickname("Nickname");
@@ -42,7 +42,7 @@ Client *mockClient()
 
 /*
  * 1. O comando USER é recebido sem parâmetros suficientes.
-*/
+ */
 Test(UserCommand, err_needmoreparams)
 {
 	Client* client = mockClient();
@@ -50,13 +50,13 @@ Test(UserCommand, err_needmoreparams)
 	Server server;
 	server._clients.push_back(*client);
 	server._handler_client_username("", client->get_fd());
-	
+
 	cr_assert(eq(int, server._reply_code, 461));
 }
 
 /*
  * 2. O comando USER é recebido e o cliente não está registrado.
-*/
+ */
 Test(UserCommand, err_notregistered)
 {
 	Client* client = mockClient();
@@ -66,13 +66,13 @@ Test(UserCommand, err_notregistered)
 	Server server;
 	server._clients.push_back(*client);
 	server._handler_client_username(client->get_username(), client->get_fd());
-	
+
 	cr_assert(eq(int, server._reply_code, 451));
 }
 
 /*
  * 3. O comando USER é recebido e o cliente já está registrado.
-*/
+ */
 Test(UserCommand, err_alreadyregistered)
 {
 	Client* client = mockClient();
@@ -80,13 +80,13 @@ Test(UserCommand, err_alreadyregistered)
 	Server server;
 	server._clients.push_back(*client);
 	server._handler_client_username(client->get_username(), client->get_fd());
-	
+
 	cr_assert(eq(int, server._reply_code, 462));
 }
 
 /*
  * 4. O comando USER é recebido e o cliente está pronto para fazer login.
-*/
+ */
 Test(UserCommand, success_readytologin)
 {
 	Client* client = mockClient();
@@ -97,13 +97,13 @@ Test(UserCommand, success_readytologin)
 	Server server;
 	server._clients.push_back(*client);
 	server._handler_client_username("Username", client->get_fd());
-	
+
 	cr_assert(eq(int, server._reply_code, 001));
 }
 
 /*
  * 5. O comando USER é recebido e o cliente não está pronto para fazer login.
-*/
+ */
 Test(UserCommand, success_notreadytologin)
 {
 	Client* client = mockClient();
@@ -115,6 +115,6 @@ Test(UserCommand, success_notreadytologin)
 	Server server;
 	server._clients.push_back(*client);
 	server._handler_client_username("Username", client->get_fd());
-	
+
 	cr_assert(eq(int, server._reply_code, 200));
 }

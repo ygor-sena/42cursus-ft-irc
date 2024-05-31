@@ -12,23 +12,24 @@
 
 #include <criterion/criterion.h>
 #include <criterion/new/assert.h>
-#include "Client.hpp"
 #include "Channel.hpp"
+#include "Client.hpp"
 #define private public
 #include "Server.hpp"
 
 /*
 ** TOPIC #channel
-** - mostrar o tópico do canal se houver (332), caso contrário, o canal não tem tópico (331)
+** - mostrar o tópico do canal se houver (332), caso contrário, o canal não tem
+*tópico (331)
 **
 ** TOPIC #channel newtopic
 ** - para alterar o tópico, o cliente deve ser operador do canal (482)
 ** - mode -t permite ou não alterar o tópico do canal
 */
 
-Client *mockChannelMemberClient()
+Client* mockChannelMemberClient()
 {
-	Client *client = new Client();
+	Client* client = new Client();
 	client->set_fd(4);
 	client->set_username("channelOperator");
 	client->set_nickname("channelOperator");
@@ -42,7 +43,7 @@ Client *mockChannelMemberClient()
 
 Test(TopicCommand, err_needmoreparams)
 {
-	Client *client = mockChannelMemberClient();
+	Client* client = mockChannelMemberClient();
 	Server server;
 
 	server._clients.push_back(*client);
@@ -52,7 +53,7 @@ Test(TopicCommand, err_needmoreparams)
 
 Test(TopicCommand, err_notregistered)
 {
-	Client *client = mockChannelMemberClient();
+	Client* client = mockChannelMemberClient();
 	Server server;
 
 	client->set_is_logged(false);
@@ -64,7 +65,7 @@ Test(TopicCommand, err_notregistered)
 
 Test(TopicCommand, err_nosuchchannel)
 {
-	Client *client = mockChannelMemberClient();
+	Client* client = mockChannelMemberClient();
 	Server server;
 
 	server._clients.push_back(*client);
@@ -74,10 +75,10 @@ Test(TopicCommand, err_nosuchchannel)
 
 Test(TopicCommand, rpl_notopic)
 {
-	Client *client = mockChannelMemberClient();
+	Client* client = mockChannelMemberClient();
 	Server server;
 
-	Channel *channel = new Channel("#channel");
+	Channel* channel = new Channel("#channel");
 
 	server._clients.push_back(*client);
 
@@ -96,10 +97,10 @@ Test(TopicCommand, rpl_notopic)
 
 Test(TopicCommand, err_notoperator)
 {
-	Client *client = mockChannelMemberClient();
+	Client* client = mockChannelMemberClient();
 	Server server;
 
-	Channel *channel = new Channel("#channel");
+	Channel* channel = new Channel("#channel");
 
 	server._clients.push_back(*client);
 
@@ -116,10 +117,10 @@ Test(TopicCommand, err_notoperator)
 
 Test(TopicCommand, rpl_topic_set_first_topic)
 {
-	Client *client = mockChannelMemberClient();
+	Client* client = mockChannelMemberClient();
 	Server server;
 
-	Channel *channel = new Channel("#channel");
+	Channel* channel = new Channel("#channel");
 
 	server._clients.push_back(*client);
 
@@ -136,10 +137,10 @@ Test(TopicCommand, rpl_topic_set_first_topic)
 
 Test(TopicCommand, rpl_topic_set_second_topic)
 {
-	Client *client = mockChannelMemberClient();
+	Client* client = mockChannelMemberClient();
 	Server server;
 
-	Channel *channel = new Channel("#channel");
+	Channel* channel = new Channel("#channel");
 
 	server._clients.push_back(*client);
 
@@ -158,10 +159,10 @@ Test(TopicCommand, rpl_topic_set_second_topic)
 
 Test(TopicCommand, cannot_set_topic_with_topic_restriction)
 {
-	Client *client = mockChannelMemberClient();
+	Client* client = mockChannelMemberClient();
 	Server server;
 
-	Channel *channel = new Channel("#channel");
+	Channel* channel = new Channel("#channel");
 
 	server._clients.push_back(*client);
 
@@ -179,10 +180,10 @@ Test(TopicCommand, cannot_set_topic_with_topic_restriction)
 
 Test(TopicCommand, err_notonchannel)
 {
-	Client *client = mockChannelMemberClient();
+	Client* client = mockChannelMemberClient();
 	Server server;
 
-	Channel *channel = new Channel("#channel");
+	Channel* channel = new Channel("#channel");
 
 	server._clients.push_back(*client);
 

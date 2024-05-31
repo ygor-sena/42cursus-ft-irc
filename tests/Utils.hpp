@@ -11,15 +11,15 @@
 /* ************************************************************************** */
 
 #ifndef UTILS_HPP
-# define UTILS_HPP
+#define UTILS_HPP
 
-# define EPSILON 0.0001
+#define EPSILON 0.0001
 
-#include <vector>
-#include <string>
 #include <sstream>
+#include <string>
+#include <vector>
 
 std::pair<std::vector<std::string>, std::string> split_message(
 	const std::string& message);
 
-# endif // UTILS_HPP
+#endif	// UTILS_HPP
