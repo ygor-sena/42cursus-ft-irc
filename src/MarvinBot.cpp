@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 11:32:28 by caalbert          #+#    #+#             */
-/*   Updated: 2024/06/01 18:36:14 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/06/01 18:59:54 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,8 +210,9 @@ void Server::_handler_bot_whoami(const std::string& /* buffer */, int fd)
 void Server::_handler_bot_whois(const std::string& buffer, int fd)
 {
 	std::istringstream iss(buffer);
+	std::string command;
 	std::string nickname;
-	iss >> nickname;
+	iss >> command >> nickname;
 
 	Client* client = _get_client(fd);
 	Client* whois = _get_client(nickname);
