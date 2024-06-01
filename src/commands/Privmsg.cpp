@@ -6,7 +6,7 @@
 /*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:31:33 by gilmar            #+#    #+#             */
-/*   Updated: 2024/06/01 09:50:29 by caalbert         ###   ########.fr       */
+/*   Updated: 2024/06/01 10:47:55 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,16 +47,6 @@ std::vector<std::string> split_parameters(const std::string& s,
 	return tokens;
 }
 
-/**
- * @brief Handles the PRIVMSG command received from the client.
- *
- * This method processes the PRIVMSG command received from the client and sends
- * a response to the client indicating that the message has been sent.
- *
- * @param buffer The buffer containing the PRIVMSG command parameters.
- * @param fd The file descriptor associated with the client that sent the
- * command.
- */
 /**
  * Handles the PRIVMSG command received from a client.
  *

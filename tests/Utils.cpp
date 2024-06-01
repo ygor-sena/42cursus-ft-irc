@@ -1,14 +1,7 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Utils.cpp                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/24 18:02:52 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/24 18:27:47 by yde-goes         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+/**
+ * @file Utils.cpp
+ * @brief Implementation of utility functions for the project.
+ */
 
 #include "Utils.hpp"
 
@@ -17,6 +10,16 @@
 #include <utility>
 #include <vector>
 
+/**
+ * @brief Splits a message into receivers and text.
+ *
+ * This function takes a message as input and splits it into two parts: the receivers and the text.
+ * The receivers are extracted from the message string, which is expected to be in the format "receiver1,receiver2,... receiverN text".
+ * The receivers are separated by commas and the text follows after the last receiver.
+ *
+ * @param message The message to be split.
+ * @return A pair containing a vector of receivers and the text.
+ */
 std::pair<std::vector<std::string>, std::string> split_message(
 	const std::string& message)
 {

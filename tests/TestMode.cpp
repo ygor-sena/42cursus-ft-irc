@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   TestMode.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 16:51:31 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 22:31:28 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/06/01 11:13:44 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ Channel* mockChannel()
 	return channel;
 }
 
-/*
- * 1. O comando MODE é recebido sem parâmetros suficientes.
+/**
+ * 1. The MODE command is received without enough parameters.
  */
 Test(ModeCommand, err_needmoreparams)
 {
@@ -51,8 +51,8 @@ Test(ModeCommand, err_needmoreparams)
 	cr_assert(eq(int, server._reply_code, 461));
 }
 
-/*
- * 2. O comando MODE é recebido e o canal não existe.
+/**
+ * 2. The MODE command is received and the channel does not exist.
  */
 Test(ModeCommand, err_nosuchchannel)
 {
@@ -65,9 +65,8 @@ Test(ModeCommand, err_nosuchchannel)
 	cr_assert(eq(int, server._reply_code, 403));
 }
 
-/*
- * 3. O comando MODE é recebido e o cliente não tem privilégios de operador no
- * canal.
+/**
+ * 3. The MODE command is received and the client does not have operator privileges in the channel.
  */
 Test(ModeCommand, err_chanoprivsneeded)
 {
@@ -82,8 +81,8 @@ Test(ModeCommand, err_chanoprivsneeded)
 	cr_assert(eq(int, server._reply_code, 482));
 }
 
-/*
- * 4. O comando MODE é recebido e o modo do canal é inválido.
+/**
+ * 4. The MODE command is received and the channel mode is invalid.
  */
 Test(ModeCommand, err_umodeunknownflag)
 {
@@ -100,8 +99,8 @@ Test(ModeCommand, err_umodeunknownflag)
 	cr_assert(eq(int, server._reply_code, 472));
 }
 
-/*
- * 5. O comando MODE é recebido e o modo do canal é válido.
+/**
+ * 5. The MODE command is received and the channel mode is valid.
  */
 Test(ModeCommand, mode_valid)
 {
@@ -119,8 +118,8 @@ Test(ModeCommand, mode_valid)
 	cr_assert(eq(int, channel->_invite_only, true));
 }
 
-/*
- * 6. O comando MODE é recebido e o modo do canal é alterado com sucesso.
+/**
+ * 6. The MODE command is received and the channel mode is successfully changed.
  */
 Test(ModeCommand, mode_changed)
 {
@@ -138,8 +137,8 @@ Test(ModeCommand, mode_changed)
 	cr_assert(eq(int, channel->_invite_only, true));
 }
 
-/*
- * 7. O comando MODE é recebido e o modo +i do canal é alterado com sucesso.
+/**
+ * 7. The MODE command is received and the channel mode +i is successfully changed.
  */
 Test(ModeCommand, mode_i_changed)
 {
@@ -157,8 +156,8 @@ Test(ModeCommand, mode_i_changed)
 	cr_assert(eq(int, channel->_invite_only, true));
 }
 
-/*
- * 8. O comando MODE é recebido e o modo -i do canal é alterado com sucesso.
+/**
+ * 8. The MODE command is received and the channel mode -i is successfully changed.
  */
 Test(ModeCommand, mode_i_removed)
 {
@@ -177,8 +176,8 @@ Test(ModeCommand, mode_i_removed)
 	cr_assert(eq(int, channel->_invite_only, false));
 }
 
-/*
- * 9. O comando MODE é recebido e o modo +t do canal é alterado com sucesso.
+/**
+ * 9. The MODE command is received and the channel mode +t is successfully changed.
  */
 Test(ModeCommand, mode_t_changed)
 {
@@ -196,8 +195,8 @@ Test(ModeCommand, mode_t_changed)
 	cr_assert(eq(int, channel->_topic_restriction, true));
 }
 
-/*
- * 10. O comando MODE é recebido e o modo -t do canal é alterado com sucesso.
+/**
+ * 10. The MODE command is received and the channel mode -t is successfully changed.
  */
 Test(ModeCommand, mode_t_removed)
 {
@@ -216,8 +215,8 @@ Test(ModeCommand, mode_t_removed)
 	cr_assert(eq(int, channel->_topic_restriction, false));
 }
 
-/*
- * 11. O comando MODE é recebido e o modo +k do canal é alterado com sucesso.
+/**
+ * 11. The MODE command is received and the channel mode +k is successfully changed.
  */
 Test(ModeCommand, mode_k_changed)
 {
@@ -238,8 +237,8 @@ Test(ModeCommand, mode_k_changed)
 	cr_assert(eq(int, (channel->_key == "TesteChannelKey"), true));
 }
 
-/*
- * 12. O comando MODE é recebido e o modo -k do canal é alterado com sucesso.
+/**
+ * 12. The MODE command is received and the channel mode -k is successfully changed.
  */
 Test(ModeCommand, mode_k_removed)
 {
@@ -258,8 +257,8 @@ Test(ModeCommand, mode_k_removed)
 	cr_assert(eq(int, channel->_key.empty(), true));
 }
 
-/*
- * 13. O comando MODE é recebido e o modo +l do canal é alterado com sucesso.
+/**
+ * 13. The MODE command is received and the channel mode +l is successfully changed.
  */
 Test(ModeCommand, mode_l_changed)
 {
@@ -277,8 +276,8 @@ Test(ModeCommand, mode_l_changed)
 	cr_assert(eq(int, channel->_limit, 5));
 }
 
-/*
- * 14. O comando MODE é recebido e o modo -l do canal é alterado com sucesso.
+/**
+ * 14. The MODE command is received and the channel mode -l is successfully changed.
  */
 Test(ModeCommand, mode_l_removed)
 {
@@ -297,8 +296,8 @@ Test(ModeCommand, mode_l_removed)
 	cr_assert(eq(int, channel->_limit, -1));
 }
 
-/*
- * 15. O comando MODE é recebido e o modo +o do canal é alterado com sucesso.
+/**
+ * 15. The MODE command is received and the channel mode +o is successfully changed.
  */
 Test(ModeCommand, mode_o_changed)
 {
@@ -316,8 +315,8 @@ Test(ModeCommand, mode_o_changed)
 	cr_assert(eq(int, channel->is_channel_operator("trollUser"), true));
 }
 
-/*
- * 16. O comando MODE é recebido e o modo -o do canal é alterado com sucesso.
+/**
+ * 16. The MODE command is received and the channel mode -o is successfully changed.
  */
 Test(ModeCommand, mode_o_removed)
 {

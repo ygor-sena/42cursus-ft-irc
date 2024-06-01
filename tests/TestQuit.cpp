@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   TestQuit.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 20:46:13 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/31 11:25:19 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/06/01 11:25:00 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,11 @@
 #define private public
 #include "Server.hpp"
 
+/**
+ * @brief Create a generic client for testing.
+ *
+ * @return Client* The created client.
+ */
 Client* genericClient()
 {
 	Client* client = new Client();
@@ -30,6 +35,11 @@ Client* genericClient()
 	return client;
 }
 
+/**
+ * @brief Create a client to be used for parting a channel.
+ *
+ * @return Client* The created client.
+ */
 Client* toPartClient()
 {
 	Client* client = new Client();
@@ -43,6 +53,9 @@ Client* toPartClient()
 	return client;
 }
 
+/**
+ * @brief Test case for the QuitCommand when a non-operator client quits successfully.
+ */
 Test(QuitCommand, non_client_operator_quits_successfully)
 {
 	Client* toPart = toPartClient();
@@ -78,6 +91,9 @@ Test(QuitCommand, non_client_operator_quits_successfully)
 	}
 }
 
+/**
+ * @brief Test case for the QuitCommand when an operator client quits successfully.
+ */
 Test(QuitCommand, client_operator_quits_successfully)
 {
 	Client* toPart = toPartClient();

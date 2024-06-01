@@ -6,7 +6,7 @@
 /*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:29:45 by gilmar            #+#    #+#             */
-/*   Updated: 2024/06/01 09:51:00 by caalbert         ###   ########.fr       */
+/*   Updated: 2024/06/01 10:48:18 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,19 +18,6 @@
  * Link: https://datatracker.ietf.org/doc/html/rfc1459#section-4.1.6
  */
 
-/**
- * @brief Handles the QUIT command received from the client.
- *
- * This method processes the QUIT command received from the client and sends a
- * response to the client indicating that the client has quit the server.
- *
- * To avoid memory leak, if the client being disconnected is the last one in a
- * channel, the channel is deleted.
- *
- * @param buffer The buffer containing the QUIT command parameters.
- * @param fd The file descriptor associated with the client that sent the
- * command.
- */
 /**
  * Handles the "QUIT" command from a client.
  *

@@ -6,7 +6,7 @@
 /*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:30:59 by gilmar            #+#    #+#             */
-/*   Updated: 2024/06/01 09:51:25 by caalbert         ###   ########.fr       */
+/*   Updated: 2024/06/01 10:48:28 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,6 @@
  * Reference: https://datatracker.ietf.org/doc/html/rfc1459#section-4.2.4
  */
 
-/**
- * @brief Handles the TOPIC command received from the client.
- *
- * This method processes the TOPIC command received from the client and sends a
- * response to the client indicating the topic of the channel.
- *
- * @param buffer The buffer containing the TOPIC command parameters.
- * @param fd The file descriptor associated with the client that sent the
- * command.
- */
 /**
  * Handles the client topic command.
  * Parses the buffer to extract the channel and topic information.

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   TestTopic.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 08:57:00 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/31 21:17:06 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/06/01 11:26:24 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,11 @@
 
 Client* mockChannelMemberClient()
 {
+	/**
+	 * @brief Mocks a channel member client.
+	 *
+	 * @return Client* The mocked client.
+	 */
 	Client* client = new Client();
 	client->set_fd(4);
 	client->set_username("channelOperator");
@@ -31,8 +36,8 @@ Client* mockChannelMemberClient()
 	return client;
 }
 
-/*
- * 1. O comando TOPIC é recebido sem parâmetros suficientes.
+/**
+ * @brief Test case for the TOPIC command with insufficient parameters.
  */
 Test(TopicCommand, err_needmoreparams)
 {
@@ -45,8 +50,8 @@ Test(TopicCommand, err_needmoreparams)
 	cr_assert(eq(int, server._reply_code, 461));
 }
 
-/*
- * 2. O comando TOPIC é recebido e o cliente não está logado.
+/**
+ * @brief Test case for the TOPIC command when the client is not registered.
  */
 Test(TopicCommand, err_notregistered)
 {
@@ -60,8 +65,8 @@ Test(TopicCommand, err_notregistered)
 	cr_assert(eq(int, server._reply_code, 451));
 }
 
-/*
- * 3. O comando TOPIC é recebido e o canal não existe.
+/**
+ * @brief Test case for the TOPIC command when the channel does not exist.
  */
 Test(TopicCommand, err_nosuchchannel)
 {
@@ -74,8 +79,8 @@ Test(TopicCommand, err_nosuchchannel)
 	cr_assert(eq(int, server._reply_code, 403));
 }
 
-/*
- * 4. O comando TOPIC é recebido e o cliente não está no canal.
+/**
+ * @brief Test case for the TOPIC command when the client is not in the channel.
  */
 Test(TopicCommand, err_notonchannel)
 {
@@ -91,8 +96,8 @@ Test(TopicCommand, err_notonchannel)
 	cr_assert(eq(int, server._reply_code, 442));
 }
 
-/*
- * 5. O comando TOPIC é recebido e o canal não tem tópico.
+/**
+ * @brief Test case for the TOPIC command when the channel has no topic.
  */
 Test(TopicCommand, rpl_notopic)
 {
@@ -109,8 +114,8 @@ Test(TopicCommand, rpl_notopic)
 	cr_assert(eq(int, server._reply_code, 331));
 }
 
-/*
- * 6. O comando TOPIC é recebido e o canal tem tópico.
+/**
+ * @brief Test case for the TOPIC command when the channel has a topic.
  */
 Test(TopicCommand, rpl_topic)
 {
@@ -128,8 +133,8 @@ Test(TopicCommand, rpl_topic)
 	cr_assert(eq(int, server._reply_code, 332));
 }
 
-/*
- * 7. O comando TOPIC é recebido e o cliente não é operador do canal.
+/**
+ * @brief Test case for the TOPIC command when the client is not a channel operator.
  */
 Test(TopicCommand, err_chanoprivsneeded)
 {
@@ -146,8 +151,8 @@ Test(TopicCommand, err_chanoprivsneeded)
 	cr_assert(eq(int, server._reply_code, 482));
 }
 
-/*
- * 8. O comando TOPIC é recebido e o canal tem restrição de tópico.
+/**
+ * @brief Test case for the TOPIC command when the channel has topic restriction.
  */
 Test(TopicCommand, err_chanoprivsneeded_topic_restriction)
 {
@@ -166,8 +171,8 @@ Test(TopicCommand, err_chanoprivsneeded_topic_restriction)
 	cr_assert(eq(int, server._reply_code, 482));
 }
 
-/*
- * 9. O comando TOPIC é recebido e o tópico é alterado com sucesso.
+/**
+ * @brief Test case for the TOPIC command when the topic is successfully changed.
  */
 Test(TopicCommand, rpl_topic_set)
 {

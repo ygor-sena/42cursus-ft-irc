@@ -6,7 +6,7 @@
 /*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:30:20 by gilmar            #+#    #+#             */
-/*   Updated: 2024/06/01 09:47:04 by caalbert         ###   ########.fr       */
+/*   Updated: 2024/06/01 10:47:32 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,6 @@
  * Link: https://datatracker.ietf.org/doc/html/rfc1459#section-4.2.2
  */
 
-/**
- * @brief Handles the PART command received from the client.
- *
- * This method processes the PART command received from the client and sends a
- * response to the client indicating that the client has left the channel.
- *
- * @param buffer The buffer containing the PART command parameters.
- * @param fd The file descriptor associated with the client that sent the
- * command.
- */
 /**
  * Handles the PART command from a client.
  *

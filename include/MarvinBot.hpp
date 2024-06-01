@@ -6,7 +6,7 @@
 /*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 11:31:32 by caalbert          #+#    #+#             */
-/*   Updated: 2024/06/01 09:43:08 by caalbert         ###   ########.fr       */
+/*   Updated: 2024/06/01 10:40:13 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,30 +41,43 @@
  */
 class MarvinBot
 {
-  public:
-	MarvinBot();
-	~MarvinBot();
+	public:
+		/**
+		 * @brief Default constructor for MarvinBot.
+		 */
+		MarvinBot();
 
-	// Enum for quotes
-	enum EnumMarvinBotQuotes
-	{
-		QUOTE_SOCRATES_KNOWLEDGE,
-		QUOTE_DESCARTES_EXISTENCE,
-		QUOTE_KANT_CATEGORICAL_IMPERATIVE,
-		QUOTE_NIETZSCHE_GOD,
-		QUOTE_PLATO_FORMS,
-		QUOTE_MARX_RELIGION,
-		QUOTE_CONFUCIUS_WISDOM,
-		QUOTE_HUME_SCIENCE,
-		QUOTE_HEIDEGGER_BEING,
-		QUOTE_ROUSSEAU_FREEDOM,
-		QUOTES_COUNT  // To keep track of the number of quotes
-	};
+		/**
+		 * @brief Destructor for MarvinBot.
+		 */
+		~MarvinBot();
 
-	const char* marvin_bot_quotes[QUOTES_COUNT];
+		/**
+		 * @brief Enum for quotes.
+		 */
+		enum EnumMarvinBotQuotes
+		{
+				QUOTE_SOCRATES_KNOWLEDGE,                /**< Quote: "I know that I know nothing. - Socrates" */
+				QUOTE_DESCARTES_EXISTENCE,               /**< Quote: "I think, therefore I am. - René Descartes" */
+				QUOTE_KANT_CATEGORICAL_IMPERATIVE,        /**< Quote: "Act only according to that maxim whereby you can, at the same time, will that it should become a universal law. - Immanuel Kant" */
+				QUOTE_NIETZSCHE_GOD,                     /**< Quote: "God is dead! - Friedrich Nietzsche" */
+				QUOTE_PLATO_FORMS,                       /**< Quote: "The Forms are eternal and changeless. - Plato" */
+				QUOTE_MARX_RELIGION,                      /**< Quote: "Religion is the opium of the people. - Karl Marx" */
+				QUOTE_CONFUCIUS_WISDOM,                   /**< Quote: "Real knowledge is to know the extent of one's ignorance. - Confucius" */
+				QUOTE_HUME_SCIENCE,                       /**< Quote: "A wise man proportions his belief to the evidence. - David Hume" */
+				QUOTE_HEIDEGGER_BEING,                    /**< Quote: "Being is time, and time is finite. - Martin Heidegger" */
+				QUOTE_ROUSSEAU_FREEDOM,                   /**< Quote: "Man is born free, and everywhere he is in chains. - Jean-Jacques Rousseau" */
+				QUOTES_COUNT                             /**< To keep track of the number of quotes */
+		};
 
-  private:
-	std::string _return_quote();
+		const char* marvin_bot_quotes[QUOTES_COUNT]; /**< Array of quotes */
+
+	private:
+		/**
+ 		 * @brief Generates and returns a random quote from the list of quotes.
+		 * @return A random quote.
+		 */
+		std::string _return_quote();
 };
 
-#endif	// MARVINBOT_HPP
+#endif  // MARVINBOT_HPP

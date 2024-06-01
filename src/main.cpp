@@ -6,20 +6,12 @@
 /*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/06/01 10:13:43 by caalbert         ###   ########.fr       */
+/*   Updated: 2024/06/01 11:02:51 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
-
-
-
-
 #include "Server.hpp"
 
-/* Use this line if you want to test the server with the automated tests
-created by Criterion framework
-server.init("4444", "12345"); */
 int main(int argc, char** argv)
 {
 	Server server;
@@ -36,3 +28,7 @@ int main(int argc, char** argv)
 
 	std::cout << RED << "The Server Closed!" << WHI << std::endl;
 }
+
+/* NOTE: Use this line if you want to test the server with the automated tests
+created by Criterion framework
+server.init("4444", "12345"); */

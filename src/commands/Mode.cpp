@@ -6,7 +6,7 @@
 /*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:30:34 by gilmar            #+#    #+#             */
-/*   Updated: 2024/06/01 09:45:36 by caalbert         ###   ########.fr       */
+/*   Updated: 2024/06/01 10:45:43 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,16 +30,6 @@ void _set_channel_operator_mode(Channel* channel, Client* client, bool addMode);
 void _set_channel_limit_mode(Channel* channel, const std::string& limitStr,
 							 bool addMode);
 
-/**
- * @brief Handles the MODE command received from the client.
- *
- * This method processes the MODE command received from the client and sends a
- * response to the client indicating the channel modes supported by the server.
- *
- * @param buffer The buffer containing the MODE command parameters.
- * @param fd The file descriptor associated with the client that sent the
- * command.
- */
 /**
  * Handles the MODE command from a client.
  * This function parses the buffer received from the client and performs the necessary actions based on the mode flags.

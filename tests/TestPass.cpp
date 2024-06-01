@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   TestPass.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 17:27:49 by gilmar            #+#    #+#             */
-/*   Updated: 2024/06/01 09:01:18 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/06/01 11:18:53 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ Client* mockClient()
 	return client;
 }
 
-/*
- * 1. O comando PASS é recebido sem parâmetros suficientes.
+/**
+ * @brief Test case for handling the PASS command with insufficient parameters.
  */
 Test(ServerHandlerClientPassword, err_needmoreparams)
 {
@@ -45,8 +45,8 @@ Test(ServerHandlerClientPassword, err_needmoreparams)
 	cr_assert_eq(server._reply_code, 461);
 }
 
-/*
- * 2. O comando PASS é recebido e o cliente já está autenticado.
+/**
+ * @brief Test case for handling the PASS command when the client is already registered.
  */
 Test(ServerHandlerClientPassword, err_alreadyregistered)
 {
@@ -61,8 +61,8 @@ Test(ServerHandlerClientPassword, err_alreadyregistered)
 	cr_assert_eq(server._reply_code, 462);
 }
 
-/*
- * 3. O comando PASS é recebido e a senha do cliente está incorreta.
+/**
+ * @brief Test case for handling the PASS command when the client's password is incorrect.
  */
 Test(ServerHandlerClientPassword, err_incorpass)
 {
@@ -77,8 +77,8 @@ Test(ServerHandlerClientPassword, err_incorpass)
 	cr_assert_eq(server._reply_code, 464);
 }
 
-/*
- * 4. O comando PASS é recebido e a senha do cliente está correta.
+/**
+ * @brief Test case for handling the PASS command when the client's password is correct.
  */
 Test(ServerHandlerClientPassword, rpl_pass)
 {

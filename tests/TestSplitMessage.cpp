@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   TestSplitMessage.cpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 18:03:20 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/24 18:51:38 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/06/01 11:25:32 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,9 @@
 #include <vector>
 #include "Utils.hpp"
 
+/**
+ * @brief Test case for splitting a message into receivers and text.
+ */
 Test(split_message, should_split_message_into_receivers_and_text_1)
 {
 	std::string message =
@@ -43,6 +46,9 @@ Test(split_message, should_split_message_into_receivers_and_text_1)
 		result.second.c_str(), expectedText.c_str(), "Text does not match");
 }
 
+/**
+ * @brief Test case for splitting a message into receivers and text.
+ */
 Test(split_message, should_split_message_into_receivers_and_text_2)
 {
 	std::string message =
@@ -70,6 +76,9 @@ Test(split_message, should_split_message_into_receivers_and_text_2)
 		result.second.c_str(), expectedText.c_str(), "Text does not match");
 }
 
+/**
+ * @brief Test case for splitting a message into receivers and text.
+ */
 Test(split_message, should_split_message_into_receivers_and_text_3)
 {
 	std::string message = "channel This is a test message";

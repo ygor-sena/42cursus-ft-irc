@@ -6,7 +6,7 @@
 /*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:19:06 by gilmar            #+#    #+#             */
-/*   Updated: 2024/06/01 09:42:47 by caalbert         ###   ########.fr       */
+/*   Updated: 2024/06/01 10:37:17 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,19 @@
 //-------------------------------------------------------//
 
 /**
- * @brief The Client class represents a client in the IRC server.
+ * @brief The Client class represents a client connected to the IRC server.
  *
- * This class encapsulates the properties and behaviors of a client, including its file descriptor,
- * login status, operator status, authentication status, buffer, nickname, username, password,
- * hostname, IP address, registration status, and invited channels.
+ * This class provides methods to get and set various properties of the client,
+ * such as file descriptor, login status, operator status, authentication status,
+ * buffer, nickname, username, password, hostname, IP address, registration status,
+ * and channels invited.
+ *
+ * It also provides methods to check if the client is invited to a specific channel,
+ * add a channel to the list of invited channels, and remove a channel from the list
+ * of invited channels.
+ *
+ * Additionally, it provides a method to broadcast a message to all clients except
+ * the sender.
  */
 class Client
 {

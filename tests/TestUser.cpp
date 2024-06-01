@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   TestUser.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 18:03:11 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/31 22:09:22 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/06/01 11:27:02 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,11 @@
 
 Client* mockClient()
 {
+	/**
+	 * @brief Create a mock client for testing.
+	 *
+	 * @return Pointer to the created client.
+	 */
 	Client* client = new Client();
 	client->set_fd(4);
 	client->set_username("Username");
@@ -30,8 +35,8 @@ Client* mockClient()
 	return client;
 }
 
-/*
- * 1. O comando USER é recebido sem parâmetros suficientes.
+/**
+ * @brief Test case for receiving the USER command with insufficient parameters.
  */
 Test(UserCommand, err_needmoreparams)
 {
@@ -44,8 +49,8 @@ Test(UserCommand, err_needmoreparams)
 	cr_assert(eq(int, server._reply_code, 461));
 }
 
-/*
- * 2. O comando USER é recebido e o cliente não está registrado.
+/**
+ * @brief Test case for receiving the USER command when the client is not registered.
  */
 Test(UserCommand, err_notregistered)
 {
@@ -60,8 +65,8 @@ Test(UserCommand, err_notregistered)
 	cr_assert(eq(int, server._reply_code, 451));
 }
 
-/*
- * 3. O comando USER é recebido e o cliente não existe.
+/**
+ * @brief Test case for receiving the USER command when the client does not exist.
  */
 Test(UserCommand, err_notexist)
 {
@@ -71,8 +76,8 @@ Test(UserCommand, err_notexist)
 	cr_assert(eq(int, server._reply_code, 451));
 }
 
-/*
- * 4. O comando USER é recebido e o cliente já está registrado.
+/**
+ * @brief Test case for receiving the USER command when the client is already registered.
  */
 Test(UserCommand, err_alreadyregistered)
 {
@@ -85,8 +90,8 @@ Test(UserCommand, err_alreadyregistered)
 	cr_assert(eq(int, server._reply_code, 462));
 }
 
-/*
- * 5. O comando USER é recebido e o cliente está pronto para fazer login.
+/**
+ * @brief Test case for receiving the USER command when the client is ready to log in.
  */
 Test(UserCommand, rpl_readytologin)
 {
@@ -102,8 +107,8 @@ Test(UserCommand, rpl_readytologin)
 	cr_assert(eq(int, server._reply_code, 001));
 }
 
-/*
- * 6. O comando USER é recebido e o cliente não está pronto para fazer login.
+/**
+ * @brief Test case for receiving the USER command when the client is not ready to log in.
  */
 Test(UserCommand, rpl_notreadytologin)
 {

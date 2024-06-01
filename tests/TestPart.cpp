@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   TestPart.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 08:56:56 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/31 22:22:04 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/06/01 11:18:15 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,11 @@
 
 Client* genericClient()
 {
+	/**
+	 * @brief Create a generic client for testing.
+	 *
+	 * @return Client* The created client.
+	 */
 	Client* client = new Client();
 	client->set_fd(6);
 	client->set_username("soAndSoUser");
@@ -32,6 +37,11 @@ Client* genericClient()
 
 Client* toPartClient()
 {
+	/**
+	 * @brief Create a client for testing the PART command.
+	 *
+	 * @return Client* The created client.
+	 */
 	Client* client = new Client();
 	client->set_fd(4);
 	client->set_username("toPartUser");
@@ -44,11 +54,14 @@ Client* toPartClient()
 	return client;
 }
 
-/*
- * 1. O comando PART é recebido sem parâmetros suficientes.
+/**
+ * @brief Test cases for the PART command.
  */
 Test(PartCommand, part_without_enough_parameters)
 {
+	/**
+	 * @brief Test case for PART command without enough parameters.
+	 */
 	Client* client = genericClient();
 
 	Server server;
@@ -58,11 +71,11 @@ Test(PartCommand, part_without_enough_parameters)
 	cr_assert(eq(int, server._reply_code, 461));
 }
 
-/*
- * 2. O comando PART é recebido e o cliente não está registrado.
- */
 Test(PartCommand, part_not_registered)
 {
+	/**
+	 * @brief Test case for PART command when the client is not registered.
+	 */
 	Client* client = genericClient();
 	client->set_is_logged(false);
 
@@ -73,11 +86,11 @@ Test(PartCommand, part_not_registered)
 	cr_assert(eq(int, server._reply_code, 451));
 }
 
-/*
- * 3. O comando PART é recebido e o canal não existe.
- */
 Test(PartCommand, part_channel_does_not_exist)
 {
+	/**
+	 * @brief Test case for PART command when the channel does not exist.
+	 */
 	Client* client = genericClient();
 
 	Server server;
@@ -87,11 +100,11 @@ Test(PartCommand, part_channel_does_not_exist)
 	cr_assert(eq(int, server._reply_code, 403));
 }
 
-/*
- * 4. O comando PART é recebido e o cliente não está no canal.
- */
 Test(PartCommand, part_not_on_channel)
 {
+	/**
+	 * @brief Test case for PART command when the client is not on the channel.
+	 */
 	Client* client = genericClient();
 
 	Channel* channel = new Channel("#channel");
@@ -104,11 +117,11 @@ Test(PartCommand, part_not_on_channel)
 	cr_assert(eq(int, server._reply_code, 442));
 }
 
-/*
- * 5. O comando PART é recebido e o cliente deixa o canal com sucesso.
- */
 Test(PartCommand, part_successfully)
 {
+	/**
+	 * @brief Test case for successful PART command.
+	 */
 	Client* client = genericClient();
 
 	Channel* channel = new Channel("#channel");

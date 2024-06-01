@@ -6,7 +6,7 @@
 /*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:31:16 by gilmar            #+#    #+#             */
-/*   Updated: 2024/06/01 09:44:22 by caalbert         ###   ########.fr       */
+/*   Updated: 2024/06/01 10:44:55 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,17 +20,6 @@
  * Example: INVITE Wiz #Twilight_Zone
  */
 
-/**
- * @brief Handles the INVITE command received from the client.
- *
- * This method processes the INVITE command received from the client and sends a
- * response to the client indicating that the client has been invited to the
- * channel.
- *
- * @param buffer The buffer containing the INVITE command parameters.
- * @param fd The file descriptor associated with the client that sent the
- * command.
- */
 /**
  * Handles the "INVITE" command from a client.
  * This function is responsible for processing the invite command and sending appropriate responses to the client.

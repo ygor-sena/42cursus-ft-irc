@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   TestKick.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 18:15:38 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/06/01 08:59:16 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/06/01 11:11:02 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,9 @@ Client* mockOperatorClient()
 	return client;
 }
 
+/**
+ * @brief Test case for successful kick command without comments.
+ */
 Test(KickCommand, kick_successfully_no_comments)
 {
 	Client* troll = mockCommonClient();
@@ -82,6 +85,9 @@ Test(KickCommand, kick_successfully_no_comments)
 		int, server._get_channel(channel->get_name())->get_clients_size(), 1));
 }
 
+/**
+ * @brief Test case for successful kick command with comments.
+ */
 Test(KickCommand, kick_successfully_with_comments)
 {
 	Client* troll = mockCommonClient();
@@ -107,6 +113,9 @@ Test(KickCommand, kick_successfully_with_comments)
 		int, server._get_channel(channel->get_name())->get_clients_size(), 1));
 }
 
+/**
+ * @brief Test case for error when channel does not exist.
+ */
 Test(KickCommand, err_nosuchchannel)
 {
 	Client* troll = mockCommonClient();
@@ -129,6 +138,9 @@ Test(KickCommand, err_nosuchchannel)
 	cr_assert(eq(int, server._reply_code, 403));
 }
 
+/**
+ * @brief Test case for error when client is not in the channel.
+ */
 Test(KickCommand, err_notonchannel)
 {
 	Client* troll = mockCommonClient();
@@ -153,6 +165,9 @@ Test(KickCommand, err_notonchannel)
 	cr_assert(eq(int, server._reply_code, 442));
 }
 
+/**
+ * @brief Test case for error when client is not a channel operator.
+ */
 Test(KickCommand, err_chanoprivsneeded)
 {
 	Client* troll = mockCommonClient();
@@ -175,6 +190,9 @@ Test(KickCommand, err_chanoprivsneeded)
 	cr_assert(eq(int, server._reply_code, 482));
 }
 
+/**
+ * @brief Test case for error when client nickname does not exist.
+ */
 Test(KickCommand, err_nosuchnick)
 {
 	Client* troll = mockCommonClient();
@@ -200,6 +218,9 @@ Test(KickCommand, err_nosuchnick)
 	cr_assert(eq(int, server._reply_code, 401));
 }
 
+/**
+ * @brief Test case for error when client is not in the channel.
+ */
 Test(KickCommand, err_usernotinchannel)
 {
 	Client* troll = mockCommonClient();
@@ -226,3 +247,4 @@ Test(KickCommand, err_usernotinchannel)
 	server._handler_client_kick("#world outsideUser", 4);
 	cr_assert(eq(int, server._reply_code, 441));
 }
+

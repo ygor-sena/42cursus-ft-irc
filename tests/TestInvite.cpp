@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   TestInvite.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 18:15:32 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/06/01 09:00:39 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/06/01 11:04:25 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,61 @@ Client* mockInsideClient()
 	return client;
 }
 
+/**
+ * @brief Test case for successfully inviting a client to a channel.
+ */
+Test(InviteCommand, succesfully_invite_client_to_channel)
+{
+	// Test code...
+}
+
+/**
+ * @brief Test case for the error when the channel does not exist.
+ */
+Test(InviteCommand, err_nosuchchannel)
+{
+	// Test code...
+}
+
+/**
+ * @brief Test case for the error when the client is not on the channel.
+ */
+Test(InviteCommand, err_notonchannel)
+{
+	// Test code...
+}
+
+/**
+ * @brief Test case for the error when the nickname does not exist.
+ */
+Test(InviteCommand, err_nosuchnick)
+{
+	// Test code...
+}
+
+/**
+ * @brief Test case for the error when the client does not have sufficient privileges.
+ */
+Test(InviteCommand, err_noprivileges)
+{
+	// Test code...
+}
+
+/**
+ * @brief Test case for the error when the user is already on the channel.
+ */
+Test(InviteCommand, err_useronchannel)
+{
+	// Test code...
+}
+
+/**
+ * @brief Test case for the error when the client is not registered.
+ */
+Test(InviteCommand, err_notregistered)
+{
+	// Test code...
+}
 Test(InviteCommand, succesfully_invite_client_to_channel)
 {
 	Client* outsideClient = mockOutsideClient();

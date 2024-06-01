@@ -6,7 +6,7 @@
 /*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:31:54 by gilmar            #+#    #+#             */
-/*   Updated: 2024/06/01 09:46:30 by caalbert         ###   ########.fr       */
+/*   Updated: 2024/06/01 10:45:59 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,7 @@
  * Reference: https://datatracker.ietf.org/doc/html/rfc1459#section-4.1.2
  */
 
-/**
- * @brief Handles the NICK command received from the client.
- *
- * This method processes the NICK command received from the client and sends a
- * response to the client indicating that the client's nickname has been
- * changed.
- *
- * @param nickname The new nickname to be assigned to the client.
- * @param fd The file descriptor associated with the client that sent the
- * command.
- */
+
 /**
  * Handles the client nickname command.
  * This function is responsible for processing the client's nickname command and performing the necessary actions based on the command's parameters and the client's state.

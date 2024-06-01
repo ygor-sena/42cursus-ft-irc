@@ -6,7 +6,7 @@
 /*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:32:39 by gilmar            #+#    #+#             */
-/*   Updated: 2024/06/01 09:50:11 by caalbert         ###   ########.fr       */
+/*   Updated: 2024/06/01 10:47:45 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,6 @@
  * Reference: https://datatracker.ietf.org/doc/html/rfc1459#section-4.1.1
  */
 
-/**
- * @brief Handles the PASSWORD command received from the client.
- *
- * This method processes the PASSWORD command received from the client and sends
- * a response to the client indicating that the client's password has been set.
- *
- * @param password The password to be assigned to the client.
- * @param fd The file descriptor associated with the client that sent the
- * command.
- */
 /**
  * Handles the client password command.
  * This function is responsible for authenticating the client based on the provided password.

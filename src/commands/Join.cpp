@@ -6,7 +6,7 @@
 /*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:33:05 by gilmar            #+#    #+#             */
-/*   Updated: 2024/06/01 09:44:45 by caalbert         ###   ########.fr       */
+/*   Updated: 2024/06/01 10:45:23 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,6 @@
  * Link: https://datatracker.ietf.org/doc/html/rfc1459#section-4.2.1
  */
 
-/**
- * @brief Handles the JOIN command received from the client.
- *
- * This method processes the JOIN command received from the client and sends a
- * response to the client indicating that the client has joined the channel.
- *
- * @param buffer The buffer containing the JOIN command parameters.
- * @param fd The file descriptor associated with the client that sent the
- * command.
- */
 /**
  * Handles the JOIN command from a client.
  *

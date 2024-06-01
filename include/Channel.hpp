@@ -6,7 +6,7 @@
 /*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:24:04 by gilmar            #+#    #+#             */
-/*   Updated: 2024/06/01 09:40:50 by caalbert         ###   ########.fr       */
+/*   Updated: 2024/06/01 10:37:27 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,16 @@
  * @class Channel
  * @brief Represents a channel in an IRC server.
  *
- * The Channel class provides functionality to manage a channel, including setting and getting properties,
- * adding and removing clients, and performing various operations on the channel.
+ * The Channel class provides methods to manage the properties and operations of a channel,
+ * such as getting and setting the channel name, topic, key, and operator clients.
+ * It also provides methods to join, kick, invite, and broadcast messages to clients in the channel.
  */
 /**
  * @class Channel
  * @brief Represents a channel in an IRC server.
  *
- * The Channel class provides methods to manage the properties and operations of a channel,
- * such as getting and setting the channel name, topic, key, and operator clients.
- * It also provides methods to join, kick, invite, and broadcast messages to clients in the channel.
+ * The Channel class provides functionality to manage clients, set channel properties,
+ * and perform various operations within the channel.
  */
 class Channel
 {

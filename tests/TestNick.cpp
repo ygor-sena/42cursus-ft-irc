@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   TestNick.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 18:03:34 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/31 21:39:27 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/06/01 11:17:36 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ Client* mockClient()
 	return client;
 }
 
-/*
- * 1. O comando NICK é recebido sem parâmetros suficientes.
+/**
+ * 1. The NICK command is received without enough parameters.
  */
 Test(NickCommand, err_needmoreparams)
 {
@@ -44,8 +44,8 @@ Test(NickCommand, err_needmoreparams)
 	cr_assert(eq(int, server._reply_code, 461));
 }
 
-/*
- * 2. O comando NICK é recebido e o cliente não está registrado.
+/**
+ * 2. The NICK command is received and the client is not registered.
  */
 Test(NickCommand, err_notregistered)
 {
@@ -59,8 +59,8 @@ Test(NickCommand, err_notregistered)
 	cr_assert(eq(int, server._reply_code, 451));
 }
 
-/*
- * 3. O comando NICK é recebido e o nickname do cliente é inválido.
+/**
+ * 3. The NICK command is received and the client's nickname is invalid.
  */
 Test(NickCommand, err_erroneusnick_1)
 {
@@ -110,8 +110,8 @@ Test(NickCommand, err_erroneusnick_4)
 	cr_assert(eq(int, server._reply_code, 432));
 }
 
-/*
- * 4. O comando NICK é recebido e o cliente está registrado.
+/**
+ * 4. The NICK command is received and the client is registered.
  */
 Test(NickCommand, success_setnickname)
 {
@@ -125,8 +125,8 @@ Test(NickCommand, success_setnickname)
 	cr_assert(eq(int, server._reply_code, 200));
 }
 
-/*
- * 5. O comando NICK é recebido e o nickname do cliente está em uso.
+/**
+ * 5. The NICK command is received and the client's nickname is already in use.
  */
 Test(NickCommand, err_nickinuse)
 {
@@ -145,8 +145,8 @@ Test(NickCommand, err_nickinuse)
 	cr_assert(eq(int, server._reply_code, 433));
 }
 
-/*
- * 6. O comando NICK é recebido e o nickname do cliente é alterado.
+/**
+ * 6. The NICK command is received and the client's nickname is changed.
  */
 Test(NickCommand, success_changenickname)
 {
@@ -160,8 +160,8 @@ Test(NickCommand, success_changenickname)
 	cr_assert(eq(int, server._reply_code, 200));
 }
 
-/*
- * 7. O comando NICK é recebido e o cliente está pronto para logar.
+/**
+ * 7. The NICK command is received and the client is ready to log in.
  */
 Test(NickCommand, success_readytologin)
 {
@@ -175,3 +175,4 @@ Test(NickCommand, success_readytologin)
 
 	cr_assert(eq(int, server._reply_code, 001));
 }
+

@@ -6,7 +6,7 @@
 /*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:30:47 by gilmar            #+#    #+#             */
-/*   Updated: 2024/06/01 09:45:15 by caalbert         ###   ########.fr       */
+/*   Updated: 2024/06/01 10:45:35 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,6 @@
  * Reference: https://datatracker.ietf.org/doc/html/rfc1459#section-4.2.8
  */
 
-/**
- * @brief Handles the KICK command received from the client.
- *
- * This method processes the KICK command received from the client and sends a
- * response to the client indicating that the client has been kicked from the
- * channel.
- *
- * @param buffer The buffer containing the KICK command parameters.
- * @param fd The file descriptor associated with the client that sent the
- * command.
- */
 /**
  * Handles the KICK command from a client.
  *

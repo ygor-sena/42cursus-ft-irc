@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   Replies.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 18:18:57 by gilmar            #+#    #+#             */
-/*   Updated: 2024/06/01 09:34:16 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/06/01 10:43:24 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef REPLIES_HPP
 #define REPLIES_HPP
 
-#define CRLF "\r\n"
+#define CRLF "\r\n" /**< Carriage return and line feed */
 
 // refer to https://datatracker.ietf.org/doc/html/rfc1459
 
@@ -21,10 +21,31 @@
 ** ----------------------------- REPLY MESSAGES -------------------------------
 */
 
+/**
+ * @brief Reply message for the RPL_WELCOME command.
+ *
+ * This message is sent to the client when they successfully connect to the server.
+ *
+ * @param serverhostname The hostname of the server.
+ * @param nickname The nickname of the client.
+ * @param targethostname The hostname of the client.
+ * @return The reply message for the RPL_WELCOME command.
+ */
 #define RPL_CONNECTED(serverhostname, nickname, targethostname) \
 	(":" + serverhostname + " 001 " + nickname +                \
 	 " :Welcome to the IRC server! " + nickname + "!" + targethostname + CRLF)
 
+/**
+ * @brief Reply message for the RPL
+ *
+ * @param nickname
+ * @param hostname
+ * @param channelname
+ * @param set
+ * @param mode
+ * @param arg
+ * @return
+ */
 #define RPL_UMODEIS(nickname, hostname, channelname, set, mode, arg)        \
 	(":" + nickname + "!" + hostname + " MODE " + channelname + " " + set + \
 	 mode + " " + arg + CRLF)

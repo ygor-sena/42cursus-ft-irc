@@ -6,7 +6,7 @@
 /*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:23:47 by gilmar            #+#    #+#             */
-/*   Updated: 2024/06/01 09:43:33 by caalbert         ###   ########.fr       */
+/*   Updated: 2024/06/01 10:44:04 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@
  * @brief Represents an IRC server.
  *
  * The Server class provides functionality to initialize and manage an IRC server.
- * It handles client connections, IRC commands, channels, and other server operations.
+ * It handles client connections, IRC commands, channels, and server operations.
  */
 class Server
 {

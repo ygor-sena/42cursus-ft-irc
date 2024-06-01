@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   TestPrivmsg.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 09:03:10 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/31 11:24:59 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/06/01 11:19:37 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,11 @@
 #define private public
 #include "Server.hpp"
 
+/**
+ * @brief Create a second receiver client for testing.
+ *
+ * @return Client* The second receiver client.
+ */
 Client* secondReceiver()
 {
 	Client* client = new Client();
@@ -30,6 +35,11 @@ Client* secondReceiver()
 	return client;
 }
 
+/**
+ * @brief Create a first receiver client for testing.
+ *
+ * @return Client* The first receiver client.
+ */
 Client* firstReceiver()
 {
 	Client* client = new Client();
@@ -43,6 +53,11 @@ Client* firstReceiver()
 	return client;
 }
 
+/**
+ * @brief Create a sender client for testing.
+ *
+ * @return Client* The sender client.
+ */
 Client* senderClient()
 {
 	Client* client = new Client();
@@ -57,6 +72,9 @@ Client* senderClient()
 	return client;
 }
 
+/**
+ * @brief Test case for successful PRIVMSG command to a single client.
+ */
 Test(PrivmsgCommand, privmsg_successfully_single_client)
 {
 	Client* sender = senderClient();
@@ -73,6 +91,9 @@ Test(PrivmsgCommand, privmsg_successfully_single_client)
 	cr_assert(eq(int, server._reply_code, 0));
 }
 
+/**
+ * @brief Test case for successful PRIVMSG command to two clients.
+ */
 Test(PrivmsgCommand, privmsg_successfully_two_clients)
 {
 	Client* sender = senderClient();
@@ -89,6 +110,9 @@ Test(PrivmsgCommand, privmsg_successfully_two_clients)
 	cr_assert(eq(int, server._reply_code, 0));
 }
 
+/**
+ * @brief Test case for successful PRIVMSG command to a single channel.
+ */
 Test(PrivmsgCommand, privmsg_successfully_single_channel)
 {
 	Client* sender = senderClient();
@@ -110,6 +134,9 @@ Test(PrivmsgCommand, privmsg_successfully_single_channel)
 	cr_assert(eq(int, server._reply_code, 0));
 }
 
+/**
+ * @brief Test case for successful PRIVMSG command to three channels.
+ */
 Test(PrivmsgCommand, privmsg_successfully_three_channels)
 {
 	Client* sender = senderClient();
@@ -140,6 +167,9 @@ Test(PrivmsgCommand, privmsg_successfully_three_channels)
 	cr_assert(eq(int, server._reply_code, 0));
 }
 
+/**
+ * @brief Test case for successful PRIVMSG command to a mixed channel and user.
+ */
 Test(PrivmsgCommand, privmsg_successfully_mixed_channel_user)
 {
 	Client* sender = senderClient();
@@ -168,6 +198,9 @@ Test(PrivmsgCommand, privmsg_successfully_mixed_channel_user)
 	cr_assert(eq(int, server._reply_code, 0));
 }
 
+/**
+ * @brief Test case for ERR_NOTREGISTERED reply code.
+ */
 Test(PrivmsgCommand, err_notregistered)
 {
 	Client* sender = senderClient();
@@ -186,6 +219,9 @@ Test(PrivmsgCommand, err_notregistered)
 	cr_assert(eq(int, server._reply_code, 451));
 }
 
+/**
+ * @brief Test case for ERR_NOSUCHCHANNEL reply code.
+ */
 Test(PrivmsgCommand, err_nosuchchannel)
 {
 	Client* sender = senderClient();
@@ -214,6 +250,9 @@ Test(PrivmsgCommand, err_nosuchchannel)
 	cr_assert(eq(int, server._reply_code, 403));
 }
 
+/**
+ * @brief Test case for ERR_NOTONCHANNEL reply code.
+ */
 Test(PrivmsgCommand, err_notonchannel)
 {
 	Client* sender = senderClient();
@@ -241,6 +280,9 @@ Test(PrivmsgCommand, err_notonchannel)
 	cr_assert(eq(int, server._reply_code, 442));
 }
 
+/**
+ * @brief Test case for ERR_NOSUCHNICK reply code.
+ */
 Test(PrivmsgCommand, err_nosuchnick)
 {
 	Client* sender = senderClient();
