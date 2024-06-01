@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   TestPass.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 17:27:49 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 11:24:21 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 20:39:53 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,6 @@
 #include "Client.hpp"
 #define private public
 #include "Server.hpp"
-
-/*
- * Cenários de Teste:
- * 1. O comando PASS é recebido sem parâmetros suficientes.
- * 2. O comando PASS é recebido e o cliente já está autenticado.
- * 3. O comando PASS é recebido e a senha do cliente está incorreta.
- * 4. O comando PASS é recebido e a senha do cliente está correta.
- * 5. O comando PASS é recebido e o cliente não está logado.
- * 6. O comando PASS é recebido e o cliente está logado.
- * 7. O comando PASS é recebido e o cliente não está autenticado.
- * 8. O comando PASS é recebido e o cliente está autenticado.
- *
- */
 
 Client* mockClient()
 {
@@ -46,7 +33,7 @@ Client* mockClient()
 
 /*
  * 1. O comando PASS é recebido sem parâmetros suficientes.
- */
+*/
 Test(ServerHandlerClientPassword, TestPassWithoutEnoughParameters)
 {
 	Client* client = mockClient();

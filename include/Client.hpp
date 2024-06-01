@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:19:06 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 12:49:07 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 19:13:03 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ class Client  //-> class for client
 	std::string get_password() const;
 	std::string get_hostname() const;
 	std::string get_ip_address() const;
+	bool get_already_registered() const;
 	std::vector<std::string> get_channels_invited() const;
 
 	void set_fd(const int fd);

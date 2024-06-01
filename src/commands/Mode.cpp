@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:30:34 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 21:02:47 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 21:53:09 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,7 @@ void Server::_handler_client_mode(const std::string& buffer, const int fd)
 	// Tratar o comando MODE
 	if (!_parse_mode_command(modes, channel, _get_client(arg), arg, fd))
 	{
-		//_send_response(fd, ERR_UNKNOWNMODE(_get_client(fd)->get_nickname(),
-		// channel->get_name(), modes[1]));
+		//_send_response(fd, ERR_UNKNOWNMODE(_get_client(fd)->get_nickname(), channel->get_name(), modes[1]));
 		// _send_response(fd,
 		// 			   ERR_INVALIDMODEPARM(admin->get_nickname(), modes[1]));
 		//_reply_code = 696;
@@ -99,9 +98,11 @@ void Server::_handler_client_mode(const std::string& buffer, const int fd)
   // TODO: VERIFICAR SE EXISTE UMA RESPOSTA PARA ESTA SITUAÇÃO, NO MOMENTO
 	// ESTÁ COMO 200 MAS DEVE HAVER OUTRO REPLY.
 
+	// TODO: VERIFICAR SE EXISTE UMA RESPOSTA CORRETA.
 	// Enviar resposta de sucesso ao cliente
 	//_send_response(fd, RPL_UMODEIS(admin->get_nickname(), chnl, modes));
 	//_reply_code = 324;
+
 	_reply_code = 200;
 }
 
@@ -122,12 +123,17 @@ bool Server::_parse_mode_command(const std::string& modes, Channel* channel,
 		{
 			mode = modes[i];
 
+			// if (client == NULL && (mode == 'o' || mode == 'i')) // Se o cliente não for encontrado
+			// {
+			// 	return false;
+			// }
+
 			if (!_handler_mode_flags(channel, client, mode, set, arg, fd))
 			{
-				_send_response(fd,
-							   ERR_UNKNOWNMODE(_get_client(fd)->get_nickname(),
-											   channel->get_name(),
-											   mode));
+				_send_response(
+					fd,
+					ERR_UNKNOWNMODE(
+						_get_client(fd)->get_nickname(), channel->get_name(), mode));
 				_reply_code = 472;
 				return false;
 			}

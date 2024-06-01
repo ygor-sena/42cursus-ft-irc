@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Replies.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 18:18:57 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 20:57:35 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 21:52:57 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,5 +137,7 @@
 #define ERR_NOPRIVILEGES(nickname)                                             \
 	(": 481 " + nickname + " :Permission Denied- You're not an IRC operator" + \
 	 CRLF)
+#define ERR_ERRONEUSNICK(nickname) \
+	(": 432 " + nickname + " :Erroneus nickname" + CRLF)
 
 #endif	// REPLIES_HPP

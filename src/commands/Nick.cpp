@@ -3,17 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   Nick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:31:54 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 19:02:11 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 21:51:29 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Replies.hpp"
 #include "Server.hpp"
-
-#define NICK_CMD "NICK"
 
 /*
  * Command: NICK
@@ -34,9 +32,6 @@
  */
 void Server::_handler_client_nickname(const std::string& buffer, const int fd)
 {
-	// Registra o comando NICK recebido
-	std::cout << "NICK command received: " << buffer << std::endl;
-
 	Client* client = _get_client(fd);
 
 	if (buffer.empty())
@@ -51,7 +46,7 @@ void Server::_handler_client_nickname(const std::string& buffer, const int fd)
 	}
 	else if (!_is_valid_nickname(buffer))
 	{
-		//_send_response(fd, ERR_ERRONEUSNICK(client->get_nickname()));
+		_send_response(fd, ERR_ERRONEUSNICK(client->get_nickname()));
 		_reply_code = 432;
 	}
 	else if (_is_nickname_in_use(fd, buffer))

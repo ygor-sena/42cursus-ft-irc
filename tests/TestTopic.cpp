@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   TestTopic.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 08:57:00 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/31 11:25:34 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 21:17:06 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,6 @@
 #include "Client.hpp"
 #define private public
 #include "Server.hpp"
-
-/*
-** TOPIC #channel
-** - mostrar o tópico do canal se houver (332), caso contrário, o canal não tem
-*tópico (331)
-**
-** TOPIC #channel newtopic
-** - para alterar o tópico, o cliente deve ser operador do canal (482)
-** - mode -t permite ou não alterar o tópico do canal
-*/
 
 Client* mockChannelMemberClient()
 {
@@ -41,155 +31,156 @@ Client* mockChannelMemberClient()
 	return client;
 }
 
+/*
+ * 1. O comando TOPIC é recebido sem parâmetros suficientes.
+*/
 Test(TopicCommand, err_needmoreparams)
 {
 	Client* client = mockChannelMemberClient();
+	
 	Server server;
-
 	server._clients.push_back(client);
 	server._handler_client_topic("", client->get_fd());
-	cr_assert(eq(int, server._reply_code, 403));
+
+	cr_assert(eq(int, server._reply_code, 461));
 }
 
+/*
+ * 2. O comando TOPIC é recebido e o cliente não está logado.
+*/
 Test(TopicCommand, err_notregistered)
 {
 	Client* client = mockChannelMemberClient();
-	Server server;
-
 	client->set_is_logged(false);
 
+	Server server;
 	server._clients.push_back(client);
-	server._handler_client_topic("", client->get_fd());
+	server._handler_client_topic("#IRC", client->get_fd());
+	
 	cr_assert(eq(int, server._reply_code, 451));
 }
 
+/*
+ * 3. O comando TOPIC é recebido e o canal não existe.
+*/
 Test(TopicCommand, err_nosuchchannel)
 {
 	Client* client = mockChannelMemberClient();
-	Server server;
 
+	Server server;
 	server._clients.push_back(client);
 	server._handler_client_topic("#channel", client->get_fd());
+	
 	cr_assert(eq(int, server._reply_code, 403));
 }
 
+/*
+ * 4. O comando TOPIC é recebido e o cliente não está no canal.
+*/
+Test(TopicCommand, err_notonchannel)
+{
+	Client* client = mockChannelMemberClient();
+	
+	Channel* channel = new Channel("#channel");
+	
+	Server server;
+	server._clients.push_back(client);
+	server._channels.push_back(channel);
+	server._handler_client_topic("#channel", client->get_fd());
+	
+	cr_assert(eq(int, server._reply_code, 442));
+}
+
+/*
+ * 5. O comando TOPIC é recebido e o canal não tem tópico.
+*/
 Test(TopicCommand, rpl_notopic)
 {
 	Client* client = mockChannelMemberClient();
-	Server server;
-
+	
 	Channel* channel = new Channel("#channel");
-
-	server._clients.push_back(client);
-
-	// Add clients as channel member
 	channel->join(client);
 
-	// Client is NOT operator
-	client->set_is_operator(false);
-
-	// Add channel to the server channels list
+	Server server;
+	server._clients.push_back(client);
 	server._channels.push_back(channel);
 
 	server._handler_client_topic("#channel", client->get_fd());
 	cr_assert(eq(int, server._reply_code, 331));
 }
 
-Test(TopicCommand, err_notoperator)
+/*
+ * 6. O comando TOPIC é recebido e o canal tem tópico.
+*/
+Test(TopicCommand, rpl_topic)
 {
 	Client* client = mockChannelMemberClient();
-	Server server;
-
+	
 	Channel* channel = new Channel("#channel");
-
-	server._clients.push_back(client);
-
-	// Add clients as channel member
 	channel->join(client);
-	client->set_is_operator(false);
+	channel->set_topic("Hello World!");
 
-	// Add channel to the server channels list
+	Server server;
+	server._clients.push_back(client);
 	server._channels.push_back(channel);
+	server._handler_client_topic("#channel", client->get_fd());
+	
+	cr_assert(eq(int, server._reply_code, 332));
+}
 
+/*
+ * 7. O comando TOPIC é recebido e o cliente não é operador do canal.
+*/
+Test(TopicCommand, err_chanoprivsneeded)
+{
+	Client* client = mockChannelMemberClient();
+	
+	Channel* channel = new Channel("#channel");
+	channel->join(client);
+
+	Server server;
+	server._clients.push_back(client);
+	server._channels.push_back(channel);
 	server._handler_client_topic("#channel newtopic", client->get_fd());
+	
 	cr_assert(eq(int, server._reply_code, 482));
 }
 
-Test(TopicCommand, rpl_topic_set_first_topic)
+/*
+ * 8. O comando TOPIC é recebido e o canal tem restrição de tópico.
+*/
+Test(TopicCommand, err_chanoprivsneeded_topic_restriction)
 {
 	Client* client = mockChannelMemberClient();
-	Server server;
-
+	
 	Channel* channel = new Channel("#channel");
-
-	server._clients.push_back(client);
-
-	// Add clients as channel member
-	channel->join(client);
-	channel->set_channel_operator(client);
-
-	// Add channel to the server channels list
-	server._channels.push_back(channel);
-
-	server._handler_client_topic("#channel newtopic", client->get_fd());
-	cr_assert(eq(int, server._reply_code, 332));
-}
-
-Test(TopicCommand, rpl_topic_set_second_topic)
-{
-	Client* client = mockChannelMemberClient();
-	Server server;
-
-	Channel* channel = new Channel("#channel");
-
-	server._clients.push_back(client);
-
-	// Add clients as channel member
-	channel->join(client);
-	channel->set_channel_operator(client);
-
-	// Add channel to the server channels list
-	server._channels.push_back(channel);
-
-	server._handler_client_topic("#channel newtopic", client->get_fd());
-	cr_assert(eq(int, server._reply_code, 332));
-	server._handler_client_topic("#channel secondtopic", client->get_fd());
-	cr_assert(eq(int, server._reply_code, 332));
-}
-
-Test(TopicCommand, cannot_set_topic_with_topic_restriction)
-{
-	Client* client = mockChannelMemberClient();
-	Server server;
-
-	Channel* channel = new Channel("#channel");
-
-	server._clients.push_back(client);
-
-	// Add clients as channel member
 	channel->join(client);
 	channel->set_channel_operator(client);
 	channel->set_topic_restriction();
 
-	// Add channel to the server channels list
+	Server server;
+	server._clients.push_back(client);
 	server._channels.push_back(channel);
-
 	server._handler_client_topic("#channel newtopic", client->get_fd());
+	
 	cr_assert(eq(int, server._reply_code, 482));
 }
 
-Test(TopicCommand, err_notonchannel)
+/*
+ * 9. O comando TOPIC é recebido e o tópico é alterado com sucesso.
+*/
+Test(TopicCommand, rpl_topic_set)
 {
 	Client* client = mockChannelMemberClient();
-	Server server;
-
+	
 	Channel* channel = new Channel("#channel");
+	channel->join(client);
+	channel->set_channel_operator(client);
 
+	Server server;
 	server._clients.push_back(client);
-
-	// Add channel to the server channels list
 	server._channels.push_back(channel);
-
 	server._handler_client_topic("#channel newtopic", client->get_fd());
-	cr_assert(eq(int, server._reply_code, 442));
+	
+	cr_assert(eq(int, server._reply_code, 332));
 }
