@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/06/01 10:14:57 by caalbert         ###   ########.fr       */
+/*   Created: 2024/04/28 10:26:55 by gilmar            #+#    #+#             */
+/*   Updated: 2024/06/01 11:54:37 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -407,11 +407,12 @@ const Server::command_handler Server::_command_list[_command_list_size] = {
 	{"PASS", &Server::_handler_client_password},
 	{"INVITE", &Server::_handler_client_invite},
 	{"PRIVMSG", &Server::_handler_client_privmsg},
-	{"!MARVIN", &Server::_handler_bot_marvin},
-	{"!TIME", &Server::_handler_bot_time},
-	{"!WHOIS", &Server::_handler_bot_whois},
-	{"!WHOAMI", &Server::_handler_bot_whoami},
-	{"!QUOTE", &Server::_handler_bot_quote},
+	{"MARVINBOT", &Server::_handler_bot_input},
+	/* 	{"!MARVIN", &Server::_handler_bot_marvin},
+		{"!TIME", &Server::_handler_bot_time},
+		{"!WHOIS", &Server::_handler_bot_whois},
+		{"!WHOAMI", &Server::_handler_bot_whoami},
+		{"!QUOTE", &Server::_handler_bot_quote}, */
 };
 
 /**

@@ -5,10 +5,11 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/28 10:23:47 by gilmar            #+#    #+#             */
-/*   Updated: 2024/06/01 10:44:04 by caalbert         ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2024/06/01 11:55:53 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #ifndef SERVER_HPP
 #define SERVER_HPP
@@ -100,6 +101,7 @@ class Server
 	void _handler_client_username(const std::string& username, const int fd);
 	void _handler_client_password(const std::string& password, const int fd);
 
+	void _handler_bot_input(const std::string& buffer, int fd);
 	void _handler_bot_time(const std::string& buffer, int fd);
 	void _handler_bot_whois(const std::string& buffer, int fd);
 	void _handler_bot_quote(const std::string& buffer, int fd);

@@ -5,10 +5,11 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/21 08:31:33 by gilmar            #+#    #+#             */
-/*   Updated: 2024/06/01 10:47:55 by caalbert         ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2024/06/01 11:55:38 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "Channel.hpp"
 #include "Client.hpp"

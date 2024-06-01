@@ -6,7 +6,7 @@
 /*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 18:18:57 by gilmar            #+#    #+#             */
-/*   Updated: 2024/06/01 10:43:24 by caalbert         ###   ########.fr       */
+/*   Updated: 2024/06/01 11:56:14 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,26 +100,29 @@
 ** ------------------------ MARVIN BOT REPLY MESSAGES -------------------------
 */
 
-#define BOT_CMDMARVIN(nickname)        \
-	(": 4242 marvin_bot " + nickname + \
+#define BOT_CMDMARVIN(serverhostname, nickname)                   \
+	(":marvin_bot!" + serverhostname + " MARVINBOT " + nickname + \
 	 " :Hello, I am Marvin, the paranoid robot." + CRLF)
 
-#define BOT_CMDTIME(nickname, time) \
-	(": 4242 marvin_bot " + nickname + " :Server time: " + time_str)
+#define BOT_CMDTIME(serverhostname, nickname, time)               \
+	(":marvin_bot!" + serverhostname + " MARVINBOT " + nickname + \
+	 " :Server time: " + time_str)
 
-#define BOT_CMDWHOIS(nickname, username, ipaddr)                              \
-	(": 4242 marvin_bot " + nickname + " :Whois " + username + " " + ipaddr + \
-	 " :End of WHOIS list" + CRLF)
+#define BOT_CMDWHOIS(serverhostname, nickname, username, ipaddr)               \
+	(":marvin_bot!" + serverhostname + " MARVINBOT " + nickname + " :Whois " + \
+	 username + " " + ipaddr + " :End of WHOIS list" + CRLF)
 
-#define BOT_CMDQUOTE(nickname, quote) \
-	(": 4242 marvin_bot " + nickname + " :" + quote + CRLF)
+#define BOT_CMDQUOTE(serverhostname, nickname, quote)                    \
+	(":marvin_bot!" + serverhostname + " MARVINBOT " + nickname + " :" + \
+	 quote + CRLF)
 
-#define BOT_CLIENTNOTINCHANNEL(nickname) \
-	(": 2424 marvin_bot " + nickname +   \
-	 ": Must be part of at least one channel to use marvin commands" + CRLF)
+#define BOT_CLIENTNOTINCHANNEL(serverhostname, nickname)          \
+	(":marvin_bot!" + serverhostname + " MARVINBOT " + nickname + \
+	 " : Must be part of at least one channel to use marvin commands" + CRLF)
 
-#define BOT_WHOISDOESNTEXIST(nickname) \
-	(": 4242 marvin_bot " + nickname + " :No such user" + CRLF)
+#define BOT_WHOISDOESNTEXIST(serverhostname, nickname)            \
+	(":marvin_bot!" + serverhostname + " MARVINBOT " + nickname + \
+	 " :No such user" + CRLF)
 
 /*
 ** --------------------------- ERROR REPLY MESSAGES ---------------------------

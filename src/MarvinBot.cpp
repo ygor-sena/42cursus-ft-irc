@@ -5,10 +5,11 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/27 11:32:28 by caalbert          #+#    #+#             */
-/*   Updated: 2024/06/01 09:54:45 by caalbert         ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2024/06/01 11:55:22 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "MarvinBot.hpp"
 
@@ -61,6 +62,35 @@ std::string _return_quote()
 */
 
 /**
+ * @brief Handles the input received from the bot.
+ *
+ * This function parses the input buffer and determines the appropriate action
+ * based on the command. The command can be one of the following: "marvin",
+ * "time", "whoami", "whois", or "quote".
+ *
+ * @param buffer The input buffer containing the command and any additional
+ * arguments.
+ * @param fd The file descriptor associated with the connection.
+ */
+void Server::_handler_bot_input(const std::string& buffer, int fd)
+{
+	std::istringstream iss(buffer);
+	std::string command;
+	iss >> command;
+
+	if (command == "marvin")
+		_handler_bot_marvin(buffer, fd);
+	else if (command == "time")
+		_handler_bot_time(buffer, fd);
+	else if (command == "whoami")
+		_handler_bot_whoami(buffer, fd);
+	else if (command == "whois")
+		_handler_bot_whois(buffer, fd);
+	else if (command == "quote")
+		_handler_bot_quote(buffer, fd);
+}
+
+/**
  * Handles the bot command "marvin" for a specific client.
  *
  * This function is responsible for processing the "marvin" command received
@@ -84,13 +114,15 @@ void Server::_handler_bot_marvin(const std::string& /* buffer */, int fd)
 	}
 	else if (this->_is_client_in_any_channel(fd))
 	{
-		this->_send_response(fd, BOT_CMDMARVIN(client->get_nickname()));
+		this->_send_response(
+			fd, BOT_CMDMARVIN(_get_hostname(), client->get_nickname()));
 		_reply_code = 4242;
 	}
 	else
 	{
-		this->_send_response(fd,
-							 BOT_CLIENTNOTINCHANNEL(client->get_nickname()));
+		this->_send_response(
+			fd,
+			BOT_CLIENTNOTINCHANNEL(_get_hostname(), client->get_nickname()));
 		_reply_code = 2424;
 	}
 }
@@ -121,11 +153,13 @@ void Server::_handler_bot_time(const std::string& /* buffer */, int fd)
 	{
 		time_t now = time(NULL);
 		std::string time_str = ctime(&now);
-		this->_send_response(fd, BOT_CMDTIME(client->get_nickname(), time_str));
+		this->_send_response(
+			fd, BOT_CMDTIME(_get_hostname(), client->get_nickname(), time_str));
 	}
 	else
 		this->_send_response(fd,
-							 BOT_CLIENTNOTINCHANNEL(client->get_nickname()));
+							 BOT_CLIENTNOTINCHANNEL(client->get_nickname(),
+													client->get_hostname()));
 }
 
 /**
@@ -149,12 +183,14 @@ void Server::_handler_bot_whoami(const std::string& /* buffer */, int fd)
 	}
 	else if (this->_is_client_in_any_channel(fd))
 		this->_send_response(fd,
-							 BOT_CMDWHOIS(client->get_nickname(),
+							 BOT_CMDWHOIS(_get_hostname(),
+										  client->get_nickname(),
 										  client->get_username(),
 										  client->get_ip_address()));
 	else
-		this->_send_response(fd,
-							 BOT_CLIENTNOTINCHANNEL(client->get_nickname()));
+		this->_send_response(
+			fd,
+			BOT_CLIENTNOTINCHANNEL(_get_hostname(), client->get_nickname()));
 }
 
 /**
@@ -203,15 +239,18 @@ void Server::_handler_bot_whois(const std::string& buffer, int fd)
 	else if (this->_is_client_in_any_channel(fd))
 		if (whois)
 			this->_send_response(fd,
-								 BOT_CMDWHOIS(whois->get_nickname(),
+								 BOT_CMDWHOIS(_get_hostname(),
+											  whois->get_nickname(),
 											  whois->get_username(),
 											  whois->get_ip_address()));
 		else
-			this->_send_response(fd,
-								 BOT_WHOISDOESNTEXIST(client->get_nickname()));
+			this->_send_response(
+				fd,
+				BOT_WHOISDOESNTEXIST(_get_hostname(), client->get_nickname()));
 	else
-		this->_send_response(fd,
-							 BOT_CLIENTNOTINCHANNEL(client->get_nickname()));
+		this->_send_response(
+			fd,
+			BOT_CLIENTNOTINCHANNEL(_get_hostname(), client->get_nickname()));
 }
 
 /**
@@ -236,8 +275,11 @@ void Server::_handler_bot_quote(const std::string& /* buffer */, int fd)
 	}
 	else if (this->_is_client_in_any_channel(fd))
 		this->_send_response(
-			fd, BOT_CMDQUOTE(client->get_nickname(), _return_quote()));
+			fd,
+			BOT_CMDQUOTE(
+				_get_hostname(), client->get_nickname(), _return_quote()));
 	else
-		this->_send_response(fd,
-							 BOT_CLIENTNOTINCHANNEL(client->get_nickname()));
+		this->_send_response(
+			fd,
+			BOT_CLIENTNOTINCHANNEL(_get_hostname(), client->get_nickname()));
 }
