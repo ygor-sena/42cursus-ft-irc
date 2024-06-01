@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:30:59 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/30 15:47:53 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 22:01:41 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,6 @@
  */
 void Server::_handler_client_topic(const std::string& buffer, const int fd)
 {
-	// Registra o comando TOPIC recebido
-	std::cout << "TOPIC command received: " << buffer << std::endl;
-
 	std::istringstream iss(buffer);
 	std::string chnl, topic;
 	iss >> chnl >> topic;
@@ -45,7 +42,12 @@ void Server::_handler_client_topic(const std::string& buffer, const int fd)
 	Client* client = _get_client(fd);
 	Channel* channel = _get_channel(chnl);
 
-	if (!client->get_is_logged())
+	if (chnl.empty())
+	{
+		_send_response(fd, ERR_NEEDMOREPARAMS(client->get_nickname()));
+		_reply_code = 461;
+	}
+	else if (!client->get_is_logged())
 	{
 		_send_response(fd, ERR_NOTREGISTERED(client->get_nickname()));
 		_reply_code = 451;

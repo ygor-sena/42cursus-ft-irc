@@ -3,38 +3,40 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:19:06 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 12:49:07 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 23:13:37 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CLIENT_HPP
 #define CLIENT_HPP
 
-#include <arpa/inet.h>	 //-> for inet_ntoa()
-#include <fcntl.h>		 //-> for fcntl()
-#include <netinet/in.h>	 //-> for sockaddr_in
-#include <poll.h>		 //-> for poll()
-#include <sys/socket.h>	 //-> for socket()
-#include <sys/types.h>	 //-> for socket()
-#include <unistd.h>		 //-> for close()
+#include <arpa/inet.h>
+#include <fcntl.h>
+#include <netinet/in.h>
+#include <poll.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <unistd.h>
 #include <algorithm>
-#include <csignal>	//-> for signal()
+#include <csignal>
 #include <iostream>
 #include <string>
-#include <vector>  //-> for vector
+#include <vector>
 #include "Replies.hpp"
 
 //-------------------------------------------------------//
-#define RED "\e[1;31m"	//-> for red color
-#define WHI "\e[0;37m"	//-> for white color
-#define GRE "\e[1;32m"	//-> for green color
-#define YEL "\e[1;33m"	//-> for yellow color
+
+#define RED "\e[1;31m"
+#define WHI "\e[0;37m"
+#define GRE "\e[1;32m"
+#define YEL "\e[1;33m"
+
 //-------------------------------------------------------//
 
-class Client  //-> class for client
+class Client
 {
   public:
 	Client();
@@ -52,6 +54,7 @@ class Client  //-> class for client
 	std::string get_password() const;
 	std::string get_hostname() const;
 	std::string get_ip_address() const;
+	bool get_already_registered() const;
 	std::vector<std::string> get_channels_invited() const;
 
 	void set_fd(const int fd);
@@ -71,16 +74,16 @@ class Client  //-> class for client
 	void broadcast(Client* sender, std::string target, std::string message);
 
   private:
-	int _fd;				 //-> client file descriptor
-	bool _is_logged;		 //-> boolean for login
-	bool _is_authenticated;	 //-> boolean for authentication
-	bool _is_operator;		 //-> boolean for channel operator
-	std::string _buffer;	 //-> client buffer
-	std::string _ip_addr;	 //-> client ip address
-	std::string _nickname;	 //-> client nickname
-	std::string _username;	 //-> client username
-	std::string _password;	 //-> client password
-	std::vector<std::string> _channels_invited;	 //-> vector of channels invited
+	int _fd;
+	bool _is_logged;
+	bool _is_authenticated;
+	bool _is_operator;
+	std::string _buffer;
+	std::string _ip_addr;
+	std::string _nickname;
+	std::string _username;
+	std::string _password;
+	std::vector<std::string> _channels_invited;
 };
 
 #endif	// CLIENT_HPP

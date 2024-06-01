@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Privmsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:31:33 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 19:27:41 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 23:11:18 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,6 @@
  * Parameters: <receiver>{,<receiver>} <text to be sent>
  * Link: https://datatracker.ietf.org/doc/html/rfc1459#section-4.4.1
  */
-
-#include <sstream>
-#include <string>
-#include <utility>
-#include <vector>
 
 /**
  * @brief Splits a string into tokens based on a delimiter.
@@ -70,7 +65,6 @@ void Server::_handler_client_privmsg(const std::string& buffer, const int fd)
 
 	if (client->get_is_logged())
 	{
-		// Check if the command has the minimum number of parameters
 		if (params.size() < 2)
 		{
 			_send_response(fd, ERR_NEEDMOREPARAMS(client->get_nickname()));
@@ -80,15 +74,12 @@ void Server::_handler_client_privmsg(const std::string& buffer, const int fd)
 
 		std::vector<std::string> receivers = split_parameters(params[0], ",");
 
-		// Validate channel and client inputs. Otherwise, return an error
 		for (std::vector<std::string>::iterator it = receivers.begin();
 			 it != receivers.end();
 			 ++it)
 		{
-			// Check if first character is #
 			if ((*it)[0] == '#')
 			{
-				// Check if the channel exists
 				Channel* target_channel = this->_get_channel(*it);
 				if (!target_channel)
 				{
@@ -96,8 +87,7 @@ void Server::_handler_client_privmsg(const std::string& buffer, const int fd)
 					_reply_code = 403;
 					return;
 				}
-
-				// Check if the client is in the channel
+				
 				if (!target_channel->has_client(client))
 				{
 					_send_response(fd,
@@ -108,7 +98,6 @@ void Server::_handler_client_privmsg(const std::string& buffer, const int fd)
 			}
 			else
 			{
-				// Check if the receiver exists
 				Client* target_client = this->_get_client(*it);
 				if (!target_client)
 				{
@@ -121,8 +110,6 @@ void Server::_handler_client_privmsg(const std::string& buffer, const int fd)
 			}
 		}
 
-		// Both channels and clients exist, now it's time to send the private
-		// message
 		for (std::vector<std::string>::iterator it = receivers.begin();
 			 it != receivers.end();
 			 ++it)
@@ -130,19 +117,15 @@ void Server::_handler_client_privmsg(const std::string& buffer, const int fd)
 			if ((*it)[0] == '#')
 			{
 				Channel* target_channel = this->_get_channel(*it);
-
 				target_channel->broadcast(
 					client, target_channel->get_name(), params[1]);
 			}
 			else
 			{
-				// Check if the receiver exists
 				Client* target_client = this->_get_client(*it);
-
-				// Send the message to the receiver
 				_send_response(target_client->get_fd(),
 							   RPL_PRIVMSG(client->get_nickname(),
-							   			   client->get_hostname(),
+										   client->get_hostname(),
 										   target_client->get_nickname(),
 										   params[1]));
 			}

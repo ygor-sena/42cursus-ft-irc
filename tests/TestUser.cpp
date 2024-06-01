@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   TestUser.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 18:03:11 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/31 11:20:53 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 22:09:22 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,6 @@
 #include "Client.hpp"
 #define private public
 #include "Server.hpp"
-
-/*
- * Cenários de Teste:
- * 1. O comando USER é recebido sem parâmetros suficientes.
- * 2. O comando USER é recebido e o cliente não está registrado.
- * 3. O comando USER é recebido e o cliente já está registrado.
- * 4. O comando USER é recebido e o cliente está pronto para fazer login.
- * 5. O comando USER é recebido e o cliente não está pronto para fazer login.
- *
- */
 
 Client* mockClient()
 {
@@ -71,7 +61,18 @@ Test(UserCommand, err_notregistered)
 }
 
 /*
- * 3. O comando USER é recebido e o cliente já está registrado.
+ * 3. O comando USER é recebido e o cliente não existe.
+ */
+Test(UserCommand, err_notexist)
+{
+	Server server;
+	server._handler_client_username("Ygor", 5);
+
+	cr_assert(eq(int, server._reply_code, 451));
+}
+
+/*
+ * 4. O comando USER é recebido e o cliente já está registrado.
  */
 Test(UserCommand, err_alreadyregistered)
 {
@@ -85,9 +86,9 @@ Test(UserCommand, err_alreadyregistered)
 }
 
 /*
- * 4. O comando USER é recebido e o cliente está pronto para fazer login.
+ * 5. O comando USER é recebido e o cliente está pronto para fazer login.
  */
-Test(UserCommand, success_readytologin)
+Test(UserCommand, rpl_readytologin)
 {
 	Client* client = mockClient();
 	client->set_username("");
@@ -102,9 +103,9 @@ Test(UserCommand, success_readytologin)
 }
 
 /*
- * 5. O comando USER é recebido e o cliente não está pronto para fazer login.
+ * 6. O comando USER é recebido e o cliente não está pronto para fazer login.
  */
-Test(UserCommand, success_notreadytologin)
+Test(UserCommand, rpl_notreadytologin)
 {
 	Client* client = mockClient();
 	client->set_username("");

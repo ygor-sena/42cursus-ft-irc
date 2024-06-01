@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:26:55 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 21:06:46 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 23:12:03 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,10 +80,7 @@ Server::~Server()
  *
  * @return The hostname of the server.
  */
-std::string Server::_get_hostname()
-{
-	return _hostname;
-}
+std::string Server::_get_hostname() { return _hostname; }
 
 /**
  * @brief Retrieves the client associated with the given file descriptor.
@@ -153,16 +150,6 @@ Channel* Server::_get_channel(const std::string& channel_name)
 	}
 	return NULL;
 }
-
-/**
- * @brief Checks if the client is in any channel.
- *
- * This function checks if the client is in any channel.
- *
- * @param fd The file descriptor associated with the client.
- * @return True if the client is in any channel, false otherwise.
- */
-int Server::get_reply_code(void) { return _reply_code; }
 
 /*
 ** ------------------------------- SETTERS --------------------------------

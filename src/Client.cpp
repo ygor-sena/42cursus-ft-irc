@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:20:02 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 19:45:35 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 21:51:48 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,7 @@ Client::Client(const Client& other)
 /*
 ** ------------------------------- DESTRUCTOR ---------------------------------
 */
-Client::~Client()
-{
-}
+Client::~Client() {}
 
 /*
 ** ------------------------------- ACCESSORS ----------------------------------
@@ -230,6 +228,8 @@ std::vector<std::string> Client::get_channels_invited() const
 	return _channels_invited;
 }
 
+bool Client::get_already_registered() const { return _username.empty(); }
+
 /*
 ** ---------------------------- MEMBER FUNCTIONS ------------------------------
 */
@@ -297,7 +297,8 @@ void Client::remove_channel_invited(const std::string& channel)
  */
 void Client::broadcast(Client* sender, std::string target, std::string message)
 {
-	std::string response = RPL_PRIVMSG(sender->get_nickname(), sender->get_hostname(), target, message);
+	std::string response = RPL_PRIVMSG(
+		sender->get_nickname(), sender->get_hostname(), target, message);
 
 	if (send(this->get_fd(), response.c_str(), response.size(), 0) == -1)
 		std::cerr << "Response send() failed" << std::endl;

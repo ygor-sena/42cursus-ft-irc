@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   TestNick.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 18:03:34 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/31 11:21:36 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 21:39:27 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,6 @@
 #include "Client.hpp"
 #define private public
 #include "Server.hpp"
-
-/*
- * Cenários de Teste:
- * 1. O comando NICK é recebido sem parâmetros suficientes.
- * 2. O comando NICK é recebido e o cliente não está registrado.
- * 3. O comando NICK é recebido e o nickname do cliente é inválido.
- * 4. O comando NICK é recebido e o cliente está registrado.
- * 5. O comando NICK é recebido e o nickname do cliente está em uso.
- * 6. O comando NICK é recebido e o nickname do cliente é alterado.
- * 7. O comando NICK é recebido e o cliente está pronto para logar.
- */
 
 Client* mockClient()
 {
