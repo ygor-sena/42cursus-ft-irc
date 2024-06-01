@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Replies.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 18:18:57 by gilmar            #+#    #+#             */
-/*   Updated: 2024/06/01 07:36:49 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/06/01 09:34:16 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,10 @@
 #define CRLF "\r\n"
 
 // refer to https://datatracker.ietf.org/doc/html/rfc1459
+
+/*
+** ----------------------------- REPLY MESSAGES -------------------------------
+*/
 
 #define RPL_CONNECTED(serverhostname, nickname, targethostname) \
 	(":" + serverhostname + " 001 " + nickname +                \
@@ -71,6 +75,10 @@
 	(":" + nickname + "!" + hostname + " PRIVMSG " + receiver + " " + text + \
 	 CRLF)
 
+/*
+** ------------------------ MARVIN BOT REPLY MESSAGES -------------------------
+*/
+
 #define BOT_CMDMARVIN(nickname)        \
 	(": 4242 marvin_bot " + nickname + \
 	 " :Hello, I am Marvin, the paranoid robot." + CRLF)
@@ -84,6 +92,7 @@
 
 #define BOT_CMDQUOTE(nickname, quote) \
 	(": 4242 marvin_bot " + nickname + " :" + quote + CRLF)
+
 #define BOT_CLIENTNOTINCHANNEL(nickname) \
 	(": 2424 marvin_bot " + nickname +   \
 	 ": Must be part of at least one channel to use marvin commands" + CRLF)
@@ -91,7 +100,9 @@
 #define BOT_WHOISDOESNTEXIST(nickname) \
 	(": 4242 marvin_bot " + nickname + " :No such user" + CRLF)
 
-///////// ERRORS /////////
+/*
+** --------------------------- ERROR REPLY MESSAGES ---------------------------
+*/
 #define ERR_NEEDMODEPARM(channelname, mode) \
 	(": 696 " + channelname +               \
 	 " * You must specify a parameter for the key mode. " + mode + CRLF)
@@ -133,9 +144,6 @@
 #define ERR_NOTREGISTERED(nickname) \
 	(": 451 " + nickname + " :You have not registered!" + CRLF)
 
-#define ERR_CMDNOTFOUND(nickname, command) \
-	(": 421 " + nickname + " " + command + " :Unknown command" + CRLF)
-
 #define ERR_BADCHANNELKEY(nickname, channelname) \
 	(": 475 " + nickname + " " + channelname +   \
 	 " :Cannot join channel (incorrect key)" + CRLF)
@@ -174,5 +182,8 @@
 #define ERR_BADCHANMASK(server, nickname, channel)       \
 	(":" + server + " 476 " + nickname + " " + channel + \
 	 " :Bad Channel Mask\r\n")
+
+#define ERR_CMDNOTFOUND(command) \
+	(": 421 " + command + " :Unknown command" + CRLF)
 
 #endif	// REPLIES_HPP
