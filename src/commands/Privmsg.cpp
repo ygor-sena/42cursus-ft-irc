@@ -87,7 +87,7 @@ void Server::_handler_client_privmsg(const std::string& buffer, const int fd)
 					_reply_code = 403;
 					return;
 				}
-				
+
 				if (!target_channel->has_client(client))
 				{
 					_send_response(fd,

@@ -71,8 +71,7 @@ class Channel
 	std::string _name;
 	std::string _topic;
 	std::string _created_at;
-	std::vector<Client*>
-		_clients;
+	std::vector<Client*> _clients;
 	std::vector<Client*> _operator_clients;
 };
 

@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:30:34 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 23:00:49 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/06/01 00:14:39 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,18 @@
  * Parameters: <channel> {[+|-]|o|p|s|i|t|n|b|v} [<limit>] [<user>]
  * Reference: https://datatracker.ietf.org/doc/html/rfc1459#section-4.2.3
  */
+
+bool _process_mode_flags(const std::string& modeFlags, Channel* channel,
+						 Client* targetClient, const std::string& argument);
+bool _apply_mode_flag(Channel* channel, Client* targetClient, char mode,
+					  bool addMode, const std::string& argument);
+void _set_invite_only_mode(Channel* channel, bool addMode);
+void _set_topic_restriction_mode(Channel* channel, bool addMode);
+void _set_channel_key_mode(Channel* channel, const std::string& key,
+						   bool addMode);
+void _set_channel_operator_mode(Channel* channel, Client* client, bool addMode);
+void _set_channel_limit_mode(Channel* channel, const std::string& limitStr,
+							 bool addMode);
 
 /**
  * @brief Handles the MODE command received from the client.
@@ -57,19 +69,29 @@ void Server::_handler_client_mode(const std::string& buffer, const int fd)
 		_reply_code = 482;
 	}
 	else if (!_process_mode_flags(
-				 modeFlags, channel, _get_client(argument), argument, fd))
+				 modeFlags, channel, _get_client(argument), argument))
 	{
-		return;
+		_send_response(
+			fd,
+			ERR_UNKNOWNMODE(
+				client->get_nickname(), channel->get_name(), modeFlags[1]));
+		_reply_code = 472;
 	}
 	else
 	{
+		_send_response(fd,
+					   RPL_UMODEIS(client->get_nickname(),
+								   client->get_hostname(),
+								   channel->get_name(),
+								   modeFlags[0],
+								   modeFlags[1],
+								   argument));
 		_reply_code = 200;
 	}
 }
 
-bool Server::_process_mode_flags(const std::string& modeFlags, Channel* channel,
-								 Client* targetClient,
-								 const std::string& argument, const int fd)
+bool _process_mode_flags(const std::string& modeFlags, Channel* channel,
+						 Client* targetClient, const std::string& argument)
 {
 	bool addMode = false;
 	char mode = 0;
@@ -87,33 +109,16 @@ bool Server::_process_mode_flags(const std::string& modeFlags, Channel* channel,
 			if (!_apply_mode_flag(
 					channel, targetClient, mode, addMode, argument))
 			{
-				_send_response(fd,
-							   ERR_UNKNOWNMODE(_get_client(fd)->get_nickname(),
-											   channel->get_name(),
-											   mode));
-				_reply_code = 472;
 				return false;
 			}
 		}
 	}
 
-	if (targetClient)
-	{
-		std::string signal = addMode ? "+" : "-";
-		_send_response(fd,
-					   RPL_UMODEIS(targetClient->get_nickname(),
-								   targetClient->get_hostname(),
-								   channel->get_name(),
-								   signal,
-								   mode,
-								   argument));
-	}
-
 	return true;
 }
 
-bool Server::_apply_mode_flag(Channel* channel, Client* targetClient, char mode,
-							  bool addMode, const std::string& argument)
+bool _apply_mode_flag(Channel* channel, Client* targetClient, char mode,
+					  bool addMode, const std::string& argument)
 {
 	switch (mode)
 	{
@@ -138,7 +143,7 @@ bool Server::_apply_mode_flag(Channel* channel, Client* targetClient, char mode,
 	return true;
 }
 
-void Server::_set_invite_only_mode(Channel* channel, bool addMode)
+void _set_invite_only_mode(Channel* channel, bool addMode)
 {
 	if (addMode)
 	{
@@ -150,7 +155,7 @@ void Server::_set_invite_only_mode(Channel* channel, bool addMode)
 	}
 }
 
-void Server::_set_topic_restriction_mode(Channel* channel, bool addMode)
+void _set_topic_restriction_mode(Channel* channel, bool addMode)
 {
 	if (addMode)
 	{
@@ -162,8 +167,8 @@ void Server::_set_topic_restriction_mode(Channel* channel, bool addMode)
 	}
 }
 
-void Server::_set_channel_key_mode(Channel* channel, const std::string& key,
-								   bool addMode)
+void _set_channel_key_mode(Channel* channel, const std::string& key,
+						   bool addMode)
 {
 	if (addMode)
 	{
@@ -175,8 +180,7 @@ void Server::_set_channel_key_mode(Channel* channel, const std::string& key,
 	}
 }
 
-void Server::_set_channel_operator_mode(Channel* channel, Client* client,
-										bool addMode)
+void _set_channel_operator_mode(Channel* channel, Client* client, bool addMode)
 {
 	if (addMode && client)
 	{
@@ -188,8 +192,8 @@ void Server::_set_channel_operator_mode(Channel* channel, Client* client,
 	}
 }
 
-void Server::_set_channel_limit_mode(Channel* channel,
-									 const std::string& limitStr, bool addMode)
+void _set_channel_limit_mode(Channel* channel, const std::string& limitStr,
+							 bool addMode)
 {
 	if (addMode)
 	{

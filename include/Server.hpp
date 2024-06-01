@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:23:47 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 23:12:41 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/06/01 00:13:47 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@
 #include <map>
 #include <sstream>
 #include <string>
-#include <vector>
 #include <utility>
+#include <vector>
 
 //-------------------------------------------------------//
 
@@ -54,7 +54,7 @@ class Server
   public:
 	Server();
 	~Server();
-	
+
 	// This contructor is to be used as a workaround for mockup tests
 	Server(std::string password, std::vector<Client*> _clients,
 		   std::vector<Channel*> _channels);
@@ -76,9 +76,10 @@ class Server
 
 	std::string _get_hostname();
 	void _is_valid_port(const std::string& port);
+	bool _is_client_in_any_channel(const int fd);
+	bool _client_is_ready_to_login(const int fd);
 	bool _is_valid_nickname(const std::string& nickname);
 	bool _is_nickname_in_use(const int fd, const std::string& nickname);
-	bool _is_client_in_any_channel(const int fd);
 
 	void _handler_client_join(const std::string& buffer, const int fd);
 	void _handler_client_quit(const std::string& buffer, const int fd);
@@ -92,39 +93,23 @@ class Server
 	void _handler_client_username(const std::string& username, const int fd);
 	void _handler_client_password(const std::string& password, const int fd);
 
-	void _handler_bot_marvin(const std::string& buffer, int fd);
 	void _handler_bot_time(const std::string& buffer, int fd);
 	void _handler_bot_whois(const std::string& buffer, int fd);
-	void _handler_bot_whoami(const std::string& buffer, int fd);
 	void _handler_bot_quote(const std::string& buffer, int fd);
-
-	void _set_channel_limit_mode(Channel* channel, const std::string& limitStr,
-								 bool addMode);
-	void _set_channel_operator_mode(Channel* channel, Client* client,
-									bool addMode);
-	void _set_channel_key_mode(Channel* channel, const std::string& key,
-							   bool addMode);
-	void _set_topic_restriction_mode(Channel* channel, bool addMode);
-	void _set_invite_only_mode(Channel* channel, bool addMode);
-
-	bool _process_mode_flags(const std::string& modeFlags, Channel* channel,
-							 Client* targetClient, const std::string& argument,
-							 const int fd);
-	bool _apply_mode_flag(Channel* channel, Client* targetClient, char mode,
-						  bool addMode, const std::string& argument);
+	void _handler_bot_whoami(const std::string& buffer, int fd);
+	void _handler_bot_marvin(const std::string& buffer, int fd);
 
 	static bool _signal;
 	static void _signal_handler(const int signum);
 
+	void _close_fds();
 	void _server_loop();
 	void _set_server_socket();
 	void _add_server_signal();
 	void _accept_new_client();
 	void _clear_client(const int fd);
 	void _receive_new_data(const int fd);
-	void _send_response(
-		const int fd,
-		const std::string& response);
+	void _send_response(const int fd, const std::string& response);
 
 	struct command_handler
 	{
@@ -133,32 +118,26 @@ class Server
 	};
 
 	static const int _command_list_size = 16;
-	static const command_handler
-		_command_list[_command_list_size];
+	static const command_handler _command_list[_command_list_size];
 
-	void _execute_command(const std::string buffer,
-						  const int fd);
-	void _close_fds();
+	void _execute_command(const std::string buffer, const int fd);
 
-	std::string _cleanse_buffer(
-		const std::string& buffer,
-		const std::string& chars_to_remove);
-	std::vector<std::string> _split_buffer(
-		const std::string& buffer,
-		const std::string& delimiter);
+	std::string _cleanse_buffer(const std::string& buffer,
+								const std::string& chars_to_remove);
+	std::vector<std::string> _split_buffer(const std::string& buffer,
+										   const std::string& delimiter);
 
 	Client* _get_client(const int fd);
 	Client* _get_client(const std::string nickname);
+
+	void _add_channel(Channel* channel);
 	Channel* _get_channel(const std::string& channel_name);
-	void _add_channel(
-		Channel* channel);
-	bool _client_is_ready_to_login(const int fd);
 
-	std::string toupper(const std::string& str);
-
+	void _remove_client_fd(const int fd);
 	void _remove_client_from_channels(const int fd);
 	void _remove_client_from_server(const int fd);
-	void _remove_client_fd(const int fd);
 };
+
+std::string toupper(const std::string& str);
 
 #endif	// SERVER_HPP
