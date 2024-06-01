@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Nick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:31:54 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/30 16:02:09 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/31 19:02:11 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void Server::_handler_client_nickname(const std::string& buffer, const int fd)
 		if (_client_is_ready_to_login(fd))
 		{
 			client->set_is_logged(fd);
-			_send_response(fd, RPL_CONNECTED(client->get_nickname()));
+			_send_response(fd, RPL_CONNECTED(_get_hostname(), client->get_nickname(), client->get_hostname()));
 			_reply_code = 001;
 			return;
 		}

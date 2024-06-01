@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:26:17 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 13:53:16 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 20:00:22 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -436,15 +436,6 @@ void Channel::quit(Client* client) { remove_channel_operator(client); }
  */
 void Channel::broadcast(Client* sender, std::string target, std::string message)
 {
-	for (std::vector<Client*>::iterator it = this->_operator_clients.begin();
-		 it != this->_operator_clients.end();
-		 it++)
-	{
-		if (*it == sender)
-			continue;
-		(*it)->broadcast(sender, target, message);
-		return;
-	}
 	for (std::vector<Client*>::iterator it = this->_clients.begin();
 		 it != this->_clients.end();
 		 it++)

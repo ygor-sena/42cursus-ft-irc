@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:33:05 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/30 14:53:41 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/31 19:52:35 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ void Server::_handler_client_join(const std::string& buffer, const int fd)
 		_add_channel(channel);
 		channel->join(client);
 		channel->set_channel_operator(client);
+		_send_response(fd, RPL_JOINMSG(client->get_nickname(), client->get_hostname(), joining_channel));
 		return;
 	}
 
@@ -121,6 +122,8 @@ void Server::_handler_client_join(const std::string& buffer, const int fd)
 		_reply_code = 475;
 		return;
 	}
+	
+	_send_response(fd, RPL_JOINMSG(client->get_nickname(), client->get_hostname(), joining_channel));
 
 	// Adicionar o cliente ao canal
 	channel->join(client);
@@ -128,4 +131,18 @@ void Server::_handler_client_join(const std::string& buffer, const int fd)
 
 	// Registra o comando JOIN recebido
 	std::cout << "JOIN command received from client " << buffer << std::endl;
+
+/* 	# Reply to a /JOIN command
+	:nick!user@host JOIN #channel
+
+	# Reply to a /PRIVMSG command
+	:nick!user@host PRIVMSG #channel :Hello, world!
+
+	# Reply to a /MODE command
+	:nick!user@host MODE #channel +o otheruser 
+	
+	# Reply to a /USER command
+	:irc.example.com 001 nick :Welcome to the Internet Relay Network nick!user@host
+
+*/
 }

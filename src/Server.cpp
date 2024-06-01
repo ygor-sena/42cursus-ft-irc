@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:26:55 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 14:01:43 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 21:06:46 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 
 Server::Server()
 {
+	_hostname = "ft_irc.42.fr";
 	_reply_code = 0;
 	_port = 0;
 	_server_fdsocket = -1;
@@ -34,6 +35,7 @@ Server::Server()
 Server::Server(std::string password, std::vector<Client*> clients,
 			   std::vector<Channel*> channels)
 {
+	_hostname = "ft_irc.42.fr";
 	_reply_code = 0;
 	_port = 0;
 	_server_fdsocket = -1;
@@ -70,6 +72,18 @@ Server::~Server()
 /*
 ** ------------------------------- GETTERS --------------------------------
 */
+
+/**
+ * @brief Get the hostname of the server.
+ *
+ * This function returns the hostname of the server.
+ *
+ * @return The hostname of the server.
+ */
+std::string Server::_get_hostname()
+{
+	return _hostname;
+}
 
 /**
  * @brief Retrieves the client associated with the given file descriptor.

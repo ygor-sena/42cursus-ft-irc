@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 18:18:57 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/29 19:19:18 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 20:57:35 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@
 
 // refer to https://datatracker.ietf.org/doc/html/rfc1459
 
-#define RPL_CONNECTED(nickname) \
-	(": 001 " + nickname + " : Welcome to the IRC server!" + CRLF)
+#define RPL_CONNECTED(serverhostname, nickname, targethostname) \
+	(":" + serverhostname + " 001 " + nickname + " :Welcome to the IRC server! " + nickname + "!" + targethostname + CRLF)
 
-#define RPL_UMODEIS(hostname, channelname, mode, user) \
-	":" + hostname + " MODE " + channelname + " " + mode + " " + user + CRLF
+#define RPL_UMODEIS(nickname, hostname, channelname, set, mode, arg) \
+	(":" + nickname + "!" + hostname + " MODE " + channelname + " " + set + mode + " " + arg + CRLF)
 
 #define RPL_CREATIONTIME(nickname, channelname, creationtime) \
 	": 329 " + nickname + " " + channelname + " " + creationtime + CRLF
@@ -29,15 +29,15 @@
 #define RPL_CHANNELMODES(nickname, channelname, modes) \
 	": 324 " + nickname + " " + channelname + " " + modes + CRLF
 
-#define RPL_CHANGEMODE(hostname, channelname, mode, arguments)                \
+#define RPL_CHANGEMODE(hostname, channelname, mode, arguments)         J       \
 	(":" + hostname + " MODE " + channelname + " " + mode + " " + arguments + \
 	 CRLF)
 
 #define RPL_NICKCHANGE(oldnickname, nickname) \
 	(":" + oldnickname + " NICK " + nickname + CRLF)
 
-#define RPL_JOINMSG(hostname, ipaddress, channelname) \
-	(":" + hostname + "@" + ipaddress + " JOIN " + channelname + CRLF)
+#define RPL_JOINMSG(nickname, hostname, channelname) \
+	(":" + nickname + "!" + hostname + " JOIN " + channelname + CRLF)
 
 #define RPL_NAMREPLY(nickname, channelname, clientslist) \
 	(": 353 " + nickname + " @ " + channelname + " :" + clientslist + CRLF)
@@ -61,8 +61,8 @@
 	 kickername + " " + comment + CRLF)
 #define RPL_INVITING(hostname, channelname, invitername, invitedname) \
 	(":" + hostname + " INVITE " + invitedname + " " + channelname + CRLF)
-#define RPL_PRIVMSG(hostname, receiver, text) \
-	(":" + hostname + " PRIVMSG " + receiver + " " + text + CRLF)
+#define RPL_PRIVMSG(nickname, hostname, receiver, text) \
+	(":" + nickname + "!" + hostname + " PRIVMSG " + receiver + " " + text + CRLF)
 
 #define BOT_CMDMARVIN(nickname)        \
 	(": 4242 marvin_bot " + nickname + \

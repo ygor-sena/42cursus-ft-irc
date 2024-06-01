@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:31:33 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 10:14:41 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 19:27:41 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,8 @@ void Server::_handler_client_privmsg(const std::string& buffer, const int fd)
 
 				// Send the message to the receiver
 				_send_response(target_client->get_fd(),
-							   RPL_PRIVMSG(client->get_hostname(),
+							   RPL_PRIVMSG(client->get_nickname(),
+							   			   client->get_hostname(),
 										   target_client->get_nickname(),
 										   params[1]));
 			}
