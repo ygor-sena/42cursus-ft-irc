@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 18:03:11 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/31 21:23:45 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/31 22:09:22 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ Client* mockClient()
 
 /*
  * 1. O comando USER é recebido sem parâmetros suficientes.
-*/
+ */
 Test(UserCommand, err_needmoreparams)
 {
 	Client* client = mockClient();
@@ -46,7 +46,7 @@ Test(UserCommand, err_needmoreparams)
 
 /*
  * 2. O comando USER é recebido e o cliente não está registrado.
-*/
+ */
 Test(UserCommand, err_notregistered)
 {
 	Client* client = mockClient();
@@ -61,8 +61,19 @@ Test(UserCommand, err_notregistered)
 }
 
 /*
- * 3. O comando USER é recebido e o cliente já está registrado.
-*/
+ * 3. O comando USER é recebido e o cliente não existe.
+ */
+Test(UserCommand, err_notexist)
+{
+	Server server;
+	server._handler_client_username("Ygor", 5);
+
+	cr_assert(eq(int, server._reply_code, 451));
+}
+
+/*
+ * 4. O comando USER é recebido e o cliente já está registrado.
+ */
 Test(UserCommand, err_alreadyregistered)
 {
 	Client* client = mockClient();
@@ -75,9 +86,9 @@ Test(UserCommand, err_alreadyregistered)
 }
 
 /*
- * 4. O comando USER é recebido e o cliente está pronto para fazer login.
-*/
-Test(UserCommand, success_readytologin)
+ * 5. O comando USER é recebido e o cliente está pronto para fazer login.
+ */
+Test(UserCommand, rpl_readytologin)
 {
 	Client* client = mockClient();
 	client->set_username("");
@@ -92,9 +103,9 @@ Test(UserCommand, success_readytologin)
 }
 
 /*
- * 5. O comando USER é recebido e o cliente não está pronto para fazer login.
-*/
-Test(UserCommand, success_notreadytologin)
+ * 6. O comando USER é recebido e o cliente não está pronto para fazer login.
+ */
+Test(UserCommand, rpl_notreadytologin)
 {
 	Client* client = mockClient();
 	client->set_username("");

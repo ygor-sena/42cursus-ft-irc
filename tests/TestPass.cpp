@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 17:27:49 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 20:39:53 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/31 22:07:34 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ Client* mockClient()
 
 /*
  * 1. O comando PASS é recebido sem parâmetros suficientes.
-*/
-Test(ServerHandlerClientPassword, TestPassWithoutEnoughParameters)
+ */
+Test(ServerHandlerClientPassword, err_needmoreparams)
 {
 	Client* client = mockClient();
 
@@ -48,7 +48,7 @@ Test(ServerHandlerClientPassword, TestPassWithoutEnoughParameters)
 /*
  * 2. O comando PASS é recebido e o cliente já está autenticado.
  */
-Test(ServerHandlerClientPassword, TestPassClientIsAuthenticated)
+Test(ServerHandlerClientPassword, err_alreadyregistered)
 {
 	Client* client = mockClient();
 	client->set_is_authenticated(true);
@@ -64,7 +64,7 @@ Test(ServerHandlerClientPassword, TestPassClientIsAuthenticated)
 /*
  * 3. O comando PASS é recebido e a senha do cliente está incorreta.
  */
-Test(ServerHandlerClientPassword, TestPassIncorrectPassword)
+Test(ServerHandlerClientPassword, err_incorpass)
 {
 	Client* client = mockClient();
 	client->set_is_authenticated(false);
@@ -80,7 +80,7 @@ Test(ServerHandlerClientPassword, TestPassIncorrectPassword)
 /*
  * 4. O comando PASS é recebido e a senha do cliente está correta.
  */
-Test(ServerHandlerClientPassword, TestPassCorrectPassword)
+Test(ServerHandlerClientPassword, rpl_pass)
 {
 	Client* client = mockClient();
 	client->set_is_authenticated(false);

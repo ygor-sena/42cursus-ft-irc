@@ -6,30 +6,15 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:30:34 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 21:53:09 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/31 23:00:49 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
-
-#define MODE_CMD "MODE"
-
 /*
  * Command: MODE
  * Parameters: <channel> {[+|-]|o|p|s|i|t|n|b|v} [<limit>] [<user>]
  * Reference: https://datatracker.ietf.org/doc/html/rfc1459#section-4.2.3
- */
-
-/*
- * Cenários de Teste:
- * 1. O comando MODE é recebido sem parâmetros suficientes.
- * 2. O comando MODE é recebido e o canal não existe.
- * 3. O comando MODE é recebido e o cliente não tem privilégios de operador no
- * canal.
- * 4. O comando MODE é recebido e o cliente tem privilégios de operador no
- * canal.
- * 5. O comando MODE é recebido e o modo do canal é alterado com sucesso.
- *
  */
 
 /**
@@ -44,126 +29,108 @@
  */
 void Server::_handler_client_mode(const std::string& buffer, const int fd)
 {
-	// Registra o comando MODE recebido
-	std::cout << "MODE command received: " << buffer << std::endl;
-
-	// Separar os argumentos do comando
 	std::istringstream iss(buffer);
-	std::string chnl, modes, arg;
+	std::string channelName, modeFlags, argument;
 
-	// Verificar e extrair os parâmetros de acordo com o padrão esperado
-	iss >> chnl >> modes;
-	if (!chnl.empty() && !modes.empty())
+	iss >> channelName >> modeFlags;
+	if (iss >> argument)
 	{
-		iss >> arg;
+		iss >> argument;
 	}
 
-	Client* admin = _get_client(fd);
-	Channel* channel = _get_channel(chnl);
+	Client* client = _get_client(fd);
+	Channel* channel = _get_channel(channelName);
 
-	// Verificar se todos os parâmetros obrigatórios foram fornecidos
-	if (chnl.empty() || modes.empty())
+	if (channelName.empty() || modeFlags.empty())
 	{
-		_send_response(fd, ERR_NEEDMOREPARAMS(admin->get_nickname()));
+		_send_response(fd, ERR_NEEDMOREPARAMS(client->get_nickname()));
 		_reply_code = 461;
-		return;
 	}
-
-	// Verificar se o canal existe
-	if (!channel)
+	else if (!channel)
 	{
-		_send_response(fd, ERR_NOSUCHCHANNEL(chnl));
+		_send_response(fd, ERR_NOSUCHCHANNEL(channelName));
 		_reply_code = 403;
-		return;
 	}
-
-	// Verificar se o cliente tem privilégios de operador no canal
-	if (!channel->is_channel_operator(admin->get_nickname()))
+	else if (!channel->is_channel_operator(client->get_nickname()))
 	{
-		_send_response(fd, ERR_CHANOPRIVSNEEDED(chnl));
+		_send_response(fd, ERR_CHANOPRIVSNEEDED(channelName));
 		_reply_code = 482;
-		return;
 	}
-
-	// Tratar o comando MODE
-	if (!_parse_mode_command(modes, channel, _get_client(arg), arg, fd))
+	else if (!_process_mode_flags(
+				 modeFlags, channel, _get_client(argument), argument, fd))
 	{
-		//_send_response(fd, ERR_UNKNOWNMODE(_get_client(fd)->get_nickname(), channel->get_name(), modes[1]));
-		// _send_response(fd,
-		// 			   ERR_INVALIDMODEPARM(admin->get_nickname(), modes[1]));
-		//_reply_code = 696;
 		return;
 	}
-
-  // TODO: VERIFICAR SE EXISTE UMA RESPOSTA PARA ESTA SITUAÇÃO, NO MOMENTO
-	// ESTÁ COMO 200 MAS DEVE HAVER OUTRO REPLY.
-
-	// TODO: VERIFICAR SE EXISTE UMA RESPOSTA CORRETA.
-	// Enviar resposta de sucesso ao cliente
-	//_send_response(fd, RPL_UMODEIS(admin->get_nickname(), chnl, modes));
-	//_reply_code = 324;
-
-	_reply_code = 200;
+	else
+	{
+		_reply_code = 200;
+	}
 }
 
-bool Server::_parse_mode_command(const std::string& modes, Channel* channel,
-								 Client* client, const std::string& arg,
-								 const int fd)
+bool Server::_process_mode_flags(const std::string& modeFlags, Channel* channel,
+								 Client* targetClient,
+								 const std::string& argument, const int fd)
 {
-	bool set = false;
+	bool addMode = false;
 	char mode = 0;
 
-	for (size_t i = 0; i < modes.size(); ++i)
+	for (size_t i = 0; i < modeFlags.size(); ++i)
 	{
-		if (modes[i] == '+' || modes[i] == '-')
+		char flag = modeFlags[i];
+		if (flag == '+' || flag == '-')
 		{
-			set = (modes[i] == '+');
+			addMode = (flag == '+');
 		}
 		else
 		{
-			mode = modes[i];
-
-			// if (client == NULL && (mode == 'o' || mode == 'i')) // Se o cliente não for encontrado
-			// {
-			// 	return false;
-			// }
-
-			if (!_handler_mode_flags(channel, client, mode, set, arg, fd))
+			mode = flag;
+			if (!_apply_mode_flag(
+					channel, targetClient, mode, addMode, argument))
 			{
-				_send_response(
-					fd,
-					ERR_UNKNOWNMODE(
-						_get_client(fd)->get_nickname(), channel->get_name(), mode));
+				_send_response(fd,
+							   ERR_UNKNOWNMODE(_get_client(fd)->get_nickname(),
+											   channel->get_name(),
+											   mode));
 				_reply_code = 472;
 				return false;
 			}
 		}
 	}
 
-	std::string signal = set ? "+" : "-";
-	_send_response(fd, RPL_UMODEIS(client->get_nickname(), client->get_hostname(), channel->get_name(), signal, mode, arg));
+	if (targetClient)
+	{
+		std::string signal = addMode ? "+" : "-";
+		_send_response(fd,
+					   RPL_UMODEIS(targetClient->get_nickname(),
+								   targetClient->get_hostname(),
+								   channel->get_name(),
+								   signal,
+								   mode,
+								   argument));
+	}
+
 	return true;
 }
 
-bool Server::_handler_mode_flags(Channel* channel, Client* client, char mode,
-								 bool set, const std::string& arg, const int fd)
+bool Server::_apply_mode_flag(Channel* channel, Client* targetClient, char mode,
+							  bool addMode, const std::string& argument)
 {
 	switch (mode)
 	{
 	case 'i':
-		_handler_invite_only_mode(channel, set);
+		_set_invite_only_mode(channel, addMode);
 		break;
 	case 't':
-		_handler_topic_restriction_mode(channel, set);
+		_set_topic_restriction_mode(channel, addMode);
 		break;
 	case 'k':
-		_handle_password_mode(channel, arg, set);
+		_set_channel_key_mode(channel, argument, addMode);
 		break;
 	case 'o':
-		_handle_operator_privileges_mode(channel, client, set);
+		_set_channel_operator_mode(channel, targetClient, addMode);
 		break;
 	case 'l':
-		_handle_limit_mode(channel, client, arg, set, fd);
+		_set_channel_limit_mode(channel, argument, addMode);
 		break;
 	default:
 		return false;
@@ -171,9 +138,9 @@ bool Server::_handler_mode_flags(Channel* channel, Client* client, char mode,
 	return true;
 }
 
-void Server::_handler_invite_only_mode(Channel* channel, bool set)
+void Server::_set_invite_only_mode(Channel* channel, bool addMode)
 {
-	if (set)
+	if (addMode)
 	{
 		channel->set_invite_only();
 	}
@@ -183,9 +150,9 @@ void Server::_handler_invite_only_mode(Channel* channel, bool set)
 	}
 }
 
-void Server::_handler_topic_restriction_mode(Channel* channel, bool set)
+void Server::_set_topic_restriction_mode(Channel* channel, bool addMode)
 {
-	if (set)
+	if (addMode)
 	{
 		channel->set_topic_restriction();
 	}
@@ -195,12 +162,12 @@ void Server::_handler_topic_restriction_mode(Channel* channel, bool set)
 	}
 }
 
-void Server::_handle_password_mode(Channel* channel,
-								   const std::string& argument, bool set)
+void Server::_set_channel_key_mode(Channel* channel, const std::string& key,
+								   bool addMode)
 {
-	if (set)
+	if (addMode)
 	{
-		channel->set_key(argument);
+		channel->set_key(key);
 	}
 	else
 	{
@@ -208,40 +175,27 @@ void Server::_handle_password_mode(Channel* channel,
 	}
 }
 
-void Server::_handle_operator_privileges_mode(Channel* channel, Client* client,
-											  bool set)
+void Server::_set_channel_operator_mode(Channel* channel, Client* client,
+										bool addMode)
 {
-	if (set)
+	if (addMode && client)
 	{
-		if (client)
-		{
-			channel->set_channel_operator(client);
-		}
+		channel->set_channel_operator(client);
 	}
-	else
+	else if (client)
 	{
-		if (client)
-		{
-			channel->remove_channel_operator(client);
-		}
+		channel->remove_channel_operator(client);
 	}
 }
 
-void Server::_handle_limit_mode(Channel* channel, Client* client,
-								const std::string& argument, bool set,
-								const int fd)
+void Server::_set_channel_limit_mode(Channel* channel,
+									 const std::string& limitStr, bool addMode)
 {
-	if (set)
+	if (addMode)
 	{
-		if (!argument.empty())
+		if (!limitStr.empty())
 		{
-			channel->set_limit(std::atoi(argument.c_str()));
-		}
-		else
-		{
-			// Respond with error if limit is not provided
-			_send_response(fd, ERR_NEEDMOREPARAMS(client->get_nickname()));
-			_reply_code = 461;
+			channel->set_limit(std::atoi(limitStr.c_str()));
 		}
 	}
 	else

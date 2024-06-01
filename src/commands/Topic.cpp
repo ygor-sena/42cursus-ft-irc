@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:30:59 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 20:30:44 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/31 22:01:41 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void Server::_handler_client_topic(const std::string& buffer, const int fd)
 
 	Client* client = _get_client(fd);
 	Channel* channel = _get_channel(chnl);
-	
+
 	if (chnl.empty())
 	{
 		_send_response(fd, ERR_NEEDMOREPARAMS(client->get_nickname()));

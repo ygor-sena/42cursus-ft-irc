@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 08:56:56 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/31 21:38:22 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/31 22:22:04 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ Client* toPartClient()
 
 /*
  * 1. O comando PART é recebido sem parâmetros suficientes.
-*/
+ */
 Test(PartCommand, part_without_enough_parameters)
 {
 	Client* client = genericClient();
@@ -60,7 +60,7 @@ Test(PartCommand, part_without_enough_parameters)
 
 /*
  * 2. O comando PART é recebido e o cliente não está registrado.
-*/
+ */
 Test(PartCommand, part_not_registered)
 {
 	Client* client = genericClient();
@@ -75,7 +75,7 @@ Test(PartCommand, part_not_registered)
 
 /*
  * 3. O comando PART é recebido e o canal não existe.
-*/
+ */
 Test(PartCommand, part_channel_does_not_exist)
 {
 	Client* client = genericClient();
@@ -89,11 +89,11 @@ Test(PartCommand, part_channel_does_not_exist)
 
 /*
  * 4. O comando PART é recebido e o cliente não está no canal.
-*/
+ */
 Test(PartCommand, part_not_on_channel)
 {
 	Client* client = genericClient();
-	
+
 	Channel* channel = new Channel("#channel");
 
 	Server server;
@@ -106,11 +106,11 @@ Test(PartCommand, part_not_on_channel)
 
 /*
  * 5. O comando PART é recebido e o cliente deixa o canal com sucesso.
-*/
+ */
 Test(PartCommand, part_successfully)
 {
 	Client* client = genericClient();
-	
+
 	Channel* channel = new Channel("#channel");
 	channel->invite(client);
 

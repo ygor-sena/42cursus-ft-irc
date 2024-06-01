@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:30:20 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 21:43:03 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/31 23:10:43 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,11 @@ void Server::_handler_client_part(const std::string& buffer, const int fd)
 {
 	Client* client = _get_client(fd);
 
+	std::vector<std::string> params = _split_buffer(buffer, SPACE);
+
 	if (buffer.empty())
 	{
-		_send_response(fd, ERR_NEEDMOREPARAMS(std::string("*")));
+		_send_response(fd, ERR_NEEDMOREPARAMS(client->get_nickname()));
 		_reply_code = 461;
 	}
 	else if (!client->get_is_logged())
@@ -44,35 +46,27 @@ void Server::_handler_client_part(const std::string& buffer, const int fd)
 	}
 	else
 	{
-		std::vector<std::string> params = _split_buffer(buffer, SPACE);
-		if (params.size() < 1)
+		std::string channel_name = params[0];
+
+		Channel* channel = _get_channel(channel_name);
+		if (!channel)
 		{
-			_send_response(fd, ERR_NEEDMOREPARAMS(client->get_nickname()));
-			_reply_code = 461;
+			_send_response(fd, ERR_NOSUCHCHANNEL(channel_name));
+			_reply_code = 403;
+		}
+		else if (!channel->has_client(client))
+		{
+			_send_response(fd, ERR_NOTONCHANNEL(channel_name));
+			_reply_code = 442;
 		}
 		else
 		{
-			std::string channel_name = params[0];
-
-			Channel* channel = _get_channel(channel_name);
-			if (!channel)
-			{
-				_send_response(fd, ERR_NOSUCHCHANNEL(channel_name));
-				_reply_code = 403;
-			}
-			else if (!channel->has_client(client))
-			{
-				_send_response(fd, ERR_NOTONCHANNEL(channel_name));
-				_reply_code = 442;
-			}
-			else
-			{
-				channel->part(client);
-				_send_response(
-					fd,
-					RPL_PART(client->get_hostname(), channel_name, client->get_nickname()));
-				_reply_code = 200;
-			}
+			channel->part(client);
+			_send_response(fd,
+						   RPL_PART(client->get_hostname(),
+									channel_name,
+									client->get_nickname()));
+			_reply_code = 200;
 		}
 	}
 }

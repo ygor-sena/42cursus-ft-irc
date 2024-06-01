@@ -18,10 +18,12 @@
 // refer to https://datatracker.ietf.org/doc/html/rfc1459
 
 #define RPL_CONNECTED(serverhostname, nickname, targethostname) \
-	(":" + serverhostname + " 001 " + nickname + " :Welcome to the IRC server! " + nickname + "!" + targethostname + CRLF)
+	(":" + serverhostname + " 001 " + nickname +                \
+	 " :Welcome to the IRC server! " + nickname + "!" + targethostname + CRLF)
 
-#define RPL_UMODEIS(nickname, hostname, channelname, set, mode, arg) \
-	(":" + nickname + "!" + hostname + " MODE " + channelname + " " + set + mode + " " + arg + CRLF)
+#define RPL_UMODEIS(nickname, hostname, channelname, set, mode, arg)        \
+	(":" + nickname + "!" + hostname + " MODE " + channelname + " " + set + \
+	 mode + " " + arg + CRLF)
 
 #define RPL_CREATIONTIME(nickname, channelname, creationtime) \
 	": 329 " + nickname + " " + channelname + " " + creationtime + CRLF
@@ -29,9 +31,9 @@
 #define RPL_CHANNELMODES(nickname, channelname, modes) \
 	": 324 " + nickname + " " + channelname + " " + modes + CRLF
 
-#define RPL_CHANGEMODE(hostname, channelname, mode, arguments)         J       \
-	(":" + hostname + " MODE " + channelname + " " + mode + " " + arguments + \
-	 CRLF)
+#define RPL_CHANGEMODE(hostname, channelname, mode, arguments)                 \
+	J(":" + hostname + " MODE " + channelname + " " + mode + " " + arguments + \
+	  CRLF)
 
 #define RPL_NICKCHANGE(oldnickname, nickname) \
 	(":" + oldnickname + " NICK " + nickname + CRLF)
@@ -61,8 +63,9 @@
 	 kickername + " " + comment + CRLF)
 #define RPL_INVITING(hostname, channelname, invitername, invitedname) \
 	(":" + hostname + " INVITE " + invitedname + " " + channelname + CRLF)
-#define RPL_PRIVMSG(nickname, hostname, receiver, text) \
-	(":" + nickname + "!" + hostname + " PRIVMSG " + receiver + " " + text + CRLF)
+#define RPL_PRIVMSG(nickname, hostname, receiver, text)                      \
+	(":" + nickname + "!" + hostname + " PRIVMSG " + receiver + " " + text + \
+	 CRLF)
 
 #define BOT_CMDMARVIN(nickname)        \
 	(": 4242 marvin_bot " + nickname + \

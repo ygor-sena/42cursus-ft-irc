@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:24:04 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 12:09:15 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 23:14:19 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,8 @@ class Channel
 	std::string _topic;
 	std::string _created_at;
 	std::vector<Client*>
-		_clients;  // -> list of clients that are channel members
-	std::vector<Client*> _operator_clients;	 // -> list of channel operators
+		_clients;
+	std::vector<Client*> _operator_clients;
 };
 
 #endif	// CHANNEL_HPP

@@ -32,7 +32,7 @@ Client* mockClient()
 
 /*
  * 1. O comando NICK é recebido sem parâmetros suficientes.
-*/
+ */
 Test(NickCommand, err_needmoreparams)
 {
 	Client* client = mockClient();
@@ -46,7 +46,7 @@ Test(NickCommand, err_needmoreparams)
 
 /*
  * 2. O comando NICK é recebido e o cliente não está registrado.
-*/
+ */
 Test(NickCommand, err_notregistered)
 {
 	Client* client = mockClient();
@@ -61,7 +61,7 @@ Test(NickCommand, err_notregistered)
 
 /*
  * 3. O comando NICK é recebido e o nickname do cliente é inválido.
-*/
+ */
 Test(NickCommand, err_erroneusnick_1)
 {
 	Client* client = mockClient();
@@ -112,7 +112,7 @@ Test(NickCommand, err_erroneusnick_4)
 
 /*
  * 4. O comando NICK é recebido e o cliente está registrado.
-*/
+ */
 Test(NickCommand, success_setnickname)
 {
 	Client* client = mockClient();
@@ -127,7 +127,7 @@ Test(NickCommand, success_setnickname)
 
 /*
  * 5. O comando NICK é recebido e o nickname do cliente está em uso.
-*/
+ */
 Test(NickCommand, err_nickinuse)
 {
 	Client* client = mockClient();
@@ -147,7 +147,7 @@ Test(NickCommand, err_nickinuse)
 
 /*
  * 6. O comando NICK é recebido e o nickname do cliente é alterado.
-*/
+ */
 Test(NickCommand, success_changenickname)
 {
 	Client* client = mockClient();
@@ -162,7 +162,7 @@ Test(NickCommand, success_changenickname)
 
 /*
  * 7. O comando NICK é recebido e o cliente está pronto para logar.
-*/
+ */
 Test(NickCommand, success_readytologin)
 {
 	Client* client = mockClient();

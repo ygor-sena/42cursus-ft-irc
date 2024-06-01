@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:31:54 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 21:51:29 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/31 22:22:41 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,10 @@ void Server::_handler_client_nickname(const std::string& buffer, const int fd)
 		if (_client_is_ready_to_login(fd))
 		{
 			client->set_is_logged(fd);
-			_send_response(fd, RPL_CONNECTED(_get_hostname(), client->get_nickname(), client->get_hostname()));
+			_send_response(fd,
+						   RPL_CONNECTED(_get_hostname(),
+										 client->get_nickname(),
+										 client->get_hostname()));
 			_reply_code = 001;
 			return;
 		}
