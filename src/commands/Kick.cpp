@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Kick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:30:47 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 23:01:30 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/06/01 09:45:15 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,18 @@
  * @param buffer The buffer containing the KICK command parameters.
  * @param fd The file descriptor associated with the client that sent the
  * command.
+ */
+/**
+ * Handles the KICK command from a client.
+ *
+ * This function is responsible for processing the KICK command received from a client.
+ * It checks if the client is logged in, if the command parameters are valid, and if the
+ * client has the necessary privileges to perform the kick. If all conditions are met,
+ * the function sends the appropriate responses to the client and performs the kick
+ * operation on the specified channel.
+ *
+ * @param buffer The command buffer received from the client.
+ * @param fd The file descriptor of the client's socket.
  */
 void Server::_handler_client_kick(const std::string& buffer, const int fd)
 {

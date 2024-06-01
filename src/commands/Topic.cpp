@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:30:59 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 22:01:41 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/06/01 09:51:25 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,16 @@
  * @param buffer The buffer containing the TOPIC command parameters.
  * @param fd The file descriptor associated with the client that sent the
  * command.
+ */
+/**
+ * Handles the client topic command.
+ * Parses the buffer to extract the channel and topic information.
+ * Verifies the client's permissions and channel existence.
+ * Updates the channel's topic if the client has the necessary privileges.
+ * Sends appropriate responses to the client.
+ *
+ * @param buffer The input buffer containing the command and arguments.
+ * @param fd The file descriptor of the client connection.
  */
 void Server::_handler_client_topic(const std::string& buffer, const int fd)
 {

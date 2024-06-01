@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:33:05 by gilmar            #+#    #+#             */
-/*   Updated: 2024/06/01 09:03:51 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/06/01 09:44:45 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,16 @@
  * @param buffer The buffer containing the JOIN command parameters.
  * @param fd The file descriptor associated with the client that sent the
  * command.
+ */
+/**
+ * Handles the JOIN command from a client.
+ *
+ * This function is responsible for processing the JOIN command received from a client.
+ * It checks the validity of the command and performs the necessary actions, such as
+ * creating a new channel, joining an existing channel, or sending error responses.
+ *
+ * @param buffer The command buffer received from the client.
+ * @param fd The file descriptor of the client's socket.
  */
 void Server::_handler_client_join(const std::string& buffer, const int fd)
 {

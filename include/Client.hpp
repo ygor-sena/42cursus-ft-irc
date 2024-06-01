@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:19:06 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 23:13:37 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/06/01 09:42:47 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,13 @@
 
 //-------------------------------------------------------//
 
+/**
+ * @brief The Client class represents a client in the IRC server.
+ *
+ * This class encapsulates the properties and behaviors of a client, including its file descriptor,
+ * login status, operator status, authentication status, buffer, nickname, username, password,
+ * hostname, IP address, registration status, and invited channels.
+ */
 class Client
 {
   public:

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:23:47 by gilmar            #+#    #+#             */
-/*   Updated: 2024/06/01 09:02:55 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/06/01 09:43:33 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,13 @@
 #define LINE_FEED "\n"
 #define DELIMITER " \t"
 
+/**
+ * @class Server
+ * @brief Represents an IRC server.
+ *
+ * The Server class provides functionality to initialize and manage an IRC server.
+ * It handles client connections, IRC commands, channels, and other server operations.
+ */
 class Server
 {
   public:

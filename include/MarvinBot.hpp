@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MarvinBot.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 11:31:32 by caalbert          #+#    #+#             */
-/*   Updated: 2024/05/29 21:27:05 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/06/01 09:43:08 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,12 @@
 	"Man is born free, and everywhere he is in chains. - Jean-Jacques " \
 	"Rousseau"
 
+/**
+ * @class MarvinBot
+ * @brief Represents a MarvinBot object.
+ *
+ * The MarvinBot class is responsible for managing quotes and returning a random quote from a predefined list.
+ */
 class MarvinBot
 {
   public:

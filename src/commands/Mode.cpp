@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:30:34 by gilmar            #+#    #+#             */
-/*   Updated: 2024/06/01 09:03:41 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/06/01 09:45:36 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,16 @@ void _set_channel_limit_mode(Channel* channel, const std::string& limitStr,
  * @param buffer The buffer containing the MODE command parameters.
  * @param fd The file descriptor associated with the client that sent the
  * command.
+ */
+/**
+ * Handles the MODE command from a client.
+ * This function parses the buffer received from the client and performs the necessary actions based on the mode flags.
+ * It checks if the channel name and mode flags are provided, and if not, sends an error response.
+ * It also checks if the channel exists and if the client has the necessary privileges to modify the channel mode.
+ * If the mode flags are valid, it processes them and sends a response to the client.
+ *
+ * @param buffer The buffer containing the MODE command and its arguments.
+ * @param fd The file descriptor of the client's socket.
  */
 void Server::_handler_client_mode(const std::string& buffer, const int fd)
 {

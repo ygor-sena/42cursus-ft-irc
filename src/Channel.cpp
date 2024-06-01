@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:26:17 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 23:03:33 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/06/01 09:52:07 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -261,6 +261,14 @@ void Channel::remove_channel_operator(Client* client)
  *
  * This function removes the specified client from the channel's list of
  * clients.
+ *
+ * @param client A pointer to the client to be removed.
+ */
+/**
+ * @brief Removes a client from the channel.
+ *
+ * This function removes the specified client from the channel's list of clients.
+ * It searches for the client in the list and erases it if found.
  *
  * @param client A pointer to the client to be removed.
  */

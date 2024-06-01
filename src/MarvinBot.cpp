@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MarvinBot.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 11:32:28 by caalbert          #+#    #+#             */
-/*   Updated: 2024/06/01 09:02:01 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/06/01 09:54:45 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,6 +170,19 @@ void Server::_handler_bot_whoami(const std::string& /* buffer */, int fd)
  * the client does not exist.
  *
  * @param buffer The buffer containing the command and its arguments.
+ * @param fd The file descriptor of the client connection.
+ */
+/**
+ * Handles the BOT_WHOIS command from the IRC client.
+ *
+ * This function is responsible for processing the BOT_WHOIS command received from the IRC client.
+ * It extracts the nickname from the command buffer and retrieves the corresponding client object.
+ * If the client is not registered, it sends an error response and returns.
+ * If the client is registered and present in a channel, it sends a response with the WHOIS information
+ * of the specified nickname. If the specified nickname does not exist, it sends an appropriate response.
+ * If the client is not present in any channel, it sends a response indicating that the client is not in a channel.
+ *
+ * @param buffer The command buffer containing the BOT_WHOIS command.
  * @param fd The file descriptor of the client connection.
  */
 void Server::_handler_bot_whois(const std::string& buffer, int fd)

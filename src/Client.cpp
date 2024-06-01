@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:20:02 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 21:51:48 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/06/01 09:52:30 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,13 @@ Client::Client()
 /*
 ** ---------------------------- COPY CONSTRUCTOR ------------------------------
 */
+/**
+ * @brief Copy constructor for the Client class.
+ *
+ * This constructor creates a new Client object by copying the data from another Client object.
+ *
+ * @param other The Client object to be copied.
+ */
 Client::Client(const Client& other)
 {
 	_fd = other._fd;

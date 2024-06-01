@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Part.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:30:20 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 23:10:43 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/06/01 09:47:04 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,15 @@
  * @param buffer The buffer containing the PART command parameters.
  * @param fd The file descriptor associated with the client that sent the
  * command.
+ */
+/**
+ * Handles the PART command from a client.
+ *
+ * This function is responsible for processing the PART command received from a client.
+ * The PART command is used to instruct the server that the client wishes to leave a specific channel.
+ *
+ * @param buffer The command buffer containing the PART command and its parameters.
+ * @param fd The file descriptor of the client's socket connection.
  */
 void Server::_handler_client_part(const std::string& buffer, const int fd)
 {

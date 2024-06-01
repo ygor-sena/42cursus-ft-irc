@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:26:55 by gilmar            #+#    #+#             */
-/*   Updated: 2024/06/01 00:10:57 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/06/01 09:55:12 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,6 +171,13 @@ Channel* Server::_get_channel(const std::string& channel_name)
  * 5. Starts listening for incoming connections.
  * 6. Adds the server socket to the pollfd vector for polling.
  * 7. Waits for incoming connections and processes data received from clients.
+ *
+ * @throws std::runtime_error if any of the socket operations fail.
+ */
+/**
+ * Sets up the server socket for accepting incoming connections.
+ * This function creates a socket, sets socket options, binds the socket to a specific address and port,
+ * and starts listening for incoming connections.
  *
  * @throws std::runtime_error if any of the socket operations fail.
  */

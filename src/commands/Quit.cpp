@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Quit.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:29:45 by gilmar            #+#    #+#             */
-/*   Updated: 2024/06/01 09:02:49 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/06/01 09:51:00 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,17 @@
  * @param buffer The buffer containing the QUIT command parameters.
  * @param fd The file descriptor associated with the client that sent the
  * command.
+ */
+/**
+ * Handles the "QUIT" command from a client.
+ *
+ * This function is responsible for processing the "QUIT" command received from a client.
+ * It removes the client from all channels they are currently in and sends a response to
+ * the client indicating that they have been disconnected. After handling the "QUIT" command,
+ * the client is cleared from the server's client list.
+ *
+ * @param buffer The buffer containing the command and its arguments (not used in this function).
+ * @param fd The file descriptor of the client's socket connection.
  */
 void Server::_handler_client_quit(const std::string& /* buffer */, const int fd)
 {

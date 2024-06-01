@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:32:16 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 22:00:01 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/06/01 09:51:44 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,14 @@
  * @param username The username to be assigned to the client.
  * @param fd The file descriptor associated with the client that sent the
  * command.
+ */
+/**
+ * Handles the client's username command.
+ *
+ * This function is responsible for processing the client's username command and performing the necessary actions based on the command's parameters and the client's state.
+ *
+ * @param buffer The command buffer containing the client's username.
+ * @param fd The file descriptor of the client's connection.
  */
 void Server::_handler_client_username(const std::string& buffer, const int fd)
 {

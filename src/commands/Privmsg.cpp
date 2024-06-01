@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Privmsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:31:33 by gilmar            #+#    #+#             */
-/*   Updated: 2024/06/01 09:03:13 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/06/01 09:50:29 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,16 @@ std::vector<std::string> split_parameters(const std::string& s,
  * @param buffer The buffer containing the PRIVMSG command parameters.
  * @param fd The file descriptor associated with the client that sent the
  * command.
+ */
+/**
+ * Handles the PRIVMSG command received from a client.
+ *
+ * This function is responsible for processing the PRIVMSG command received from a client.
+ * It checks if the client is logged in and validates the parameters. If the parameters are
+ * valid, it sends the message to the specified receivers (either channels or clients).
+ *
+ * @param buffer The buffer containing the PRIVMSG command.
+ * @param fd The file descriptor of the client's socket.
  */
 void Server::_handler_client_privmsg(const std::string& buffer, const int fd)
 {

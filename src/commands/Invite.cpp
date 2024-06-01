@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Invite.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:31:16 by gilmar            #+#    #+#             */
-/*   Updated: 2024/06/01 00:04:48 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/06/01 09:44:22 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,13 @@
  * @param buffer The buffer containing the INVITE command parameters.
  * @param fd The file descriptor associated with the client that sent the
  * command.
+ */
+/**
+ * Handles the "INVITE" command from a client.
+ * This function is responsible for processing the invite command and sending appropriate responses to the client.
+ *
+ * @param buffer The command buffer received from the client.
+ * @param fd The file descriptor of the client's socket connection.
  */
 void Server::_handler_client_invite(const std::string& buffer, const int fd)
 {
