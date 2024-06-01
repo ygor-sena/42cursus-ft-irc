@@ -76,7 +76,7 @@ Test(KickCommand, kick_successfully_no_comments)
 
 	server._channels.push_back(channel);
 	server._handler_client_kick("#world trollUser", 4);
-	
+
 	cr_assert(eq(int, server._reply_code, 200));
 	cr_assert(eq(
 		int, server._get_channel(channel->get_name())->get_clients_size(), 1));
@@ -101,7 +101,7 @@ Test(KickCommand, kick_successfully_with_comments)
 
 	server._channels.push_back(channel);
 	server._handler_client_kick("#world trollUser trolou", 4);
-	
+
 	cr_assert(eq(int, server._reply_code, 200));
 	cr_assert(eq(
 		int, server._get_channel(channel->get_name())->get_clients_size(), 1));

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:26:55 by gilmar            #+#    #+#             */
-/*   Updated: 2024/06/01 00:10:57 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/06/01 09:22:38 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -423,6 +423,8 @@ const Server::command_handler Server::_command_list[_command_list_size] = {
  */
 void Server::_execute_command(const std::string buffer, const int fd)
 {
+	bool cmd_executed = false;
+
 	if (buffer.empty())
 		return;
 	std::string clean_buffer = _cleanse_buffer(buffer, CRLF);
@@ -438,9 +440,12 @@ void Server::_execute_command(const std::string buffer, const int fd)
 		if (command == _command_list[i].command)
 		{
 			(this->*_command_list[i].handler)(parameters, fd);
+			cmd_executed = true;
 			break;
 		}
 	}
+	if (!cmd_executed)
+		_send_response(fd, ERR_CMDNOTFOUND(command));
 }
 
 /*
