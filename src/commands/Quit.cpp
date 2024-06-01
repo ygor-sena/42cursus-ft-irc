@@ -3,14 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   Quit.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:29:45 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 13:45:50 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/06/01 09:02:49 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <csignal>
 #include "Server.hpp"
 
 /*
