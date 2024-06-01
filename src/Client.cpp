@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:20:02 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 19:45:35 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 21:51:48 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,6 +229,8 @@ std::vector<std::string> Client::get_channels_invited() const
 {
 	return _channels_invited;
 }
+
+bool Client::get_already_registered() const { return _username.empty(); }
 
 /*
 ** ---------------------------- MEMBER FUNCTIONS ------------------------------
