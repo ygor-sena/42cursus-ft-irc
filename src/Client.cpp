@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:20:02 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 21:51:48 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/06/01 16:47:11 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -282,6 +282,22 @@ void Client::remove_channel_invited(const std::string& channel)
 		}
 	}
 }
+
+/**
+ * @brief Appends the given data to the buffer.
+ *
+ * This function appends the provided data to the internal buffer of the client.
+ *
+ * @param data The data to be appended to the buffer.
+ */
+void Client::append_to_buffer(const std::string& data) { _buffer += data; }
+
+/**
+ * @brief Clears the buffer of the client.
+ *
+ * This function clears the buffer of the client, removing all its contents.
+ */
+void Client::clear_buffer(void) { _buffer.clear(); }
 
 /**
  * @brief Sends a broadcast message from the client to a target.

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MarvinBot.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 11:32:28 by caalbert          #+#    #+#             */
-/*   Updated: 2024/06/01 09:02:01 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/06/01 17:09:50 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,35 @@ std::string _return_quote()
 /*
 ** ----------------------------- COMMAND HANDLERS -----------------------------
 */
+
+/**
+ * @brief Handles the input received from the bot.
+ *
+ * This function parses the input buffer and determines the appropriate action
+ * based on the command. The command can be one of the following: "marvin",
+ * "time", "whoami", "whois", or "quote".
+ *
+ * @param buffer The input buffer containing the command and any additional
+ * arguments.
+ * @param fd The file descriptor associated with the connection.
+ */
+void Server::_handler_bot_input(const std::string& buffer, int fd)
+{
+	std::istringstream iss(buffer);
+	std::string command;
+	iss >> command;
+
+	if (command == "marvin")
+		_handler_bot_marvin(buffer, fd);
+	else if (command == "time")
+		_handler_bot_time(buffer, fd);
+	else if (command == "whoami")
+		_handler_bot_whoami(buffer, fd);
+	else if (command == "whois")
+		_handler_bot_whois(buffer, fd);
+	else if (command == "quote")
+		_handler_bot_quote(buffer, fd);
+}
 
 /**
  * Handles the bot command "marvin" for a specific client.
