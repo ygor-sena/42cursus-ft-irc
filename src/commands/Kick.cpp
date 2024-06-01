@@ -16,7 +16,7 @@
  * Command: Kick
  * Parameters: <channel> <user> [<comment>]
  * Reference: https://datatracker.ietf.org/doc/html/rfc1459#section-4.2.8
-*/
+ */
 
 /**
  * @brief Handles the KICK command received from the client.
@@ -28,7 +28,7 @@
  * @param buffer The buffer containing the KICK command parameters.
  * @param fd The file descriptor associated with the client that sent the
  * command.
-*/
+ */
 void Server::_handler_client_kick(const std::string& buffer, const int fd)
 {
 	Client* client = _get_client(fd);

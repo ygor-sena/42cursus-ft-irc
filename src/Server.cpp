@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:26:55 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 23:12:03 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/06/01 00:10:57 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -809,7 +809,7 @@ void Server::_send_response(const int fd, const std::string& response)
  * @param str The string to convert to uppercase.
  * @return The converted string in uppercase.
  */
-std::string Server::toupper(const std::string& str)
+std::string toupper(const std::string& str)
 {
 	std::string result = str;
 	for (size_t i = 0; i < result.length(); ++i)
