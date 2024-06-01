@@ -6,11 +6,12 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:30:34 by gilmar            #+#    #+#             */
-/*   Updated: 2024/06/01 00:14:39 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/06/01 09:03:41 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+
 /*
  * Command: MODE
  * Parameters: <channel> {[+|-]|o|p|s|i|t|n|b|v} [<limit>] [<user>]

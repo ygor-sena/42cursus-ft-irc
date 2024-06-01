@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   TestInvite.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 18:15:32 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/31 11:22:04 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/06/01 09:00:39 by gilmar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,17 +54,13 @@ Test(InviteCommand, succesfully_invite_client_to_channel)
 
 	channel->set_channel_operator(insideClient);
 
-	// Add clients to the server clients list
 	server._clients.push_back(outsideClient);
 	server._clients.push_back(insideClient);
 
-	// Add clients as channel member
 	channel->join(insideClient);
 
-	// Add channel to the server channels list
 	server._channels.push_back(channel);
 
-	// Invite client to channel
 	server._handler_client_invite("outsideUser #world", 4);
 
 	cr_assert(eq(int, server._reply_code, 200));
@@ -82,14 +78,11 @@ Test(InviteCommand, err_nosuchchannel)
 	Server server;
 	Channel* channel = new Channel("#world");
 
-	// Add clients to the server clients list
 	server._clients.push_back(outsideClient);
 	server._clients.push_back(insideClient);
 
-	// Add channel to the server channels list
 	server._channels.push_back(channel);
 
-	// Invite client to channel
 	server._handler_client_invite("outsideClient #deadworld", 4);
 	cr_assert(eq(int, server._reply_code, 403));
 }
@@ -102,16 +95,13 @@ Test(InviteCommand, err_notonchannel)
 	Server server;
 	Channel* channel = new Channel("#world");
 
-	// Add clients to the server clients list
 	server._clients.push_back(outsideClient);
 	server._clients.push_back(insideClient);
 
 	channel->invite(outsideClient);
 
-	// Add channel to the server channels list
 	server._channels.push_back(channel);
 
-	// Invite client to channel
 	server._handler_client_invite("outsideClient #world", 4);
 	cr_assert(eq(int, server._reply_code, 442));
 }
@@ -125,15 +115,12 @@ Test(InviteCommand, err_nosuchnick)
 
 	channel->set_channel_operator(insideClient);
 
-	// Add clients to the server clients list
 	server._clients.push_back(insideClient);
 
 	channel->invite(insideClient);
 
-	// Add channel to the server channels list
 	server._channels.push_back(channel);
 
-	// Invite client to channel
 	server._handler_client_invite("outsideClient #world", 4);
 	cr_assert(eq(int, server._reply_code, 401));
 }
@@ -145,16 +132,12 @@ Test(InviteCommand, err_noprivileges)
 	Server server;
 	Channel* channel = new Channel("#world");
 
-	// Add clients to the server clients list
 	server._clients.push_back(insideClient);
 
-	// Add clients as channel member
 	channel->invite(insideClient);
 
-	// Add channel to the server channels list
 	server._channels.push_back(channel);
 
-	// Invite client to channel
 	server._handler_client_invite("outsideUser #world", 4);
 	cr_assert(eq(int, server._reply_code, 481));
 }
@@ -168,15 +151,12 @@ Test(InviteCommand, err_useronchannel)
 
 	channel->set_channel_operator(insideClient);
 
-	// Add clients to the server clients list
 	server._clients.push_back(insideClient);
 
 	channel->invite(insideClient);
 
-	// Add channel to the server channels list
 	server._channels.push_back(channel);
 
-	// Invite client to channel
 	server._handler_client_invite("insideUser #world", 4);
 	cr_assert(eq(int, server._reply_code, 443));
 }
@@ -190,15 +170,12 @@ Test(InviteCommand, err_notregistered)
 
 	insideClient->set_is_logged(false);
 
-	// Add clients to the server clients list
 	server._clients.push_back(insideClient);
 
 	channel->invite(insideClient);
 
-	// Add channel to the server channels list
 	server._channels.push_back(channel);
 
-	// Invite client to channel
 	server._handler_client_invite("insideUser #world", 4);
 	cr_assert(eq(int, server._reply_code, 451));
 }
