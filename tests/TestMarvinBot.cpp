@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   TestMarvinBot.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 18:23:35 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/31 11:24:08 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/06/01 15:48:25 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,9 @@ Client* mockClient()
 	return client;
 }
 
+/**
+ * @brief Test case for the MarvinBotCommand when the user is not in any channel.
+ */
 Test(MarvinBotCommand, user_is_not_in_any_channel)
 {
 	Client* client = mockClient();
@@ -41,6 +44,9 @@ Test(MarvinBotCommand, user_is_not_in_any_channel)
 	cr_assert(eq(int, server._reply_code, 2424));
 }
 
+/**
+ * @brief Test case for the MarvinBotCommand when the user is in any channel.
+ */
 Test(MarvinBotCommand, user_is_in_any_channel)
 {
 	Client* client = mockClient();

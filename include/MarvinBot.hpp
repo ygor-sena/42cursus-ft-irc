@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MarvinBot.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 11:31:32 by caalbert          #+#    #+#             */
-/*   Updated: 2024/06/01 10:17:05 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/06/01 15:24:34 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,21 @@
 	"Man is born free, and everywhere he is in chains. - Jean-Jacques " \
 	"Rousseau"
 
+/**
+ * @class MarvinBot
+ * @brief Represents a MarvinBot object.
+ *
+ * The MarvinBot class is responsible for managing quotes and returning a random quote from a predefined list.
+ */
 class MarvinBot
 {
   public:
 	MarvinBot();
 	~MarvinBot();
 
-	// Enum for quotes
+		/**
+		 * @brief Enum for quotes.
+		 */
 	enum EnumMarvinBotQuotes
 	{
 		QUOTE_SOCRATES_KNOWLEDGE,
@@ -52,7 +60,7 @@ class MarvinBot
 		QUOTE_HUME_SCIENCE,
 		QUOTE_HEIDEGGER_BEING,
 		QUOTE_ROUSSEAU_FREEDOM,
-		QUOTES_COUNT  // To keep track of the number of quotes
+		QUOTES_COUNT 
 	};
 
 	const char* marvin_bot_quotes[QUOTES_COUNT];
