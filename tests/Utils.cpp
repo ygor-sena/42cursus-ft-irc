@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 18:02:52 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/24 18:27:47 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/06/01 16:04:32 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,15 @@
 
 #include <sstream>
 #include <string>
-#include <utility>
-#include <vector>
-
+/**
+ * @brief Splits a message into receivers and text.
+ *
+ * This function takes a message string and splits it into individual receivers and the text.
+ * The receivers are separated by commas and the text follows after a space.
+ *
+ * @param message The message string to be split.
+ * @return A pair containing a vector of receivers and the text.
+ */
 std::pair<std::vector<std::string>, std::string> split_message(
 	const std::string& message)
 {

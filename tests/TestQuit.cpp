@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   TestQuit.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 20:46:13 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/31 11:25:19 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/06/01 16:01:08 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,10 @@ Client* genericClient()
 	return client;
 }
 
+/**
+ * @brief Creates a client that is going to leave a channel for testing purposes.
+ * @return A pointer to the created client.
+ */
 Client* toPartClient()
 {
 	Client* client = new Client();
@@ -43,6 +47,9 @@ Client* toPartClient()
 	return client;
 }
 
+/**
+ * @brief Unit test for the QuitCommand class when a non-operator client quits.
+ */
 Test(QuitCommand, non_client_operator_quits_successfully)
 {
 	Client* toPart = toPartClient();
@@ -78,6 +85,9 @@ Test(QuitCommand, non_client_operator_quits_successfully)
 	}
 }
 
+/**
+ * @brief Unit test for the QuitCommand class when an operator client quits.
+ */
 Test(QuitCommand, client_operator_quits_successfully)
 {
 	Client* toPart = toPartClient();

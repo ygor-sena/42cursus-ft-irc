@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   TestPrivmsg.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 09:03:10 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/05/31 11:24:59 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/06/01 16:00:10 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,10 @@ Client* secondReceiver()
 	return client;
 }
 
+/**
+ * @brief Creates a first receiver client.
+ * @return A pointer to the first receiver client.
+ */
 Client* firstReceiver()
 {
 	Client* client = new Client();
@@ -43,6 +47,10 @@ Client* firstReceiver()
 	return client;
 }
 
+/**
+ * @brief Creates a sender client.
+ * @return A pointer to the sender client.
+ */
 Client* senderClient()
 {
 	Client* client = new Client();
@@ -57,6 +65,9 @@ Client* senderClient()
 	return client;
 }
 
+/**
+ * @brief Tests the privmsg command with a single client.
+ */
 Test(PrivmsgCommand, privmsg_successfully_single_client)
 {
 	Client* sender = senderClient();
@@ -73,6 +84,9 @@ Test(PrivmsgCommand, privmsg_successfully_single_client)
 	cr_assert(eq(int, server._reply_code, 0));
 }
 
+/**
+ * @brief Tests the privmsg command with two clients.
+ */
 Test(PrivmsgCommand, privmsg_successfully_two_clients)
 {
 	Client* sender = senderClient();
@@ -89,6 +103,9 @@ Test(PrivmsgCommand, privmsg_successfully_two_clients)
 	cr_assert(eq(int, server._reply_code, 0));
 }
 
+/**
+ * @brief Tests the privmsg command with a single channel.
+ */
 Test(PrivmsgCommand, privmsg_successfully_single_channel)
 {
 	Client* sender = senderClient();
@@ -110,6 +127,9 @@ Test(PrivmsgCommand, privmsg_successfully_single_channel)
 	cr_assert(eq(int, server._reply_code, 0));
 }
 
+/**
+ * @brief Tests the privmsg command with three channels.
+ */
 Test(PrivmsgCommand, privmsg_successfully_three_channels)
 {
 	Client* sender = senderClient();
@@ -140,6 +160,9 @@ Test(PrivmsgCommand, privmsg_successfully_three_channels)
 	cr_assert(eq(int, server._reply_code, 0));
 }
 
+/**
+ * @brief Tests the privmsg command with mixed channels and users.
+ */
 Test(PrivmsgCommand, privmsg_successfully_mixed_channel_user)
 {
 	Client* sender = senderClient();
@@ -168,6 +191,9 @@ Test(PrivmsgCommand, privmsg_successfully_mixed_channel_user)
 	cr_assert(eq(int, server._reply_code, 0));
 }
 
+/**
+ * @brief Tests the privmsg command with an unregistered client.
+ */
 Test(PrivmsgCommand, err_notregistered)
 {
 	Client* sender = senderClient();
@@ -186,6 +212,9 @@ Test(PrivmsgCommand, err_notregistered)
 	cr_assert(eq(int, server._reply_code, 451));
 }
 
+/**
+ * @brief Tests the privmsg command with a non-existent channel.
+ */
 Test(PrivmsgCommand, err_nosuchchannel)
 {
 	Client* sender = senderClient();
@@ -214,6 +243,9 @@ Test(PrivmsgCommand, err_nosuchchannel)
 	cr_assert(eq(int, server._reply_code, 403));
 }
 
+/**
+ * @brief Tests the privmsg command with a client not on the channel.
+ */
 Test(PrivmsgCommand, err_notonchannel)
 {
 	Client* sender = senderClient();
@@ -241,6 +273,9 @@ Test(PrivmsgCommand, err_notonchannel)
 	cr_assert(eq(int, server._reply_code, 442));
 }
 
+/**
+ * @brief Tests the privmsg command with a non-existent nickname.
+ */
 Test(PrivmsgCommand, err_nosuchnick)
 {
 	Client* sender = senderClient();

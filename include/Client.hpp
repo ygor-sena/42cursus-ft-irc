@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:19:06 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 23:13:37 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/06/01 15:22:55 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,21 @@
 
 //-------------------------------------------------------//
 
+/**
+ * @brief The Client class represents a client connected to the IRC server.
+ *
+ * This class provides methods to get and set various properties of the client,
+ * such as file descriptor, login status, operator status, authentication status,
+ * buffer, nickname, username, password, hostname, IP address, registration status,
+ * and channels invited.
+ *
+ * It also provides methods to check if the client is invited to a specific channel,
+ * add a channel to the list of invited channels, and remove a channel from the list
+ * of invited channels.
+ *
+ * Additionally, it provides a method to broadcast a message to all clients except
+ * the sender.
+ */
 class Client
 {
   public:

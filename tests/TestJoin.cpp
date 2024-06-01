@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   TestJoin.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 18:15:35 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/06/01 08:36:42 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/06/01 15:40:58 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,11 @@
 #define private public
 #include "Server.hpp"
 
+/**
+ * @brief Creates a mock client outside the server.
+ *
+ * @return A pointer to the created client.
+ */
 Client* mockOutsideClient()
 {
 	Client* client = new Client();
@@ -30,6 +35,11 @@ Client* mockOutsideClient()
 	return client;
 }
 
+/**
+ * @brief Creates a mock common client.
+ *
+ * @return A pointer to the created client.
+ */
 Client* mockCommonClient()
 {
 	Client* client = new Client();
@@ -43,6 +53,11 @@ Client* mockCommonClient()
 	return client;
 }
 
+/**
+ * @brief Creates a mock operator client.
+ *
+ * @return A pointer to the created client.
+ */
 Client* mockOperatorClient()
 {
 	Client* client = new Client();
@@ -57,8 +72,8 @@ Client* mockOperatorClient()
 	return client;
 }
 
-/*
- * 1. O comando JOIN é recebido sem parâmetros suficientes.
+/**
+ * @brief Test case for the JOIN command with insufficient parameters.
  */
 Test(JoinCommand, err_needmoreparams)
 {
@@ -71,8 +86,8 @@ Test(JoinCommand, err_needmoreparams)
 	cr_assert(eq(int, server._reply_code, 461));
 }
 
-/*
- * 2. O comando JOIN é recebido e o cliente não está autenticado.
+/**
+ * @brief Test case for the JOIN command when the client is not registered.
  */
 Test(JoinCommand, err_notregistered)
 {
@@ -86,8 +101,8 @@ Test(JoinCommand, err_notregistered)
 	cr_assert(eq(int, server._reply_code, 451));
 }
 
-/*
- * 3. O comando JOIN é recebido e a máscara de canal inválida
+/**
+ * @brief Test case for the JOIN command with an invalid channel mask.
  */
 Test(JoinCommand, err_badchanmask)
 {
@@ -100,9 +115,9 @@ Test(JoinCommand, err_badchanmask)
 	cr_assert(eq(int, server._reply_code, 403));
 }
 
-/*
- * 4. O comando JOIN é recebido e o canal não existe.
- * O canal é criado e o cliente é adicionado como moderador.
+/**
+ * @brief Test case for the JOIN command when the channel does not exist.
+ * The channel is created and the client is added as an operator.
  */
 Test(JoinCommand, channel_created)
 {
@@ -119,8 +134,8 @@ Test(JoinCommand, channel_created)
 	cr_assert(eq(int, server._reply_code, 200));
 }
 
-/*
- * 5. O comando JOIN é recebido e o cliente já está no canal.
+/**
+ * @brief Test case for the JOIN command when the client is already in the channel.
  */
 Test(JoinCommand, err_alreadyregistered)
 {
@@ -137,8 +152,8 @@ Test(JoinCommand, err_alreadyregistered)
 	cr_assert(eq(int, server._channels[0]->has_client(client), true));
 }
 
-/*
- * 6. O comando JOIN é recebido o canal tem limite de clientes.
+/**
+ * @brief Test case for the JOIN command when the channel is full.
  */
 Test(JoinCommand, err_channelisfull)
 {
@@ -164,8 +179,8 @@ Test(JoinCommand, err_channelisfull)
 	cr_assert(eq(int, server._channels[0]->has_client(client2), false));
 }
 
-/*
- * 7. O comando JOIN é recebido e o canal é somente para convidados.
+/**
+ * @brief Test case for the JOIN command when the channel is invite-only.
  */
 Test(JoinCommand, err_inviteonlychan)
 {
@@ -192,9 +207,8 @@ Test(JoinCommand, err_inviteonlychan)
 	cr_assert(eq(int, server._channels[0]->has_client(client2), false));
 }
 
-/*
- * 8. O comando JOIN é recebido o canal é apenas para convidados e o cliente não
- * foi convidado.
+/**
+ * @brief Test case for the JOIN command when the channel is invite-only.
  */
 Test(JoinCommand, err_inviteonlychan_not_invited)
 {
@@ -221,9 +235,8 @@ Test(JoinCommand, err_inviteonlychan_not_invited)
 	cr_assert(eq(int, server._channels[0]->has_client(client2), false));
 }
 
-/*
- * 9. O comando JOIN é recebido o canal é apenas para convidados e o cliente foi
- * convidado.
+/**
+ * @brief Test case for the JOIN command when the client is not invited to the invite-only channel.
  */
 Test(JoinCommand, inviteonlychan_invited)
 {
@@ -254,9 +267,8 @@ Test(JoinCommand, inviteonlychan_invited)
 	cr_assert(eq(int, server._channels[0]->has_client(client2), true));
 }
 
-/*
- * 10. O comando JOIN é recebido o canal é apenas para convidados e o cliente
- * entra com senha correta
+/**
+ * @brief Test case for the JOIN command when the client is not invited to the invite-only channel.
  */
 Test(JoinCommand, inviteonlychan_invited_with_key)
 {
@@ -288,9 +300,8 @@ Test(JoinCommand, inviteonlychan_invited_with_key)
 	cr_assert(eq(int, server._channels[0]->has_client(client2), true));
 }
 
-/*
- * 11. O comando JOIN é recebido o canal é apenas para convidados e o cliente
- * entra com senha incorreta.
+/**
+ * @brief Test case for the JOIN command when the client is invited to the invite-only channel.
  */
 Test(JoinCommand, err_invite_only_badchannelkey)
 {
@@ -322,8 +333,8 @@ Test(JoinCommand, err_invite_only_badchannelkey)
 	cr_assert(eq(int, server._channels[0]->has_client(client2), false));
 }
 
-/*
- * 12. O comando JOIN é recebido e o cliente não entra com senha incorreta.
+/**
+ * @brief Test case for the JOIN command when the client enters the invite-only channel with the correct key.
  */
 Test(JoinCommand, err_badchannelkey)
 {
@@ -351,8 +362,8 @@ Test(JoinCommand, err_badchannelkey)
 	cr_assert(eq(int, server._channels[0]->has_client(client2), false));
 }
 
-/*
- * 13. O comando JOIN é recebido e o cliente entra no canal com senha.
+/**
+ * @brief Test case for the JOIN command when the client enters the channel with a key.
  */
 Test(JoinCommand, channel_with_key)
 {
@@ -380,8 +391,8 @@ Test(JoinCommand, channel_with_key)
 	cr_assert(eq(int, server._channels[0]->has_client(client2), true));
 }
 
-/*
- * 14. O comando JOIN é recebido e o cliente entra no canal sem senha.
+/**
+ * @brief Test case for the JOIN command when the client enters the channel without a key.
  */
 Test(JoinCommand, channel_without_key)
 {

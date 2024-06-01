@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:23:47 by gilmar            #+#    #+#             */
-/*   Updated: 2024/06/01 10:22:11 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/06/01 15:25:49 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,13 @@
 #define LINE_FEED "\n"
 #define DELIMITER " \t"
 
+/**
+ * @class Server
+ * @brief Represents an IRC server.
+ *
+ * The Server class provides functionality to initialize and manage an IRC server.
+ * It handles client connections, IRC commands, channels, and server operations.
+ */
 class Server
 {
   public:
@@ -71,8 +78,7 @@ class Server
 	struct sockaddr_in _server_addr;
 	std::vector<Channel*> _channels;
 
-	int _reply_code;  // -> This a workaround to test the IRC commands without
-					  // mocking up a client-server connection
+	int _reply_code;
 
 	std::string _get_hostname();
 	void _is_valid_port(const std::string& port);
@@ -93,7 +99,6 @@ class Server
 	void _handler_client_username(const std::string& username, const int fd);
 	void _handler_client_password(const std::string& password, const int fd);
 
-	void _handler_bot_input(const std::string& buffer, int fd);
 	void _handler_bot_time(const std::string& buffer, int fd);
 	void _handler_bot_whois(const std::string& buffer, int fd);
 	void _handler_bot_quote(const std::string& buffer, int fd);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   TestInvite.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 18:15:32 by yde-goes          #+#    #+#             */
-/*   Updated: 2024/06/01 09:00:39 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/06/01 15:36:42 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,9 @@ Client* mockInsideClient()
 	return client;
 }
 
+/**
+ * @brief Test case for successfully inviting a client to a channel.
+ */
 Test(InviteCommand, succesfully_invite_client_to_channel)
 {
 	Client* outsideClient = mockOutsideClient();
@@ -70,6 +73,9 @@ Test(InviteCommand, succesfully_invite_client_to_channel)
 				 1));
 }
 
+/**
+ * @brief Test case for the error when the channel does not exist.
+ */
 Test(InviteCommand, err_nosuchchannel)
 {
 	Client* outsideClient = mockOutsideClient();
@@ -87,6 +93,9 @@ Test(InviteCommand, err_nosuchchannel)
 	cr_assert(eq(int, server._reply_code, 403));
 }
 
+/**
+ * @brief Test case for the error when the client is not on the channel.
+ */
 Test(InviteCommand, err_notonchannel)
 {
 	Client* outsideClient = mockOutsideClient();
@@ -106,6 +115,9 @@ Test(InviteCommand, err_notonchannel)
 	cr_assert(eq(int, server._reply_code, 442));
 }
 
+/**
+ * @brief Test case for the error when the nickname does not exist.
+ */
 Test(InviteCommand, err_nosuchnick)
 {
 	Client* insideClient = mockInsideClient();
@@ -125,6 +137,9 @@ Test(InviteCommand, err_nosuchnick)
 	cr_assert(eq(int, server._reply_code, 401));
 }
 
+/**
+ * @brief Test case for the error when the client does not have sufficient privileges.
+ */
 Test(InviteCommand, err_noprivileges)
 {
 	Client* insideClient = mockInsideClient();
@@ -142,6 +157,9 @@ Test(InviteCommand, err_noprivileges)
 	cr_assert(eq(int, server._reply_code, 481));
 }
 
+/**
+ * @brief Test case for the error when the user is already on the channel.
+ */
 Test(InviteCommand, err_useronchannel)
 {
 	Client* insideClient = mockInsideClient();
@@ -161,6 +179,9 @@ Test(InviteCommand, err_useronchannel)
 	cr_assert(eq(int, server._reply_code, 443));
 }
 
+/**
+ * @brief Test case for the error when the client is not registered.
+ */
 Test(InviteCommand, err_notregistered)
 {
 	Client* insideClient = mockInsideClient();
