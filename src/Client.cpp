@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:20:02 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 12:48:20 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/05/31 19:45:35 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,9 @@ Client::Client(const Client& other)
 /*
 ** ------------------------------- DESTRUCTOR ---------------------------------
 */
-Client::~Client() {}
+Client::~Client()
+{
+}
 
 /*
 ** ------------------------------- ACCESSORS ----------------------------------
@@ -216,7 +218,7 @@ std::string Client::get_password() const { return _password; }
  *
  * @return std::string The hostname of the client.
  */
-std::string Client::get_hostname() const { return _nickname + "@" + _ip_addr; }
+std::string Client::get_hostname() const { return _username + "@" + _ip_addr; }
 
 /**
  * @brief Get the list of channels the client has been invited to.
@@ -295,7 +297,7 @@ void Client::remove_channel_invited(const std::string& channel)
  */
 void Client::broadcast(Client* sender, std::string target, std::string message)
 {
-	std::string response = RPL_PRIVMSG(sender->get_hostname(), target, message);
+	std::string response = RPL_PRIVMSG(sender->get_nickname(), sender->get_hostname(), target, message);
 
 	if (send(this->get_fd(), response.c_str(), response.size(), 0) == -1)
 		std::cerr << "Response send() failed" << std::endl;

@@ -6,7 +6,7 @@
 /*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:23:47 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 16:45:14 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/31 18:57:35 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ class Server
   private:
 	int _port;						  //-> server port
 	int _server_fdsocket;			  //-> server socket file descriptor
+	std::string _hostname;
 	std::string _password;			  //-> server password
 	std::vector<Client*> _clients;	  //-> vector of clients
 	std::vector<struct pollfd> _fds;  //-> vector of pollfd
@@ -69,6 +70,7 @@ class Server
 	int _reply_code;  // -> This a workaround to test the IRC commands without
 					  // mocking up a client-server connection
 
+	std::string _get_hostname();  //-> get hostname
 	int get_reply_code(void);  // -> Get the reply code to be checked against
 							   // criterion test results
 	void _is_valid_port(const std::string& port);

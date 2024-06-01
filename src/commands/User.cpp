@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:32:16 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/30 16:47:25 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/31 18:58:03 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void Server::_handler_client_username(const std::string& buffer, const int fd)
 		if (_client_is_ready_to_login(fd))
 		{
 			client->set_is_logged(fd);
-			_send_response(fd, RPL_CONNECTED(client->get_nickname()));
+			_send_response(fd, RPL_CONNECTED(_get_hostname(), client->get_nickname(), client->get_hostname()));
 			_reply_code = 001;
 		}
 		else

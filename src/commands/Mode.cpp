@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:30:34 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 16:53:26 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/05/31 21:02:47 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ void Server::_handler_client_mode(const std::string& buffer, const int fd)
 		return;
 	}
 
-	// TODO: VERIFICAR SE EXISTE UMA RESPOSTA PARA ESTA SITUAÇÃO, NO MOMENTO
+  // TODO: VERIFICAR SE EXISTE UMA RESPOSTA PARA ESTA SITUAÇÃO, NO MOMENTO
 	// ESTÁ COMO 200 MAS DEVE HAVER OUTRO REPLY.
 
 	// Enviar resposta de sucesso ao cliente
@@ -133,6 +133,9 @@ bool Server::_parse_mode_command(const std::string& modes, Channel* channel,
 			}
 		}
 	}
+
+	std::string signal = set ? "+" : "-";
+	_send_response(fd, RPL_UMODEIS(client->get_nickname(), client->get_hostname(), channel->get_name(), signal, mode, arg));
 	return true;
 }
 
