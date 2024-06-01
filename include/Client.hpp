@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:19:06 by gilmar            #+#    #+#             */
-/*   Updated: 2024/05/31 23:13:37 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/06/01 16:47:42 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ class Client
 	Client(const Client& other);
 
 	int get_fd() const;
+
 	bool get_is_logged() const;
 	bool get_is_operator() const;
 	bool get_is_authenticated() const;
@@ -72,6 +73,9 @@ class Client
 	void remove_channel_invited(const std::string& channel);
 
 	void broadcast(Client* sender, std::string target, std::string message);
+
+	void append_to_buffer(const std::string& data);
+	void clear_buffer();
 
   private:
 	int _fd;

@@ -6,7 +6,7 @@
 /*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 10:26:55 by gilmar            #+#    #+#             */
-/*   Updated: 2024/06/01 10:45:08 by yde-goes         ###   ########.fr       */
+/*   Updated: 2024/06/01 16:48:29 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -348,10 +348,13 @@ void Server::_receive_new_data(const int fd)
 	}
 	else
 	{
-		cli->set_buffer(buffer);
-		if (cli->get_buffer().find_first_of(LINE_FEED) == std::string::npos)
-			return;
-		_execute_command(cli->get_buffer(), fd);
+		buffer[bytes] = '\0';
+		cli->append_to_buffer(buffer);
+		if (cli->get_buffer().find_first_of(CRLF) != std::string::npos)
+		{
+			_execute_command(cli->get_buffer(), fd);
+			cli->clear_buffer();
+		}
 	}
 }
 
@@ -399,11 +402,6 @@ const Server::command_handler Server::_command_list[_command_list_size] = {
 	{"INVITE", &Server::_handler_client_invite},
 	{"PRIVMSG", &Server::_handler_client_privmsg},
 	{"MARVINBOT", &Server::_handler_bot_input},
-	/* 	{"!MARVIN", &Server::_handler_bot_marvin},
-		{"!TIME", &Server::_handler_bot_time},
-		{"!WHOIS", &Server::_handler_bot_whois},
-		{"!WHOAMI", &Server::_handler_bot_whoami},
-		{"!QUOTE", &Server::_handler_bot_quote}, */
 };
 
 /**
@@ -428,6 +426,7 @@ void Server::_execute_command(const std::string buffer, const int fd)
 
 	if (buffer.empty())
 		return;
+
 	std::string clean_buffer = _cleanse_buffer(buffer, CRLF);
 	std::vector<std::string> splitted_buffer =
 		_split_buffer(clean_buffer, DELIMITER);
@@ -438,6 +437,12 @@ void Server::_execute_command(const std::string buffer, const int fd)
 
 	for (size_t i = 0; i < _command_list_size; i++)
 	{
+		if (command == "WHO")
+		{
+			cmd_executed = true;
+			break;
+		}
+
 		if (command == _command_list[i].command)
 		{
 			(this->*_command_list[i].handler)(parameters, fd);

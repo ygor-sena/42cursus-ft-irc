@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:30:34 by gilmar            #+#    #+#             */
-/*   Updated: 2024/06/01 09:03:41 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/06/01 15:54:13 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,12 @@ void Server::_handler_client_mode(const std::string& buffer, const int fd)
 
 	Client* client = _get_client(fd);
 	Channel* channel = _get_channel(channelName);
+
+	if (modeFlags.empty())
+	{
+		_reply_code = 461;
+		return;
+	}
 
 	if (channelName.empty() || modeFlags.empty())
 	{
