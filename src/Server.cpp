@@ -5,10 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: caalbert <caalbert@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/28 10:26:55 by gilmar            #+#    #+#             */
-/*   Updated: 2024/06/01 09:55:12 by caalbert         ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2024/06/01 10:14:57 by caalbert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+
 
 #include "Server.hpp"
 
@@ -430,6 +432,8 @@ const Server::command_handler Server::_command_list[_command_list_size] = {
  */
 void Server::_execute_command(const std::string buffer, const int fd)
 {
+	bool cmd_executed = false;
+
 	if (buffer.empty())
 		return;
 	std::string clean_buffer = _cleanse_buffer(buffer, CRLF);
@@ -445,9 +449,12 @@ void Server::_execute_command(const std::string buffer, const int fd)
 		if (command == _command_list[i].command)
 		{
 			(this->*_command_list[i].handler)(parameters, fd);
+			cmd_executed = true;
 			break;
 		}
 	}
+	if (!cmd_executed)
+		_send_response(fd, ERR_CMDNOTFOUND(command));
 }
 
 /*
