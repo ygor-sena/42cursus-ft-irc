@@ -54,7 +54,7 @@ We have implemented both the mandatory and bonus requirements of this project. T
 #### 1) Copy this repository to your local workstation
 
 ```
-git clone https://github.com/ygor-sena/42cursus-miniRT.git
+git clone https://github.com/ygor-sena/42cursus-ft-irc.git
 ```
 
 #### 2) Install the required libraries to run the project and the unit tests
