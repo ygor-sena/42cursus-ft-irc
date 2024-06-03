@@ -29,18 +29,18 @@ We have implemented both the mandatory and bonus requirements of this project. T
 |`TOPIC`| `TOPIC <channel> [<topic>]`| - | Change or view the channel topic.|
 |`PRIVMSG`| `PRIVMSG <receiver>{,<receiver>} <text to be sent>`| - | Sends a message to one or more clients or channels. If there are more than one receiver, they must be separated by `,`.| 
 |`MODE`| `MODE <channel> <flag> [<limit>] [<user>]`| `+i` or `-i` | Change the channel's mode. This flag sets/removes Invite-only channel.|
-|`MODE`| `MODE <channel> <flag> [<limit>] [<user>]`| `+t` or `-t` | Change the channel's mode. This flag sets/removes the restrictions of the `TOPIC` command to channel operators. |
-|`MODE`| `MODE <channel> <flag> [<limit>] [<user>]`| `+k` or `-k` | Change the channel's mode. This flag sets/removes the channel key. |
-|`MODE`| `MODE <channel> <flag> [<limit>] [<user>]`| `+o` or `-o` | Change the channel's mode. This flag gives/takes channel operator privilege. |
-|`MODE`| `MODE <channel> <flag> [<limit>] [<user>]`| `+l` or `-l` | Change the channel's mode. This flag sets/removes the user limit to channel. |
+||| `+t` or `-t` | Change the channel's mode. This flag sets/removes the restrictions of the `TOPIC` command to channel operators. |
+||| `+k` or `-k` | Change the channel's mode. This flag sets/removes the channel key. |
+||| `+o` or `-o` | Change the channel's mode. This flag gives/takes channel operator privilege. |
+||| `+l` or `-l` | Change the channel's mode. This flag sets/removes the user limit to channel. |
 |`PART`| `PART <channel>`| - | Leave a channel.|
 |`KICK`| `KICK <channel> <user> [<comment>]`| - | Eject a client from the channel. It's also possible to provide a commentary.|
 |`QUIT`| `QUIT`| - | Closes the IRC server connection.|
 |`MARVINBOT`| `MARVINBOT <flag>` |`marvin`| Marvin presents himself!|
-|`MARVINBOT`| `MARVINBOT <flag>`| `quote` | Marvin recites a philosophy quote!|
-|`MARVINBOT`| `MARVINBOT <flag>`| `time` | Marvin answers the current time.|
-|`MARVINBOT`| `MARVINBOT <flag>`| `whoami` | Marvin answers who you are.|
-|`MARVINBOT`| `MARVINBOT <flag>` |`whois` | Marvin gets information about other clients logged on the IRC server.|
+||| `quote` | Marvin recites a philosophy quote!|
+||| `time` | Marvin answers the current time.|
+||| `whoami` | Marvin answers who you are.|
+|| |`whois` | Marvin gets information about other clients logged on the IRC server.|
 
 >[!IMPORTANT]
 > Some command have to meet some requirements for its usage by the client:
