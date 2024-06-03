@@ -37,7 +37,8 @@
  * @class MarvinBot
  * @brief Represents a MarvinBot object.
  *
- * The MarvinBot class is responsible for managing quotes and returning a random quote from a predefined list.
+ * The MarvinBot class is responsible for managing quotes and returning a random
+ * quote from a predefined list.
  */
 class MarvinBot
 {
@@ -45,9 +46,9 @@ class MarvinBot
 	MarvinBot();
 	~MarvinBot();
 
-		/**
-		 * @brief Enum for quotes.
-		 */
+	/**
+	 * @brief Enum for quotes.
+	 */
 	enum EnumMarvinBotQuotes
 	{
 		QUOTE_SOCRATES_KNOWLEDGE,
@@ -60,7 +61,7 @@ class MarvinBot
 		QUOTE_HUME_SCIENCE,
 		QUOTE_HEIDEGGER_BEING,
 		QUOTE_ROUSSEAU_FREEDOM,
-		QUOTES_COUNT 
+		QUOTES_COUNT
 	};
 
 	const char* marvin_bot_quotes[QUOTES_COUNT];

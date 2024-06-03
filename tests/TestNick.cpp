@@ -50,7 +50,8 @@ Test(NickCommand, err_needmoreparams)
 }
 
 /**
- * @brief Test case for receiving the NICK command when the client is not registered.
+ * @brief Test case for receiving the NICK command when the client is not
+ * registered.
  */
 Test(NickCommand, err_notregistered)
 {
@@ -65,7 +66,8 @@ Test(NickCommand, err_notregistered)
 }
 
 /**
- * @brief Test case for receiving the NICK command with an invalid client nickname.
+ * @brief Test case for receiving the NICK command with an invalid client
+ * nickname.
  */
 Test(NickCommand, err_erroneusnick_1)
 {
@@ -116,7 +118,8 @@ Test(NickCommand, err_erroneusnick_4)
 }
 
 /**
- * @brief Test case for receiving the NICK command when the client is registered.
+ * @brief Test case for receiving the NICK command when the client is
+ * registered.
  */
 Test(NickCommand, success_setnickname)
 {
@@ -131,7 +134,8 @@ Test(NickCommand, success_setnickname)
 }
 
 /**
- * @brief Test case for receiving the NICK command with a nickname that is already in use.
+ * @brief Test case for receiving the NICK command with a nickname that is
+ * already in use.
  */
 Test(NickCommand, err_nickinuse)
 {
@@ -151,7 +155,8 @@ Test(NickCommand, err_nickinuse)
 }
 
 /**
- * @brief Test case for receiving the NICK command and changing the client's nickname.
+ * @brief Test case for receiving the NICK command and changing the client's
+ * nickname.
  */
 Test(NickCommand, success_changenickname)
 {
@@ -166,7 +171,8 @@ Test(NickCommand, success_changenickname)
 }
 
 /**
- * @brief Test case for receiving the NICK command when the client is ready to log in.
+ * @brief Test case for receiving the NICK command when the client is ready to
+ * log in.
  */
 Test(NickCommand, success_readytologin)
 {

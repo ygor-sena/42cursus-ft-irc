@@ -29,7 +29,8 @@ Client* mockClient()
 }
 
 /**
- * @brief Test case for the MarvinBotCommand when the user is not in any channel.
+ * @brief Test case for the MarvinBotCommand when the user is not in any
+ * channel.
  */
 Test(MarvinBotCommand, user_is_not_in_any_channel)
 {

@@ -32,7 +32,8 @@ Client* mockChannelMemberClient()
 }
 
 /**
- * @brief Test case for receiving the TOPIC command with insufficient parameters.
+ * @brief Test case for receiving the TOPIC command with insufficient
+ * parameters.
  */
 Test(TopicCommand, err_needmoreparams)
 {
@@ -46,7 +47,8 @@ Test(TopicCommand, err_needmoreparams)
 }
 
 /**
- * @brief Test case for receiving the TOPIC command when the client is not logged in.
+ * @brief Test case for receiving the TOPIC command when the client is not
+ * logged in.
  */
 Test(TopicCommand, err_notregistered)
 {
@@ -61,7 +63,8 @@ Test(TopicCommand, err_notregistered)
 }
 
 /**
- * @brief Test case for receiving the TOPIC command when the channel does not exist.
+ * @brief Test case for receiving the TOPIC command when the channel does not
+ * exist.
  */
 Test(TopicCommand, err_nosuchchannel)
 {
@@ -75,7 +78,8 @@ Test(TopicCommand, err_nosuchchannel)
 }
 
 /**
- * @brief Test case for receiving the TOPIC command when the client is not in the channel.
+ * @brief Test case for receiving the TOPIC command when the client is not in
+ * the channel.
  */
 Test(TopicCommand, err_notonchannel)
 {
@@ -92,7 +96,8 @@ Test(TopicCommand, err_notonchannel)
 }
 
 /**
- * @brief Test case for receiving the TOPIC command when the channel does not have a topic.
+ * @brief Test case for receiving the TOPIC command when the channel does not
+ * have a topic.
  */
 Test(TopicCommand, rpl_notopic)
 {
@@ -110,7 +115,8 @@ Test(TopicCommand, rpl_notopic)
 }
 
 /**
- * @brief Test case for receiving the TOPIC command when the channel has a topic.
+ * @brief Test case for receiving the TOPIC command when the channel has a
+ * topic.
  */
 Test(TopicCommand, rpl_topic)
 {
@@ -129,7 +135,8 @@ Test(TopicCommand, rpl_topic)
 }
 
 /**
- * @brief Test case for receiving the TOPIC command when the client is not an operator of the channel.
+ * @brief Test case for receiving the TOPIC command when the client is not an
+ * operator of the channel.
  */
 Test(TopicCommand, err_chanoprivsneeded)
 {
@@ -147,7 +154,8 @@ Test(TopicCommand, err_chanoprivsneeded)
 }
 
 /**
- * @brief Test case for receiving the TOPIC command when the channel has topic restriction.
+ * @brief Test case for receiving the TOPIC command when the channel has topic
+ * restriction.
  */
 Test(TopicCommand, err_chanoprivsneeded_topic_restriction)
 {
@@ -167,7 +175,8 @@ Test(TopicCommand, err_chanoprivsneeded_topic_restriction)
 }
 
 /**
- * @brief Test case for receiving the TOPIC command and successfully changing the topic.
+ * @brief Test case for receiving the TOPIC command and successfully changing
+ * the topic.
  */
 Test(TopicCommand, rpl_topic_set)
 {

@@ -31,7 +31,8 @@ Client* mockClient()
 }
 
 /**
- * @brief Test case for the User command when it is received without enough parameters.
+ * @brief Test case for the User command when it is received without enough
+ * parameters.
  */
 Test(UserCommand, err_needmoreparams)
 {
@@ -45,7 +46,8 @@ Test(UserCommand, err_needmoreparams)
 }
 
 /**
- * @brief Test case for the User command when it is received and the client is not registered.
+ * @brief Test case for the User command when it is received and the client is
+ * not registered.
  */
 Test(UserCommand, err_notregistered)
 {
@@ -61,7 +63,8 @@ Test(UserCommand, err_notregistered)
 }
 
 /**
- * @brief Test case for the User command when it is received and the client does not exist.
+ * @brief Test case for the User command when it is received and the client does
+ * not exist.
  */
 Test(UserCommand, err_notexist)
 {
@@ -72,7 +75,8 @@ Test(UserCommand, err_notexist)
 }
 
 /**
- * @brief Test case for the User command when it is received and the client is already registered.
+ * @brief Test case for the User command when it is received and the client is
+ * already registered.
  */
 Test(UserCommand, err_alreadyregistered)
 {
@@ -86,7 +90,8 @@ Test(UserCommand, err_alreadyregistered)
 }
 
 /**
- * @brief Test case for the User command when it is received and the client is ready to log in.
+ * @brief Test case for the User command when it is received and the client is
+ * ready to log in.
  */
 Test(UserCommand, rpl_readytologin)
 {
@@ -103,7 +108,8 @@ Test(UserCommand, rpl_readytologin)
 }
 
 /**
- * @brief Test case for the User command when it is received and the client is not ready to log in.
+ * @brief Test case for the User command when it is received and the client is
+ * not ready to log in.
  */
 Test(UserCommand, rpl_notreadytologin)
 {

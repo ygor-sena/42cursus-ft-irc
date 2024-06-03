@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Quit.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gilmar <gilmar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yde-goes <yde-goes@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:29:45 by gilmar            #+#    #+#             */
-/*   Updated: 2024/06/01 09:02:49 by gilmar           ###   ########.fr       */
+/*   Updated: 2024/06/03 13:21:27 by yde-goes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,6 @@ void Server::_handler_client_quit(const std::string& /* buffer */, const int fd)
 		if (channel->has_client(client))
 		{
 			channel->quit(client);
-			if (channel->get_channel_clients().size() == 0)
-				delete channel;
 		}
 	}
 

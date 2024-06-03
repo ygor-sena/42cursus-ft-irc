@@ -53,8 +53,9 @@
  * @class Server
  * @brief Represents an IRC server.
  *
- * The Server class provides functionality to initialize and manage an IRC server.
- * It handles client connections, IRC commands, channels, and server operations.
+ * The Server class provides functionality to initialize and manage an IRC
+ * server. It handles client connections, IRC commands, channels, and server
+ * operations.
  */
 class Server
 {
