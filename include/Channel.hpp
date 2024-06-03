@@ -20,8 +20,8 @@
  * @class Channel
  * @brief Represents a channel in an IRC server.
  *
- * The Channel class provides functionality to manage clients, set channel properties,
- * and perform various operations within the channel.
+ * The Channel class provides functionality to manage clients, set channel
+ * properties, and perform various operations within the channel.
  */
 class Channel
 {

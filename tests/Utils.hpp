@@ -23,4 +23,3 @@ std::pair<std::vector<std::string>, std::string> split_message(
 	const std::string& message);
 
 #endif	// UTILS_HPP/**
- 

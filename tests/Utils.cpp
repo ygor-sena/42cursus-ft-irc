@@ -17,8 +17,9 @@
 /**
  * @brief Splits a message into receivers and text.
  *
- * This function takes a message string and splits it into individual receivers and the text.
- * The receivers are separated by commas and the text follows after a space.
+ * This function takes a message string and splits it into individual receivers
+ * and the text. The receivers are separated by commas and the text follows
+ * after a space.
  *
  * @param message The message string to be split.
  * @return A pair containing a vector of receivers and the text.

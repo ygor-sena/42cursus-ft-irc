@@ -113,7 +113,8 @@ Test(PartCommand, part_not_on_channel)
 }
 
 /**
- * @brief Tests the PART command when the client successfully leaves the channel.
+ * @brief Tests the PART command when the client successfully leaves the
+ * channel.
  */
 Test(PartCommand, part_successfully)
 {

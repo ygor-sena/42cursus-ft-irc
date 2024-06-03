@@ -31,7 +31,8 @@ Client* genericClient()
 }
 
 /**
- * @brief Creates a client that is going to leave a channel for testing purposes.
+ * @brief Creates a client that is going to leave a channel for testing
+ * purposes.
  * @return A pointer to the created client.
  */
 Client* toPartClient()

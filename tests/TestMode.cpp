@@ -76,7 +76,8 @@ Test(ModeCommand, err_nosuchchannel)
 }
 
 /**
- * @brief Test case for receiving MODE command with client lacking operator privileges in the channel.
+ * @brief Test case for receiving MODE command with client lacking operator
+ * privileges in the channel.
  */
 Test(ModeCommand, err_chanoprivsneeded)
 {
@@ -128,7 +129,8 @@ Test(ModeCommand, mode_valid)
 	cr_assert(eq(int, channel->_invite_only, true));
 }
 /**
- * @brief Test case for receiving MODE command and successfully changing the channel mode.
+ * @brief Test case for receiving MODE command and successfully changing the
+ * channel mode.
  */
 Test(ModeCommand, mode_changed)
 {
@@ -147,7 +149,8 @@ Test(ModeCommand, mode_changed)
 }
 
 /**
- * @brief Test case for receiving MODE command and successfully changing the channel mode to +i.
+ * @brief Test case for receiving MODE command and successfully changing the
+ * channel mode to +i.
  */
 Test(ModeCommand, mode_i_changed)
 {
@@ -166,7 +169,8 @@ Test(ModeCommand, mode_i_changed)
 }
 
 /**
- * @brief Test case for receiving MODE command and successfully removing the channel mode -i.
+ * @brief Test case for receiving MODE command and successfully removing the
+ * channel mode -i.
  */
 Test(ModeCommand, mode_i_removed)
 {
@@ -186,7 +190,8 @@ Test(ModeCommand, mode_i_removed)
 }
 
 /**
- * @brief Test case for receiving MODE command and successfully changing the channel mode +t.
+ * @brief Test case for receiving MODE command and successfully changing the
+ * channel mode +t.
  */
 Test(ModeCommand, mode_t_changed)
 {
@@ -205,7 +210,8 @@ Test(ModeCommand, mode_t_changed)
 }
 
 /**
- * @brief Test case for receiving MODE command and successfully removing the channel mode -t.
+ * @brief Test case for receiving MODE command and successfully removing the
+ * channel mode -t.
  */
 Test(ModeCommand, mode_t_removed)
 {
@@ -225,7 +231,8 @@ Test(ModeCommand, mode_t_removed)
 }
 
 /**
- * @brief Test case for receiving MODE command and successfully changing the channel mode +k.
+ * @brief Test case for receiving MODE command and successfully changing the
+ * channel mode +k.
  */
 Test(ModeCommand, mode_k_changed)
 {
@@ -247,7 +254,8 @@ Test(ModeCommand, mode_k_changed)
 }
 
 /**
- * @brief Test case for receiving MODE command and successfully removing the channel mode -k.
+ * @brief Test case for receiving MODE command and successfully removing the
+ * channel mode -k.
  */
 Test(ModeCommand, mode_k_removed)
 {
@@ -267,7 +275,8 @@ Test(ModeCommand, mode_k_removed)
 }
 
 /**
- * @brief Test case for receiving MODE command and successfully changing the channel mode +l.
+ * @brief Test case for receiving MODE command and successfully changing the
+ * channel mode +l.
  */
 Test(ModeCommand, mode_l_changed)
 {
@@ -286,7 +295,8 @@ Test(ModeCommand, mode_l_changed)
 }
 
 /**
- * @brief Test case for receiving MODE command and successfully removing the channel mode -l.
+ * @brief Test case for receiving MODE command and successfully removing the
+ * channel mode -l.
  */
 Test(ModeCommand, mode_l_removed)
 {
@@ -306,7 +316,8 @@ Test(ModeCommand, mode_l_removed)
 }
 
 /**
- * @brief Test case for receiving MODE command and successfully changing the channel mode +o.
+ * @brief Test case for receiving MODE command and successfully changing the
+ * channel mode +o.
  */
 Test(ModeCommand, mode_o_changed)
 {
@@ -325,7 +336,8 @@ Test(ModeCommand, mode_o_changed)
 }
 
 /**
- * @brief Test case for receiving MODE command and successfully removing the channel mode -o.
+ * @brief Test case for receiving MODE command and successfully removing the
+ * channel mode -o.
  */
 Test(ModeCommand, mode_o_removed)
 {

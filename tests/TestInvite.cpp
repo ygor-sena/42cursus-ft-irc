@@ -138,7 +138,8 @@ Test(InviteCommand, err_nosuchnick)
 }
 
 /**
- * @brief Test case for the error when the client does not have sufficient privileges.
+ * @brief Test case for the error when the client does not have sufficient
+ * privileges.
  */
 Test(InviteCommand, err_noprivileges)
 {

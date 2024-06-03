@@ -135,7 +135,8 @@ Test(JoinCommand, channel_created)
 }
 
 /**
- * @brief Test case for the JOIN command when the client is already in the channel.
+ * @brief Test case for the JOIN command when the client is already in the
+ * channel.
  */
 Test(JoinCommand, err_alreadyregistered)
 {
@@ -236,7 +237,8 @@ Test(JoinCommand, err_inviteonlychan_not_invited)
 }
 
 /**
- * @brief Test case for the JOIN command when the client is not invited to the invite-only channel.
+ * @brief Test case for the JOIN command when the client is not invited to the
+ * invite-only channel.
  */
 Test(JoinCommand, inviteonlychan_invited)
 {
@@ -268,7 +270,8 @@ Test(JoinCommand, inviteonlychan_invited)
 }
 
 /**
- * @brief Test case for the JOIN command when the client is not invited to the invite-only channel.
+ * @brief Test case for the JOIN command when the client is not invited to the
+ * invite-only channel.
  */
 Test(JoinCommand, inviteonlychan_invited_with_key)
 {
@@ -301,7 +304,8 @@ Test(JoinCommand, inviteonlychan_invited_with_key)
 }
 
 /**
- * @brief Test case for the JOIN command when the client is invited to the invite-only channel.
+ * @brief Test case for the JOIN command when the client is invited to the
+ * invite-only channel.
  */
 Test(JoinCommand, err_invite_only_badchannelkey)
 {
@@ -334,7 +338,8 @@ Test(JoinCommand, err_invite_only_badchannelkey)
 }
 
 /**
- * @brief Test case for the JOIN command when the client enters the invite-only channel with the correct key.
+ * @brief Test case for the JOIN command when the client enters the invite-only
+ * channel with the correct key.
  */
 Test(JoinCommand, err_badchannelkey)
 {
@@ -363,7 +368,8 @@ Test(JoinCommand, err_badchannelkey)
 }
 
 /**
- * @brief Test case for the JOIN command when the client enters the channel with a key.
+ * @brief Test case for the JOIN command when the client enters the channel with
+ * a key.
  */
 Test(JoinCommand, channel_with_key)
 {
@@ -392,7 +398,8 @@ Test(JoinCommand, channel_with_key)
 }
 
 /**
- * @brief Test case for the JOIN command when the client enters the channel without a key.
+ * @brief Test case for the JOIN command when the client enters the channel
+ * without a key.
  */
 Test(JoinCommand, channel_without_key)
 {

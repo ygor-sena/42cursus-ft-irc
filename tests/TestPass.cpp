@@ -36,7 +36,8 @@ Client* mockClient()
 }
 
 /**
- * @brief Test case for handling the PASS command when received without enough parameters.
+ * @brief Test case for handling the PASS command when received without enough
+ * parameters.
  */
 Test(ServerHandlerClientPassword, err_needmoreparams)
 {
@@ -50,7 +51,8 @@ Test(ServerHandlerClientPassword, err_needmoreparams)
 }
 
 /**
- * @brief Test case for handling the PASS command when received and the client is already authenticated.
+ * @brief Test case for handling the PASS command when received and the client
+ * is already authenticated.
  */
 Test(ServerHandlerClientPassword, err_alreadyregistered)
 {
@@ -66,7 +68,8 @@ Test(ServerHandlerClientPassword, err_alreadyregistered)
 }
 
 /**
- * @brief Test case for handling the PASS command when received and the client's password is incorrect.
+ * @brief Test case for handling the PASS command when received and the client's
+ * password is incorrect.
  */
 Test(ServerHandlerClientPassword, err_incorpass)
 {
@@ -82,7 +85,8 @@ Test(ServerHandlerClientPassword, err_incorpass)
 }
 
 /**
- * @brief Test case for handling the PASS command when received and the client's password is correct.
+ * @brief Test case for handling the PASS command when received and the client's
+ * password is correct.
  */
 Test(ServerHandlerClientPassword, rpl_pass)
 {
